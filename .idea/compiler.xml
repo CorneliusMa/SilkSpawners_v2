@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="v1_18_R2" />
+        <module name="v1_17_R1" />
+        <module name="v1_15_R1" />
+        <module name="v1_16_R3" />
+        <module name="v1_14_R1" />
+        <module name="v1_11_R1" />
+        <module name="v1_9_R2" />
+        <module name="v1_10_R1" />
+        <module name="API" />
+        <module name="v1_13_R2" />
+        <module name="v1_12_R1" />
+        <module name="v1_8_R3" />
+      </profile>
+      <profile name="Annotation profile for SilkSpawners_v2" enabled="true">
+        <sourceOutputDir name="../target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="SilkSpawners_v2-Plugin" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Plugin" target="1.8" />
+      <module name="v1_13_R1" target="1.8" />
+      <module name="v1_16_R1" target="1.8" />
+      <module name="v1_16_R2" target="1.8" />
+      <module name="v1_18_R1" target="1.8" />
+      <module name="v1_9_R1" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
