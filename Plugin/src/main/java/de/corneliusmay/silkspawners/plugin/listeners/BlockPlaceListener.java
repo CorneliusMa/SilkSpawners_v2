@@ -2,11 +2,8 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.SpawnerPlaceEvent;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,25 +14,17 @@ public class BlockPlaceListener implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-        Player p = e.getPlayer();
+        if(e.isCancelled()) return;
 
-        if(e.isCancelled()) {
-            return;
-        }
+        Player p = e.getPlayer();
 
         if(!p.hasPermission("silkspawners.place")) return;
 
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
+        Spawner spawner = new Spawner(itemIsSpawner(itemsInHand));
+        if(!spawner.isValid()) return;
 
-        ItemStack spawnerPlaced = itemIsSpawner(itemsInHand);
-        if(spawnerPlaced == null) return;
-
-        if(spawnerPlaced.getItemMeta() == null || spawnerPlaced.getItemMeta().getLore() == null) return;
-
-        EntityType spawnerEntityType = getSpawnerEntity(spawnerPlaced.getItemMeta().getLore().get(0));
-        if(spawnerEntityType == null) return;
-
-        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawnerEntityType, e.getBlock());
+        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner.getEntityType(), e.getBlock());
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()) {
@@ -43,7 +32,7 @@ public class BlockPlaceListener implements Listener {
             return;
         }
 
-        Bukkit.getScheduler().runTaskLater(SilkSpawners.getInstance(), () -> setSpawnerType(e.getBlock(), spawnerEntityType), 5);
+        spawner.setSpawnerBlockType(e.getBlock());
     }
 
     private ItemStack itemIsSpawner(ItemStack[] items) {
@@ -55,18 +44,5 @@ public class BlockPlaceListener implements Listener {
 
         if(items[i].getType() == SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()) return items[i];
         else return itemIsSpawner(items, i + 1);
-    }
-
-    private EntityType getSpawnerEntity(String lore) {
-        if(!lore.startsWith("§e")) return null;
-
-        return EntityType.fromName(lore.replaceAll("§e", "").toLowerCase());
-    }
-
-    private void setSpawnerType(Block spawnerBlock, EntityType spawnerEntityType) {
-        BlockState blockState = spawnerBlock.getState();
-        CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
-        creatureSpawner.setSpawnedType(spawnerEntityType);
-        blockState.update();
     }
 }

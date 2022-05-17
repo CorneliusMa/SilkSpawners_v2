@@ -1,28 +1,23 @@
 package de.corneliusmay.silkspawners.plugin.utils;
 
+import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 
 public class Logger {
 
-    private final String PREFIX;
-
-    public Logger() {
-        this.PREFIX = " §b[SilkSpawners] ";
-    }
-
     public void info(String msg) {
-        Bukkit.getConsoleSender().sendMessage(this.PREFIX + " §2[INFO] §f" + msg);
+        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §2[INFO] §f" + msg);
     }
 
     public void warn(String msg) {
-        Bukkit.getConsoleSender().sendMessage(this.PREFIX + " §e[WARN] §f" + msg);
+        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §e[WARN] §f" + msg);
 
     }
 
     public void error(String msg) {
-        Bukkit.getConsoleSender().sendMessage(this.PREFIX + " §c[ERROR] §f" + msg);
+        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §c[ERROR] §f" + msg);
 
     }
 
