@@ -86,7 +86,7 @@ public class VersionHandler {
     }
 
     private void addPackageName(String name, List<String> names) {
-        if (!name.startsWith("de/corneliusmay/silkspawners/nms/v") && name.contains(".class"))  return;
+        if(!name.startsWith("de/corneliusmay/silkspawners/nms/v") || name.contains(".class")) return;
 
         String[] nameSplit = name.split("/");
         names.add(nameSplit[nameSplit.length - 1]);
