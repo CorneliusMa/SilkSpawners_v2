@@ -1,8 +1,11 @@
 package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.api.NMS;
+import de.corneliusmay.silkspawners.plugin.commands.SpawnerCommand;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
+import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionHandler;
 import lombok.Getter;
@@ -19,14 +22,19 @@ public class SilkSpawners extends JavaPlugin {
     private Logger log;
 
     @Getter
+    PluginConfig pluginConfig;
+
+    @Getter
     private NMS nmsHandler;
 
     @Override
     public void onEnable() {
+        instance = this;
+
+        this.pluginConfig = new PluginConfig();
+
         this.log = new Logger();
         log.info("Starting SilkSpawners v" + getDescription().getVersion());
-
-        instance = this;
 
         log.info("Loading Cross-Version support");
         VersionHandler versionHandler = new VersionHandler();
@@ -41,6 +49,9 @@ public class SilkSpawners extends JavaPlugin {
         registerListeners();
         log.info("Registered listeners");
 
+        log.info("Registering commands");
+        registerCommands();
+        log.info("Registered commands");
 
         log.info("Started SilkSpawners v" + getDescription().getVersion());
     }
@@ -49,6 +60,12 @@ public class SilkSpawners extends JavaPlugin {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new BlockBreakListener(), this);
         pm.registerEvents(new BlockPlaceListener(), this);
+        pm.registerEvents(new SpawnerBreakListener(), this);
+    }
+
+    private void registerCommands() {
+        getCommand("spawner").setExecutor(new SpawnerCommand());
+        getCommand("spawner").setTabCompleter(new SpawnerCommand());
     }
 
     @Override
