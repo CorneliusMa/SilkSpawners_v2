@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.api.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -30,7 +31,7 @@ public class BlockBreakListener implements Listener {
 
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)) {
-            generateExplosion(e.getBlock());
+            new Explosion(e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
             return;
         }
 
@@ -44,12 +45,6 @@ public class BlockBreakListener implements Listener {
 
         e.setExpToDrop(0);
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawner.getItemStack());
-    }
-
-    private void generateExplosion(Block spawner) {
-        int intensity = SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion();
-        if(intensity == 0) return;
-        spawner.getWorld().createExplosion(spawner.getLocation(), intensity);
     }
 
     private boolean itemHasSilktouch(ItemStack[] items) {
