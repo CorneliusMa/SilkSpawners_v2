@@ -10,6 +10,8 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -60,29 +62,33 @@ public class VersionHandler {
     }
 
     private String[] getSupportedVersions() {
-        ArrayList<String> versions = new ArrayList<>();
+        List<String> versions = new ArrayList<>();
         try {
             CodeSource src = SilkSpawners.class.getProtectionDomain().getCodeSource();
-            if (src != null) {
-                URL jar = src.getLocation();
-                ZipInputStream zip = new ZipInputStream(jar.openStream());
-                while (true) {
-                    ZipEntry e = zip.getNextEntry();
-                    if (e == null)
-                        break;
-                    String name = e.getName();
-                    if (name.startsWith("de/corneliusmay/silkspawners/nms/v") && !name.contains(".class")) {
-                        String[] nameSplit = name.split("/");
-                        versions.add(nameSplit[nameSplit.length - 1]);
-                    }
-                }
-            } else {
-                return new String[]{"Cannot get supported versions"};
-            }
+            if(src == null) return new String[]{"Cannot get supported versions"};
+
+            URL jar = src.getLocation();
+            ZipInputStream zip = new ZipInputStream(jar.openStream());
+            zipIterator(zip, (zipEntry -> addPackageName(zipEntry.getName(), versions)));
         } catch (IOException ex) {
             return new String[]{"Cannot get supported versions: " + ex.getMessage()};
         }
 
         return versions.toArray(new String[0]);
+    }
+
+    private void zipIterator(ZipInputStream zip, Consumer<ZipEntry> consumer) throws IOException {
+        while (true) {
+            ZipEntry e = zip.getNextEntry();
+            if (e == null) break;
+            consumer.accept(e);
+        }
+    }
+
+    private void addPackageName(String name, List<String> names) {
+        if (!name.startsWith("de/corneliusmay/silkspawners/nms/v") && name.contains(".class"))  return;
+
+        String[] nameSplit = name.split("/");
+        names.add(nameSplit[nameSplit.length - 1]);
     }
 }
