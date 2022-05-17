@@ -23,7 +23,10 @@ public class BlockBreakListener implements Listener {
         if(!spawner.isValid()) return;
 
         Player p = e.getPlayer();
-        if(!p.hasPermission("silkspawners.break")) return;
+        if(!p.hasPermission("silkspawners.break")) {
+            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+            return;
+        }
 
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)) {

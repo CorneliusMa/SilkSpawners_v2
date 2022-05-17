@@ -17,6 +17,7 @@ public class PluginConfig {
         config.addDefault("messages.insufficient_permission", "§cYou dont have the Permission to execute this command.");
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
+        config.addDefault("spawner.destroyable", true);
 
         config.options().copyDefaults(true);
         SilkSpawners.getInstance().saveConfig();
@@ -37,5 +38,9 @@ public class PluginConfig {
 
     public int getSpawnerExplosionSilktouch() {
         return config.getInt("spawner.explosion.silktouch");
+    }
+
+    public boolean isSpawnerDestroyable() {
+        return config.getBoolean("spawner.destroyable");
     }
 }
