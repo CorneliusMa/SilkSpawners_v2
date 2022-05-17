@@ -32,7 +32,7 @@ public class VersionHandler {
             SilkSpawners.getInstance().getLog().error("The detected Server Version (" + this.version + ") is not supported by the currently installed version of SilkSpawners");
 
             SilkSpawners.getInstance().getLog().info("Currently supported Versions are: " + Arrays.toString(getSupportedVersions()));
-            SilkSpawners.getInstance().getLog().info("You can check for updates at https://www.spigotmc.org/resources/silkspawners-with-api.60063/");
+            SilkSpawners.getInstance().getLog().info("You can check for updates at https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/");
 
 
             SilkSpawners.getInstance().getLog().warn("Disabling plugin due to version incompatibility");
