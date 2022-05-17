@@ -4,6 +4,7 @@ import de.corneliusmay.silkspawners.api.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,15 +18,17 @@ public class BlockBreakListener implements Listener {
     public void onBlockBreak(BlockBreakEvent e) {
         if(e.isCancelled()) return;
 
-        Player p = e.getPlayer();
+        Spawner spawner = new Spawner(e.getBlock());
+        if(!spawner.isValid()) return;
 
+        Player p = e.getPlayer();
         if(!p.hasPermission("silkspawners.break")) return;
 
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
-        if(!itemHasSilktouch(itemsInHand)) return;
-
-        Spawner spawner = new Spawner(e.getBlock());
-        if(!spawner.isValid()) return;
+        if(!itemHasSilktouch(itemsInHand)) {
+            generateExplosion(e.getBlock());
+            return;
+        }
 
         SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner.getEntityType(), e.getBlock());
         Bukkit.getPluginManager().callEvent(event);
@@ -37,6 +40,12 @@ public class BlockBreakListener implements Listener {
 
         e.setExpToDrop(0);
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawner.getItemStack());
+    }
+
+    private void generateExplosion(Block spawner) {
+        int intensity = SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion();
+        if(intensity == 0) return;
+        spawner.getWorld().createExplosion(spawner.getLocation(), intensity);
     }
 
     private boolean itemHasSilktouch(ItemStack[] items) {

@@ -22,13 +22,9 @@ public class Spawner {
         if(block.getType() != SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()) return;
 
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
-
         this.entityType = creatureSpawner.getSpawnedType();
-        if(this.entityType.getName() == null) return;
-
-        this.itemStack = new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial())
-            .addToLore("§e" + this.entityType.getName().substring(0, 1).toUpperCase() + this.entityType.getName().substring(1)).build();
-}
+        this.itemStack = generateItemStack();
+    }
 
     public Spawner(ItemStack itemStack) {
         this.itemStack = itemStack;
@@ -38,21 +34,34 @@ public class Spawner {
         this.entityType = getSpawnerEntity(itemStack.getItemMeta().getLore().get(0));
     }
 
+    public Spawner(EntityType entityType) {
+        this.entityType = entityType;
+        this.itemStack = generateItemStack();
+    }
+
     public void setSpawnerBlockType(Block block) {
         if(!isValid()) return;
         Bukkit.getScheduler().runTaskLater(SilkSpawners.getInstance(), () -> {
             BlockState blockState = block.getState();
+            if(!(blockState instanceof CreatureSpawner)) return;
             CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
             creatureSpawner.setSpawnedType(this.entityType);
             blockState.update();
         }, 5);
     }
+
+    private ItemStack generateItemStack() {
+        if(this.entityType == null || this.entityType.getName() == null) return null;
+        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial())
+                .addToLore("§e" + this.entityType.getName().substring(0, 1).toUpperCase() + this.entityType.getName().substring(1)).build();
+    }
+
     private EntityType getSpawnerEntity(String lore) {
         if(!lore.startsWith("§e")) return null;
         return EntityType.fromName(lore.replaceAll("§e", "").toLowerCase());
     }
 
     public boolean isValid() {
-        return entityType != null && itemStack != null;
+        return itemStack != null && entityType != null && entityType.isSpawnable();
     }
 }
