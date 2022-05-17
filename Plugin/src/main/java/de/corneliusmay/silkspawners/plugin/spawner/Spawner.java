@@ -28,6 +28,7 @@ public class Spawner {
 
     public Spawner(ItemStack itemStack) {
         this.itemStack = itemStack;
+        if(itemStack == null) return;
         if(itemStack.getType() != SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()) return;
         if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getLore() == null) return;
 
