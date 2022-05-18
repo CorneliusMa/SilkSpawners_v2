@@ -4,5 +4,5 @@ main: de.corneliusmay.silkspawners.plugin.SilkSpawners
 api-version: 1.13
 
 commands:
-  spawner:
+  silkspawners:
 
