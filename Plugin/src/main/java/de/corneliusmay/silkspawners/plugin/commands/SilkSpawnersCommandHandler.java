@@ -28,16 +28,17 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
         if(args.length < 1) {
+            commandSender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §eCommand not found.§f\n§7Available commands: \n" + getAvailableCommandsString(commandSender));
             return false;
         }
 
         SilkSpawnersCommand command = getCommand(args[0]);
         if(command == null) {
-            commandSender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§eCommand not found. §7Available commands: " + Arrays.toString(getCommands(commandSender).toArray(String[]::new)));
+            commandSender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §eCommand not found.§f\n§7Available commands: \n" + getAvailableCommandsString(commandSender));
             return false;
         }
 
-        if(commandSender instanceof Player && !commandSender.hasPermission("silkspawners.command." + command.getCommand())) {
+        if(!commandSender.hasPermission("silkspawners.command." + command.getCommand())) {
             command.insufficientPermission(commandSender);
             return false;
         }
@@ -56,5 +57,9 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     public List<String> getCommands(CommandSender cs) {
         return commands.stream().map(SilkSpawnersCommand::getCommand).filter(command -> cs.hasPermission("silkspawners.command." + command)).collect(Collectors.toList());
+    }
+
+    public String getAvailableCommandsString(CommandSender cs) {
+        return " - /silkspawners " + Arrays.toString(getCommands(cs).toArray(String[]::new)).replace("[", "").replace("]", "").replace(", ", "\n - /silkspawners ");
     }
 }
