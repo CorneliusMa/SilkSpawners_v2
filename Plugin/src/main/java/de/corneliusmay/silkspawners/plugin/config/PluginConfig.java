@@ -14,7 +14,7 @@ public class PluginConfig {
 
     private void init() {
         config.addDefault("messages.prefix", "§b[SilkSpawners]");
-        config.addDefault("messages.insufficient_permission", "§cYou dont have the Permission to execute this command.");
+        config.addDefault("messages.insufficient_permission", "§cYou dont have the permission to execute this command.");
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
         config.addDefault("spawner.destroyable", true);
