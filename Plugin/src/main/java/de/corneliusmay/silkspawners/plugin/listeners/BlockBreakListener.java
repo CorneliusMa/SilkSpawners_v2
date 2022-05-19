@@ -24,13 +24,13 @@ public class BlockBreakListener implements Listener {
 
         Player p = e.getPlayer();
         if(!p.hasPermission("silkspawners.break." + spawner.getEntityType().getName())) {
-            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+            destroySpawner(p, e);
             return;
         }
 
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)) {
-            new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
+            destroySpawner(p, e);
             return;
         }
 
@@ -46,6 +46,10 @@ public class BlockBreakListener implements Listener {
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawner.getItemStack());
     }
 
+    private void destroySpawner(Player p, BlockBreakEvent e) {
+        if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
+    }
     private boolean itemHasSilktouch(ItemStack[] items) {
         return itemHasSilktouch(items, 0);
     }
