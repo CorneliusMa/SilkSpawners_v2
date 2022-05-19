@@ -22,19 +22,19 @@ public class GiveCommand extends SilkSpawnersCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if(args.length < 2 || args.length > 3) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§ePlease use /silkspawners give <Player> <Mob> [Amount]");
+            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §ePlease use /silkspawners give <Player> <Mob> [Amount]");
             return false;
         }
 
         Player p = Bukkit.getPlayer(args[0]);
         if(p == null) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§7The Player §c" + args[0] + "§7 is not online.");
+            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7The Player §c" + args[0] + "§7 is not online.");
             return false;
         }
 
         Spawner spawner = new Spawner(EntityType.fromName(args[1]));
         if(!spawner.isValid()) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§7The Entity §c" + args[1] + "§7 is no valid spawner mob.");
+            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7The Entity §c" + args[1] + "§7 is no valid spawner mob.");
             return false;
         }
 
@@ -54,8 +54,8 @@ public class GiveCommand extends SilkSpawnersCommand {
         ItemStack item = spawner.getItemStack();
         item.setAmount(amount);
         p.getInventory().addItem(item);
-        sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§7Gave " + amount +  " " + args[1] +  " spawner" + (amount > 1? "s" : "") + " to " + p.getName() + ".");
-        p.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§7You received " + amount +  " " + args[1] +  " spawner" + (amount > 1? "s" : "") + ".");
+        sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7Gave " + amount +  " " + args[1] +  " spawner" + (amount > 1? "s" : "") + " to " + p.getName() + ".");
+        p.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7You received " + amount +  " " + args[1] +  " spawner" + (amount > 1? "s" : "") + ".");
         return true;
     }
 

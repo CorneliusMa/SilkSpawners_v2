@@ -17,7 +17,7 @@ public class PermissionsCommand extends SilkSpawnersCommand {
     @Override
     public boolean execute(CommandSender sender, String[] args) {
         if(args.length != 1) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§ePlease use /silkspawners permissions <commands/spawners/all>");
+            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §ePlease use /silkspawners permissions <commands/spawners/all>");
             return false;
         }
 
@@ -26,7 +26,7 @@ public class PermissionsCommand extends SilkSpawnersCommand {
             case "spawners", "s" -> sender.sendMessage(getSpawnerPermissions());
             case "all", "a" -> sender.sendMessage(getAllPermissions());
             default -> {
-                sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§ePlease use /silkspawners permissions <commands/spawners/all>");
+                sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §ePlease use /silkspawners permissions <commands/spawners/all>");
                 return false;
             }
         }
