@@ -2,6 +2,7 @@ package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.api.NMS;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommandHandler;
+import de.corneliusmay.silkspawners.plugin.commands.executors.ExplosionCommand;
 import de.corneliusmay.silkspawners.plugin.commands.executors.GiveCommand;
 import de.corneliusmay.silkspawners.plugin.commands.executors.HelpCommand;
 import de.corneliusmay.silkspawners.plugin.commands.executors.PermissionsCommand;
@@ -76,6 +77,7 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.registerCommand(new HelpCommand());
         commandHandler.registerCommand(new GiveCommand());
         commandHandler.registerCommand(new PermissionsCommand());
+        commandHandler.registerCommand(new ExplosionCommand());
 
         getCommand("silkspawners").setExecutor(commandHandler);
         getCommand("silkspawners").setTabCompleter(commandHandler.getTabCompleter());
