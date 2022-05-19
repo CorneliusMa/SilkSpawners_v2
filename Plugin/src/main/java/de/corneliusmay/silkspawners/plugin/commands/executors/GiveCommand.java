@@ -18,7 +18,7 @@ public class GiveCommand extends SilkSpawnersCommand {
     public GiveCommand() {
         super("give",true,
                 () -> Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).toList(),
-                () -> Arrays.stream(EntityType.values()).map(EntityType::getName).filter(Objects::nonNull).toList());
+                () -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
     }
 
     @Override
