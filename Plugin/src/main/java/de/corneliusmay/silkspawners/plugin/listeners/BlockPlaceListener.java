@@ -19,11 +19,14 @@ public class BlockPlaceListener implements Listener {
 
         Player p = e.getPlayer();
 
-        if(!p.hasPermission("silkspawners.place")) return;
-
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
         Spawner spawner = new Spawner(itemIsSpawner(itemsInHand));
         if(!spawner.isValid()) return;
+
+        if(!p.hasPermission("silkspawners.place." + spawner.getEntityType().getName())) {
+            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+            return;
+        }
 
         SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner.getEntityType(), e.getBlock());
         Bukkit.getPluginManager().callEvent(event);

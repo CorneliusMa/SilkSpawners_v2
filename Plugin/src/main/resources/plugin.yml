@@ -1,8 +1,8 @@
 name: SilkSpawners
-version: 2.0.0
+version: 2.1.0
 main: de.corneliusmay.silkspawners.plugin.SilkSpawners
 api-version: 1.13
 
 commands:
-  spawner:
+  silkspawners:
 

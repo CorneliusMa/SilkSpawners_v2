@@ -3,8 +3,8 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.api.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,14 +23,14 @@ public class BlockBreakListener implements Listener {
         if(!spawner.isValid()) return;
 
         Player p = e.getPlayer();
-        if(!p.hasPermission("silkspawners.break")) {
-            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+        if(!p.hasPermission("silkspawners.break." + spawner.getEntityType().getName())) {
+            destroySpawner(p, e);
             return;
         }
 
         ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)) {
-            generateExplosion(e.getBlock());
+            destroySpawner(p, e);
             return;
         }
 
@@ -46,15 +46,15 @@ public class BlockBreakListener implements Listener {
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawner.getItemStack());
     }
 
-    private void generateExplosion(Block spawner) {
-        int intensity = SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion();
-        if(intensity == 0) return;
-        spawner.getWorld().createExplosion(spawner.getLocation(), intensity);
+    private void destroySpawner(Player p, BlockBreakEvent e) {
+        if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
     }
-
+    
     private boolean itemHasSilktouch(ItemStack[] items) {
         return itemHasSilktouch(items, 0);
     }
+
     private boolean itemHasSilktouch(ItemStack[] items, int i) {
         if(items.length == i) return false;
 

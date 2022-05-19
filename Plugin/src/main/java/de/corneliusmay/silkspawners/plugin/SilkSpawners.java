@@ -1,10 +1,15 @@
 package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.api.NMS;
-import de.corneliusmay.silkspawners.plugin.commands.SpawnerCommand;
+import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommandHandler;
+import de.corneliusmay.silkspawners.plugin.commands.executors.ExplosionCommand;
+import de.corneliusmay.silkspawners.plugin.commands.executors.GiveCommand;
+import de.corneliusmay.silkspawners.plugin.commands.executors.HelpCommand;
+import de.corneliusmay.silkspawners.plugin.commands.executors.PermissionsCommand;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
+import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionHandler;
@@ -26,6 +31,9 @@ public class SilkSpawners extends JavaPlugin {
 
     @Getter
     private NMS nmsHandler;
+
+    @Getter
+    private SilkSpawnersCommandHandler commandHandler;
 
     @Override
     public void onEnable() {
@@ -61,11 +69,18 @@ public class SilkSpawners extends JavaPlugin {
         pm.registerEvents(new BlockBreakListener(), this);
         pm.registerEvents(new BlockPlaceListener(), this);
         pm.registerEvents(new SpawnerBreakListener(), this);
+        pm.registerEvents(new PlayerInteractListener(), this);
     }
 
     private void registerCommands() {
-        getCommand("spawner").setExecutor(new SpawnerCommand());
-        getCommand("spawner").setTabCompleter(new SpawnerCommand());
+        commandHandler = new SilkSpawnersCommandHandler();
+        commandHandler.registerCommand(new HelpCommand());
+        commandHandler.registerCommand(new GiveCommand());
+        commandHandler.registerCommand(new PermissionsCommand());
+        commandHandler.registerCommand(new ExplosionCommand());
+
+        getCommand("silkspawners").setExecutor(commandHandler);
+        getCommand("silkspawners").setTabCompleter(commandHandler.getTabCompleter());
     }
 
     @Override

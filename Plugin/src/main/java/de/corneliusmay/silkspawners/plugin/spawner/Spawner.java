@@ -19,6 +19,7 @@ public class Spawner {
     private ItemStack itemStack;
 
     public Spawner(Block block) {
+        if(block == null) return;
         if(block.getType() != SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()) return;
 
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
