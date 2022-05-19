@@ -16,7 +16,7 @@ import java.util.Objects;
 public class GiveCommand extends SilkSpawnersCommand {
 
     public GiveCommand() {
-        super("give",
+        super("give",true,
                 () -> Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).toList(),
                 () -> Arrays.stream(EntityType.values()).map(EntityType::getName).filter(Objects::nonNull).toList());
     }

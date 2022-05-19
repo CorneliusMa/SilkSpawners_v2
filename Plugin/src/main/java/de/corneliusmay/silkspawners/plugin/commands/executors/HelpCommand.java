@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class HelpCommand extends SilkSpawnersCommand {
 
     public HelpCommand() {
-        super("help");
+        super("help", false);
     }
 
     @Override

@@ -5,7 +5,6 @@ import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,10 +37,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
             return false;
         }
 
-        if(!commandSender.hasPermission("silkspawners.command." + command.getCommand())) {
-            command.insufficientPermission(commandSender);
-            return false;
-        }
+        if(!command.hasPermission(commandSender)) return command.insufficientPermission(commandSender);
 
         return command.execute(commandSender, Arrays.copyOfRange(args, 1, args.length));
     }
@@ -56,7 +52,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     }
 
     public List<String> getCommands(CommandSender cs) {
-        return commands.stream().map(SilkSpawnersCommand::getCommand).filter(command -> cs.hasPermission("silkspawners.command." + command)).collect(Collectors.toList());
+        return commands.stream().filter(c -> c.hasPermission(cs)).map(SilkSpawnersCommand::getCommand).collect(Collectors.toList());
     }
 
     public String getAvailableCommandsString(CommandSender cs) {

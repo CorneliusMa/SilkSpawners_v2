@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class PermissionsCommand extends SilkSpawnersCommand {
 
     public PermissionsCommand() {
-        super("permissions", new StaticTabCompletion("commands", "spawners", "all"));
+        super("permissions", true, new StaticTabCompletion("commands", "spawners", "all"));
     }
 
     @Override
