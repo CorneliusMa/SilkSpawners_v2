@@ -2,11 +2,11 @@ package de.corneliusmay.silkspawners.plugin.commands.executors;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,9 +16,7 @@ import java.util.Objects;
 public class GiveCommand extends SilkSpawnersCommand {
 
     public GiveCommand() {
-        super("give",true,
-                () -> Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).toList(),
-                () -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
+        super("give", true, new OnlinePlayersTabCompleter(), () -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
     }
 
     @Override
