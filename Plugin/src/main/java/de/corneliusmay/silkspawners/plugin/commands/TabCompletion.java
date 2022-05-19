@@ -1,6 +1,8 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
+import java.util.List;
+
 public interface TabCompletion {
 
-    String[] get();
+    List<String> update();
 }
