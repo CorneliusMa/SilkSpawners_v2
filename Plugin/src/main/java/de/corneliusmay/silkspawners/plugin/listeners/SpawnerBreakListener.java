@@ -11,6 +11,6 @@ public class SpawnerBreakListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onSpawnerBreak(SpawnerBreakEvent e) {
-        new Explosion(e.getSpawner().getWorld(), e.getSpawner().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosionSilktouch());
+        new Explosion(e.getPlayer(), e.getSpawner().getWorld(), e.getSpawner().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosionSilktouch());
     }
 }
