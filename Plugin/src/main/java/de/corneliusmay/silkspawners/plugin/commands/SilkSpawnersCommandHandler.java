@@ -26,6 +26,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
+        args = Arrays.stream(args).map(String::toLowerCase).toList().toArray(String[]::new);
         if(args.length < 1) {
             commandSender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §eCommand not found.§f\n§7Available commands: \n" + getAvailableCommandsString(commandSender));
             return false;
