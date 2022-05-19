@@ -24,7 +24,7 @@ public class BlockBreakListener implements Listener {
         if(!spawner.isValid()) return;
 
         Player p = e.getPlayer();
-        if(!p.hasPermission("silkspawners.break")) {
+        if(!p.hasPermission("silkspawners.break." + spawner.getEntityType().getName())) {
             if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
             return;
         }
