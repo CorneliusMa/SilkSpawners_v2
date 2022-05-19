@@ -8,6 +8,7 @@ import de.corneliusmay.silkspawners.plugin.commands.executors.PermissionsCommand
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
+import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionHandler;
@@ -67,6 +68,7 @@ public class SilkSpawners extends JavaPlugin {
         pm.registerEvents(new BlockBreakListener(), this);
         pm.registerEvents(new BlockPlaceListener(), this);
         pm.registerEvents(new SpawnerBreakListener(), this);
+        pm.registerEvents(new PlayerInteractListener(), this);
     }
 
     private void registerCommands() {
