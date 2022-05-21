@@ -11,10 +11,10 @@ jobs:
       - uses: actions/checkout@v3
       - name: Get plugin version
         id: yaml-data
-        uses: KJ002/read-yaml@1.6      
+        uses: KJ002/read-yaml@1.6
         with:
-          file: '${{ github.workspace }}/Plugin/src/main/resources/plugin.yml'    
-          key-path: '["version"]' 
+          file: '${{ github.workspace }}/Plugin/src/main/resources/plugin.yml'
+          key-path: '["version"]'
       - name: Store version
         uses: "finnp/create-file-action@1.0.0"
         env:

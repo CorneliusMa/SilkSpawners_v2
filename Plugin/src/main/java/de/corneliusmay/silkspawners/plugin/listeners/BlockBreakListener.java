@@ -50,7 +50,7 @@ public class BlockBreakListener implements Listener {
         if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
         else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
     }
-    
+
     private boolean itemHasSilktouch(ItemStack[] items) {
         return itemHasSilktouch(items, 0);
     }
