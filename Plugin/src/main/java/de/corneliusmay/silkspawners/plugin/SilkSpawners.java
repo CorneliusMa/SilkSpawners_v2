@@ -26,7 +26,7 @@ public class SilkSpawners extends JavaPlugin {
     private Logger log;
 
     @Getter
-    PluginConfig pluginConfig;
+    private PluginConfig pluginConfig;
 
     @Getter
     private NMS nmsHandler;
