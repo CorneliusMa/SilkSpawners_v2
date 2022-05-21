@@ -13,7 +13,7 @@ import java.util.*;
 
 public class LocaleHandler {
 
-    private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}";
+    private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}.§7\n Use /silkspawners locale update to update the locale files.";
 
 
     private final File localePath;
