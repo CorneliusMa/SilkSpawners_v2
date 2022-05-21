@@ -24,7 +24,10 @@ public class BlockPlaceListener implements Listener {
         if(!spawner.isValid()) return;
 
         if(!p.hasPermission("silkspawners.place." + spawner.getEntityType().getName())) {
-            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) {
+                e.setCancelled(true);
+                if(SilkSpawners.getInstance().getPluginConfig().sendSpawnerPlaceMessage()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_PLACE_DENIED"));
+            }
             return;
         }
 

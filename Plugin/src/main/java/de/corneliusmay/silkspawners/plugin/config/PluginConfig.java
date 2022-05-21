@@ -19,7 +19,10 @@ public class PluginConfig {
         config.addDefault("messages.locale", "en");
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
-        config.addDefault("spawner.destroyable", true);
+        config.addDefault("spawner.message.denyDestroy", true);
+        config.addDefault("spawner.message.denyPlace", true);
+        config.addDefault("spawner.message.denyChange", true);
+        config.addDefault("spawner.destroyable", false);
         config.addDefault("update.check.enabled", true);
         config.addDefault("update.check.interval", 24);
 
@@ -42,6 +45,18 @@ public class PluginConfig {
 
     public int getSpawnerExplosionSilktouch() {
         return config.getInt("spawner.explosion.silktouch");
+    }
+
+    public boolean sendSpawnerDestroyMessage() {
+        return config.getBoolean("spawner.message.denyDestroy");
+    }
+
+    public boolean sendSpawnerPlaceMessage() {
+        return config.getBoolean("spawner.message.denyPlace");
+    }
+
+    public boolean sendSpawnerChangeMessage() {
+        return config.getBoolean("spawner.message.denyChange");
     }
 
     public boolean isSpawnerDestroyable() {
