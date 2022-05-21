@@ -18,6 +18,8 @@ public class PluginConfig {
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
         config.addDefault("spawner.destroyable", true);
+        config.addDefault("update.check.enabled", true);
+        config.addDefault("update.check.interval", 6);
 
         config.options().copyDefaults(true);
         SilkSpawners.getInstance().saveConfig();
@@ -42,5 +44,13 @@ public class PluginConfig {
 
     public boolean isSpawnerDestroyable() {
         return config.getBoolean("spawner.destroyable");
+    }
+
+    public boolean checkForUpdates() {
+        return config.getBoolean("update.check.enabled");
+    }
+
+    public int getUpdateCheckInterval() {
+        return config.getInt("update.check.interval");
     }
 }
