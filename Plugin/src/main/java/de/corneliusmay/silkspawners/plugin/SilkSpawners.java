@@ -106,6 +106,7 @@ public class SilkSpawners extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if(versionChecker == null) return;
         log.info("Stopping version checker");
         versionChecker.stop();
     }
