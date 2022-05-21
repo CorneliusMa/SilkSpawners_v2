@@ -52,12 +52,10 @@ public class SilkSpawners extends JavaPlugin {
         VersionHandler versionHandler = new VersionHandler();
         if(!versionHandler.load()) return;
         nmsHandler = versionHandler.getNmsHandler();
-        log.info("Loaded Cross-Version support");
 
         log.info("Loading locale file");
         locale = new LocaleHandler(pluginConfig.getLocale());
         if(locale.getResourceBundle() == null) return;
-        log.info("Loaded locale file");
 
         versionChecker = new VersionChecker();
         if(pluginConfig.checkForUpdates()) startUpdateChecker();
@@ -68,11 +66,9 @@ public class SilkSpawners extends JavaPlugin {
 
         log.info("Registering listeners");
         registerListeners();
-        log.info("Registered listeners");
 
         log.info("Registering commands");
         registerCommands();
-        log.info("Registered commands");
 
         log.info("Started SilkSpawners v" + VersionChecker.getInstalledVersion());
     }
@@ -80,7 +76,6 @@ public class SilkSpawners extends JavaPlugin {
     private void startUpdateChecker() {
         log.info("Starting update checker");
         versionChecker.start(pluginConfig.getUpdateCheckInterval());
-        log.info("Started update checker");
     }
 
     private void registerListeners() {
