@@ -8,6 +8,7 @@ import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
 import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.plugin.version.VersionHandler;
@@ -31,6 +32,9 @@ public class SilkSpawners extends JavaPlugin {
     private NMS nmsHandler;
 
     @Getter
+    private LocaleHandler locale;
+
+    @Getter
     private VersionChecker versionChecker;
     @Getter
     private SilkSpawnersCommandHandler commandHandler;
@@ -49,6 +53,11 @@ public class SilkSpawners extends JavaPlugin {
         if(!versionHandler.load()) return;
         nmsHandler = versionHandler.getNmsHandler();
         log.info("Loaded Cross-Version support");
+
+        log.info("Loading locale file");
+        locale = new LocaleHandler(pluginConfig.getLocale());
+        if(locale.getResourceBundle() == null) return;
+        log.info("Loaded locale file");
 
         versionChecker = new VersionChecker();
         if(pluginConfig.checkForUpdates()) startUpdateChecker();

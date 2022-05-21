@@ -3,6 +3,8 @@ package de.corneliusmay.silkspawners.plugin.config;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Locale;
+
 public class PluginConfig {
 
     private final FileConfiguration config;
@@ -14,6 +16,7 @@ public class PluginConfig {
 
     private void init() {
         config.addDefault("messages.prefix", "§b[SilkSpawners]");
+        config.addDefault("messages.locale", "en");
         config.addDefault("messages.insufficient_permission", "§cYou dont have the permission to execute this command.");
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
@@ -28,6 +31,10 @@ public class PluginConfig {
 
     public String getPrefix() {
         return config.getString("messages.prefix");
+    }
+
+    public Locale getLocale() {
+        return Locale.forLanguageTag(config.getString("messages.locale"));
     }
 
     public String getInsufficientPermissionMessage() {
