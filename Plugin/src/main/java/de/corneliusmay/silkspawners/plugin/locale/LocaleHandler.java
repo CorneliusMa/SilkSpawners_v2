@@ -69,7 +69,7 @@ public class LocaleHandler {
         try {
             return getPrefix() + "§f " + MessageFormat.format(resourceBundle.getString(key), args);
         } catch (MissingResourceException ex) {
-            return String.format(DEFAULT_MESSAGE, key, locale.toString());
+            return MessageFormat.format(DEFAULT_MESSAGE, key, locale.toString());
         }
     }
 
