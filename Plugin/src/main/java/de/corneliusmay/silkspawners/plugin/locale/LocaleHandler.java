@@ -33,7 +33,7 @@ public class LocaleHandler {
         } catch(MissingResourceException | URISyntaxException | IOException ex) {
             SilkSpawners.getInstance().getLog().error("Error loading locale file", ex);
             SilkSpawners.getInstance().getLog().warn("Disabling plugin due to missing locale file");
-            SilkSpawners.getInstance().getLog().info("Available locales: " + Arrays.toString(getAvailableLocales().toArray(String[]::new)));
+            SilkSpawners.getInstance().getLog().info("Available locales: " + getAvailableLocales());
             SilkSpawners.getInstance().getPluginLoader().disablePlugin(SilkSpawners.getInstance());
         }
     }
@@ -68,9 +68,9 @@ public class LocaleHandler {
         this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
     }
 
-    public List<String> getAvailableLocales() {
+    public String getAvailableLocales() {
         File localesDir = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
-        return Arrays.stream(localesDir.listFiles()).sorted().map((f) -> f.getName().replace("messages_", "").replace(".properties", "")).collect(Collectors.toList());
+        return Arrays.stream(localesDir.listFiles()).sorted().map((f) -> f.getName().replace("messages_", "").replace(".properties", "")).toList().toString().replace("[", "").replace("]", "");
     }
 
     public String getMessage(String key, Object... args) {

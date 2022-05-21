@@ -13,15 +13,12 @@ import java.util.MissingResourceException;
 public class LocaleCommand extends SilkSpawnersCommand {
 
     public LocaleCommand() {
-        super("locale", true, new StaticTabCompletion( "reload", "update"));
+        super("locale", true, new StaticTabCompletion( "setting", "reload", "update"));
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if(args.length > 3) return invalidSyntax(sender);
-
         switch (args.length) {
-            case 0 -> sender.sendMessage(getMessage("CURRENT", SilkSpawners.getInstance().getPluginConfig().getLocale()));
             case 1 -> {
                 switch (args[0].toLowerCase()) {
                     case "reload" -> {
@@ -33,6 +30,7 @@ public class LocaleCommand extends SilkSpawnersCommand {
                             sender.sendMessage(getMessage("RELOAD_ERROR"));
                         }
                     }
+                    case "setting" -> sender.sendMessage(getMessage("SETTING", SilkSpawners.getInstance().getPluginConfig().getLocale(), SilkSpawners.getInstance().getLocale().getAvailableLocales()));
                     case "update" -> sender.sendMessage(getMessage("UPDATE_WARNING"));
                     default -> invalidSyntax(sender);
                 }
