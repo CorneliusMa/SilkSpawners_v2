@@ -33,6 +33,7 @@ public class LocaleHandler {
         } catch(MissingResourceException | URISyntaxException | IOException ex) {
             SilkSpawners.getInstance().getLog().error("Error loading locale file", ex);
             SilkSpawners.getInstance().getLog().warn("Disabling plugin due to missing locale file");
+            SilkSpawners.getInstance().getLog().info("Available locales: " + Arrays.toString(getAvailableLocales().toArray(String[]::new)));
             SilkSpawners.getInstance().getPluginLoader().disablePlugin(SilkSpawners.getInstance());
         }
     }
