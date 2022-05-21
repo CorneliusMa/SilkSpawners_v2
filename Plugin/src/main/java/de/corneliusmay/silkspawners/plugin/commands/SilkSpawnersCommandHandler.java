@@ -26,15 +26,14 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
-        args = Arrays.stream(args).map(String::toLowerCase).toList().toArray(String[]::new);
         if(args.length < 1) {
-            commandSender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §eCommand not found.§f\n§7Available commands: \n" + getAvailableCommandsString(commandSender));
+            commandSender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
             return false;
         }
 
         SilkSpawnersCommand command = getCommand(args[0]);
         if(command == null) {
-            commandSender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §eCommand not found.§f\n§7Available commands: \n" + getAvailableCommandsString(commandSender));
+            commandSender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
             return false;
         }
 
@@ -49,7 +48,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     }
 
     public SilkSpawnersCommand getCommand(String command) {
-        return commands.stream().filter(c -> c.getCommand().equals(command)).findFirst().orElse(null);
+        return commands.stream().filter(c -> c.getCommand().equalsIgnoreCase(command)).findFirst().orElse(null);
     }
 
     public List<String> getCommands(CommandSender cs) {

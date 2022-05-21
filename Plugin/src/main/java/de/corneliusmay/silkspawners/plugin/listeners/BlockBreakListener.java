@@ -47,10 +47,13 @@ public class BlockBreakListener implements Listener {
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {
-        if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) e.setCancelled(true);
+        if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) {
+            e.setCancelled(true);
+            if(SilkSpawners.getInstance().getPluginConfig().sendSpawnerDestroyMessage()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
+        }
         else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
     }
-    
+
     private boolean itemHasSilktouch(ItemStack[] items) {
         return itemHasSilktouch(items, 0);
     }

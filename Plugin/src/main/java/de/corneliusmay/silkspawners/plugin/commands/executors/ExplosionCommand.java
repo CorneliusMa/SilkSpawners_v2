@@ -17,32 +17,26 @@ public class ExplosionCommand extends SilkSpawnersCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if(args.length != 2) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §ePlease use /silkspawners explosion <enable/disable/setting> <Player>");
-            return false;
-        }
+        if(args.length != 2) return invalidSyntax(sender);
 
         Player p = Bukkit.getPlayer(args[1]);
         if(p == null) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7The Player §c" + args[0] + "§7 is not online.");
+            sender.sendMessage(getMessage("PLAYER_NOT_FOUND", args[1]));
             return false;
         }
 
         PermissionAttachment attachment = p.addAttachment(SilkSpawners.getInstance());
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "enable", "e" -> {
                 attachment.setPermission("silkspawners.explosion", true);
-                sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §cEnabled §7spawner explosion for " + p.getName() + ".");
+                sender.sendMessage(getMessage("ENABLED", p.getName()));
             }
             case "disable", "d" -> {
                 attachment.setPermission("silkspawners.explosion", false);
-                sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §aDisabled §7spawner explosion for " + p.getName() + ".");
+                sender.sendMessage(getMessage("DISABLED", p.getName()));
             }
-            case "setting", "s" -> sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7Explosions for " + p.getName() + " are " + (p.hasPermission("silkspawners.explosion")? "§cenabled" : "§adisabled" + "§7."));
-            default -> {
-                sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §ePlease use /silkspawners permissions <commands/spawners/all>");
-                return false;
-            }
+            case "setting", "s" -> sender.sendMessage(getMessage("SETTING_" + (p.hasPermission("silkspawners.explosion")? "ENABLED" : "DISABLED"), p.getName()));
+            default -> invalidSyntax(sender);
         }
         return true;
     }

@@ -16,25 +16,22 @@ import java.util.Objects;
 public class GiveCommand extends SilkSpawnersCommand {
 
     public GiveCommand() {
-        super("give", true, new OnlinePlayersTabCompleter(), () -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
+        super("give", true, new OnlinePlayersTabCompleter(), (sender) -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        if(args.length < 2 || args.length > 3) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §ePlease use /silkspawners give <Player> <Mob> [Amount]");
-            return false;
-        }
+        if(args.length < 2 || args.length > 3) return invalidSyntax(sender);
 
         Player p = Bukkit.getPlayer(args[0]);
         if(p == null) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7The Player §c" + args[0] + "§7 is not online.");
+            sender.sendMessage(getMessage("PLAYER_NOT_FOUND", args[0]));
             return false;
         }
 
         Spawner spawner = new Spawner(EntityType.fromName(args[1]));
         if(!spawner.isValid()) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7The Entity §c" + args[1] + "§7 is no valid spawner mob.");
+            sender.sendMessage(getMessage("ENTITY_NOT_FOUND", args[1]));
             return false;
         }
 
@@ -42,20 +39,20 @@ public class GiveCommand extends SilkSpawnersCommand {
         if(args.length == 3) amount = parseAmount(args[2]);
 
         if(amount == -1) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§7The amount §c" + args[2] + "§7 is no number.");
+            sender.sendMessage(getMessage("INVALID_AMOUNT", args[2]));
             return false;
         }
 
         if(amount < 1) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§7The amount must be at least 1.");
+            sender.sendMessage(getMessage("TOO_SMALL_AMOUNT"));
             return false;
         }
 
         ItemStack item = spawner.getItemStack();
         item.setAmount(amount);
         p.getInventory().addItem(item);
-        sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7Gave " + amount +  " " + args[1] +  " spawner" + (amount > 1? "s" : "") + " to " + p.getName() + ".");
-        p.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7You received " + amount +  " " + args[1] +  " spawner" + (amount > 1? "s" : "") + ".");
+        sender.sendMessage(getMessage("SUCCESS", amount, spawner.serializedName(), amount > 1? "s" : "", p.getName()));
+        p.sendMessage(getMessage("SUCCESS_TARGET", amount, spawner.serializedName(), amount > 1? "s" : "", sender.getName()));
         return true;
     }
 

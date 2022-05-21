@@ -7,12 +7,20 @@ import org.bukkit.command.CommandSender;
 public class HelpCommand extends SilkSpawnersCommand {
 
     public HelpCommand() {
-        super("help", false);
+        super("help", false, (sender) -> SilkSpawners.getInstance().getCommandHandler().getCommands(sender));
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
-        sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §7You can execute the following commands: \n" + SilkSpawners.getInstance().getCommandHandler().getAvailableCommandsString(sender));
-        return false;
+        switch (args.length) {
+            case 0 -> sender.sendMessage(getMessage("MESSAGE", SilkSpawners.getInstance().getCommandHandler().getAvailableCommandsString(sender)));
+            case 1 -> {
+                SilkSpawnersCommand command = SilkSpawners.getInstance().getCommandHandler().getCommand(args[0]);
+                if(command != null) sender.sendMessage(getMessage("MESSAGE_" + command.getCommand().toUpperCase()));
+                else sender.sendMessage(getMessage("COMMAND_NOT_FOUND", args[0]));
+            }
+            default -> invalidSyntax(sender);
+        }
+        return true;
     }
 }

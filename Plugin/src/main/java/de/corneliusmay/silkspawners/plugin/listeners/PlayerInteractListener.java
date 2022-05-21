@@ -38,7 +38,10 @@ public class PlayerInteractListener implements Listener {
         Bukkit.getScheduler().runTaskLater(SilkSpawners.getInstance(), () -> {
             Spawner newSpawner = new Spawner(block.getWorld().getBlockAt(block.getLocation()));
 
-            if(!e.getPlayer().hasPermission("silkspawners.change." + spawner.getEntityType().getName()) && spawner.getEntityType() != newSpawner.getEntityType()) spawner.setSpawnerBlockType(block);
+            if(!e.getPlayer().hasPermission("silkspawners.change." + spawner.getEntityType().getName()) && spawner.getEntityType() != newSpawner.getEntityType()) {
+                spawner.setSpawnerBlockType(block);
+                if(SilkSpawners.getInstance().getPluginConfig().sendSpawnerChangeMessage()) e.getPlayer().sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
+            }
 
             Bukkit.getScheduler().runTaskLater(SilkSpawners.getInstance(), () -> editedSpawners.remove(block), 5);
         }, 5);

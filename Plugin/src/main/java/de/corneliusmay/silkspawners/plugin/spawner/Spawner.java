@@ -55,12 +55,16 @@ public class Spawner {
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
         return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial())
-                .addToLore("§e" + this.entityType.getName().substring(0, 1).toUpperCase() + this.entityType.getName().substring(1)).build();
+                .addToLore(serializedName()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
         if(!lore.startsWith("§e")) return null;
         return EntityType.fromName(lore.replaceAll("§e", "").toLowerCase());
+    }
+
+    public String serializedName() {
+        return "§e" + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
     }
 
     public boolean isValid() {
