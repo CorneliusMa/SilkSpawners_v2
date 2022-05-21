@@ -17,7 +17,6 @@ public class PluginConfig {
     private void init() {
         config.addDefault("messages.prefix", "§b[SilkSpawners]");
         config.addDefault("messages.locale", "en");
-        config.addDefault("messages.insufficient_permission", "§cYou dont have the permission to execute this command.");
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
         config.addDefault("spawner.destroyable", true);
@@ -35,10 +34,6 @@ public class PluginConfig {
 
     public Locale getLocale() {
         return Locale.forLanguageTag(config.getString("messages.locale"));
-    }
-
-    public String getInsufficientPermissionMessage() {
-        return config.getString("messages.insufficient_permission");
     }
 
     public int getSpawnerExplosion() {

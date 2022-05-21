@@ -13,15 +13,15 @@ public class VersionCommand extends SilkSpawnersCommand {
 
     @Override
     public boolean execute(CommandSender sender, String[] args) {
+        if(args.length != 0) return invalidSyntax(sender);
+
         if(!SilkSpawners.getInstance().getPluginConfig().checkForUpdates()) {
-            sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §cUpdate checking is disabled. §7\n§7The currently installed version is v" + VersionChecker.getInstalledVersion());
+            sender.sendMessage(getMessage("ERROR", VersionChecker.getInstalledVersion()));
             return false;
         }
 
-        sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() +
-                (SilkSpawners.getInstance().getVersionChecker().check()? " §aYou are up to date" : " §eAn update is available!") +
-                "§7\n§7The currently installed version is v" + VersionChecker.getInstalledVersion() +
-                (SilkSpawners.getInstance().getVersionChecker().check()? "" : "\n§7The latest version is v" + SilkSpawners.getInstance().getVersionChecker().getLatestVersion()));
+        if(SilkSpawners.getInstance().getVersionChecker().check()) sender.sendMessage(getMessage("INFO", VersionChecker.getInstalledVersion()));
+        else sender.sendMessage(getMessage("UPDATE_AVAILABLE", VersionChecker.getInstalledVersion(), SilkSpawners.getInstance().getVersionChecker().getLatestVersion()));
         return true;
     }
 }

@@ -25,8 +25,17 @@ public abstract class SilkSpawnersCommand {
         return sender.hasPermission("silkspawners.command." + command);
     }
 
+    protected final String getMessage(String key, Object... args) {
+        return  SilkSpawners.getInstance().getLocale().getMessage("COMMAND_" + command.toUpperCase() + "_" + key, args);
+    }
+
     public boolean insufficientPermission(CommandSender sender) {
-        sender.sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + "§f" + SilkSpawners.getInstance().getPluginConfig().getInsufficientPermissionMessage());
+        sender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
+        return false;
+    }
+
+    public boolean invalidSyntax(CommandSender sender) {
+        sender.sendMessage(getMessage("USAGE"));
         return false;
     }
 
