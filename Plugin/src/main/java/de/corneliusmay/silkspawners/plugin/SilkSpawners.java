@@ -98,6 +98,7 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.registerCommand(new PermissionsCommand());
         commandHandler.registerCommand(new ExplosionCommand());
         commandHandler.registerCommand(new VersionCommand());
+        commandHandler.registerCommand(new LocaleCommand());
 
         getCommand("silkspawners").setExecutor(commandHandler);
         getCommand("silkspawners").setTabCompleter(commandHandler.getTabCompleter());

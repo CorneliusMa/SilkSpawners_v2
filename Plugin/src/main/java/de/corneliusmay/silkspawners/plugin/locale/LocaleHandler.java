@@ -12,10 +12,8 @@ import java.net.URLClassLoader;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class LocaleHandler {
 
@@ -31,7 +29,7 @@ public class LocaleHandler {
         File localePath = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
 
         try {
-            copyDefaultLocales();
+            copyDefaultLocales(false);
             URL[] urls = {localePath.toURI().toURL()};
             ClassLoader loader = new URLClassLoader(urls);
             this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
@@ -42,7 +40,7 @@ public class LocaleHandler {
         }
     }
 
-    private void copyDefaultLocales() throws URISyntaxException, IOException {
+    public void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
         Path target = Paths.get(SilkSpawners.getInstance().getDataFolder() + "/locale");
         URI resource = getClass().getResource("").toURI();
         FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap());
@@ -58,16 +56,22 @@ public class LocaleHandler {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 Path targetFile = target.resolve(jarPath.relativize(file).toString());
-                if(Files.notExists(targetFile)) Files.copy(file, targetFile);
+                if(overwrite) Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                else if(Files.notExists(targetFile)) Files.copy(file, targetFile);
                 return FileVisitResult.CONTINUE;
             }
         });
         fileSystem.close();
     }
 
+    public List<String> getAvailableLocales() {
+        File localesDir = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
+        return Arrays.stream(localesDir.listFiles()).sorted().map((f) -> f.getName().replace("messages_", "").replace(".properties", "")).collect(Collectors.toList());
+    }
+
     public String getMessage(String key, Object... args) {
         try {
-            return getPrefix() + "§f " + MessageFormat.format(resourceBundle.getString(key), args);
+            return getPrefix() + "§f " + MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
         } catch (MissingResourceException ex) {
             return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, locale.toString());
         }
