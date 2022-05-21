@@ -16,6 +16,16 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
+      - name: Get plugin version
+        id: yaml-data
+        uses: KJ002/read-yaml@1.6      
+        with:
+          file: '${{ github.workspace }}/Plugin/src/main/resources/plugin.yml'          
+      - name: Store version
+        uses: "finnp/create-file-action@1.0.0"
+        env:
+          FILE_NAME: "/home/runner/work/version"
+          FILE_DATA: "${{ steps.yaml-data.outputs.data }}"
       - name: 'Set up GCoogle Cloud Envoirement'
         uses: 'google-github-actions/auth@v0.6.0'
         with:
@@ -29,5 +39,11 @@ jobs:
         with:
           path: '/home/runner/work/SilkSpawners_v2/SilkSpawners_v2/target/SilkSpawners_v2.jar'
           destination: '${{ secrets.GCS_BUCKET }}'
+      - name: 'Update version'
+        uses: 'google-github-actions/upload-cloud-storage@v0.6.0'
+        with:
+          path: '/home/runner/work/version'
+          destination: '${{ secrets.GCS_BUCKET }}'
+
 
 
