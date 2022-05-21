@@ -16,7 +16,7 @@ import java.util.Objects;
 public class GiveCommand extends SilkSpawnersCommand {
 
     public GiveCommand() {
-        super("give", true, new OnlinePlayersTabCompleter(), () -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
+        super("give", true, new OnlinePlayersTabCompleter(), (sender) -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
     }
 
     @Override

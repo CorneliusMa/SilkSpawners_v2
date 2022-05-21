@@ -1,5 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
+import org.bukkit.command.CommandSender;
+
 import java.util.List;
 
 public class StaticTabCompletion implements TabCompletion {
@@ -11,7 +13,7 @@ public class StaticTabCompletion implements TabCompletion {
     }
 
     @Override
-    public List<String> update() {
+    public List<String> update(CommandSender sender) {
         return completions;
     }
 }
