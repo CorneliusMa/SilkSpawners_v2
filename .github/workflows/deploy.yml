@@ -20,7 +20,8 @@ jobs:
         id: yaml-data
         uses: KJ002/read-yaml@1.6      
         with:
-          file: '${{ github.workspace }}/Plugin/src/main/resources/plugin.yml'          
+          file: '${{ github.workspace }}/Plugin/src/main/resources/plugin.yml'    
+          key-path: '["version"]' 
       - name: Store version
         uses: "finnp/create-file-action@1.0.0"
         env:
