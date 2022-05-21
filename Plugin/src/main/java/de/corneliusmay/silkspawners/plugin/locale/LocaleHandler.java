@@ -5,10 +5,7 @@ import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
@@ -19,6 +16,8 @@ public class LocaleHandler {
 
     private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}";
 
+
+    private final File localePath;
     private final Locale locale;
 
     @Getter
@@ -26,13 +25,11 @@ public class LocaleHandler {
 
     public LocaleHandler(Locale locale) {
         this.locale = locale;
-        File localePath = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
+        this.localePath = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
 
         try {
             copyDefaultLocales(false);
-            URL[] urls = {localePath.toURI().toURL()};
-            ClassLoader loader = new URLClassLoader(urls);
-            this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
+            loadLocale();
         } catch(MissingResourceException | URISyntaxException | IOException ex) {
             SilkSpawners.getInstance().getLog().error("Error loading locale file", ex);
             SilkSpawners.getInstance().getLog().warn("Disabling plugin due to missing locale file");
@@ -62,6 +59,12 @@ public class LocaleHandler {
             }
         });
         fileSystem.close();
+    }
+
+    public void loadLocale() throws MalformedURLException {
+        URL[] urls = {localePath.toURI().toURL()};
+        ClassLoader loader = new URLClassLoader(urls);
+        this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
     }
 
     public List<String> getAvailableLocales() {
