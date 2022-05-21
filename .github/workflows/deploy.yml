@@ -18,7 +18,7 @@ jobs:
       - name: Store version
         uses: "finnp/create-file-action@1.0.0"
         env:
-          FILE_NAME: "/home/runner/version.html"
+          FILE_NAME: "version.html"
           FILE_DATA: "${{ steps.yaml-data.outputs.data }}"
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -43,7 +43,7 @@ jobs:
       - name: 'Update version'
         uses: 'google-github-actions/upload-cloud-storage@v0.6.0'
         with:
-          path: '/home/runner/version.html'
+          path: 'version.html'
           destination: '${{ secrets.GCS_BUCKET }}'
 
 
