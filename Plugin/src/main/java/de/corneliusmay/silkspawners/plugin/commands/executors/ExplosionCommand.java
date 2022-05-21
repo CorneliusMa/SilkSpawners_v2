@@ -26,7 +26,7 @@ public class ExplosionCommand extends SilkSpawnersCommand {
         }
 
         PermissionAttachment attachment = p.addAttachment(SilkSpawners.getInstance());
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "enable", "e" -> {
                 attachment.setPermission("silkspawners.explosion", true);
                 sender.sendMessage(getMessage("ENABLED", p.getName()));
