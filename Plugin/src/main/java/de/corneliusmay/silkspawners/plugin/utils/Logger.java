@@ -8,16 +8,16 @@ import java.util.Arrays;
 public class Logger {
 
     public void info(String msg) {
-        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §2[INFO] §f" + msg);
+        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §8[§2INFO§8]§7: " + msg);
     }
 
     public void warn(String msg) {
-        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §e[WARN] §f" + msg);
+        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §8[§eWARN§8]§7: " + msg);
 
     }
 
     public void error(String msg) {
-        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §c[ERROR] §f" + msg);
+        Bukkit.getConsoleSender().sendMessage(SilkSpawners.getInstance().getPluginConfig().getPrefix() + " §8[§cERROR§8]§7: " + msg);
 
     }
 

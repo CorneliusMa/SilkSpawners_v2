@@ -15,14 +15,14 @@ public class PluginConfig {
     }
 
     private void init() {
-        config.addDefault("messages.prefix", "§b[SilkSpawners]");
+        config.addDefault("messages.prefix", "$8[$bSilkSpawners$8]");
         config.addDefault("messages.locale", "en");
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
         config.addDefault("spawner.message.denyDestroy", true);
         config.addDefault("spawner.message.denyPlace", true);
         config.addDefault("spawner.message.denyChange", true);
-        config.addDefault("spawner.destroyable", false);
+        config.addDefault("spawner.destroyable", true);
         config.addDefault("update.check.enabled", true);
         config.addDefault("update.check.interval", 24);
 
@@ -32,7 +32,7 @@ public class PluginConfig {
     }
 
     public String getPrefix() {
-        return config.getString("messages.prefix");
+        return config.getString("messages.prefix").replace("$", "§");
     }
 
     public Locale getLocale() {
