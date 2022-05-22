@@ -54,17 +54,21 @@ public class Spawner {
 
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
-        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial())
-                .addToLore(serializedName()).build();
+        ItemBuilder builder =  new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).addToLore(serializedName());
+        builder.addToLore(SilkSpawners.getInstance().getPluginConfig().getSpawnerLore());
+        return builder.build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
-        if(!lore.startsWith("§e")) return null;
-        return EntityType.fromName(lore.replaceAll("§e", "").toLowerCase());
+        String prefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefix();
+        String oldPrefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefixOld();
+        if(lore.startsWith(prefix)) return EntityType.fromName(lore.replace(prefix, "").toLowerCase());
+        else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(lore.replace(oldPrefix, "").toLowerCase());
+        else return null;
     }
 
     public String serializedName() {
-        return "§e" + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
+        return SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefix() + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
     }
 
     public boolean isValid() {
