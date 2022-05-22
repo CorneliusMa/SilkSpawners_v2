@@ -19,15 +19,15 @@ public class PluginConfig {
     private void init() {
         config.addDefault("messages.prefix", "$8[$bSilkSpawners$8]");
         config.addDefault("messages.locale", "en");
-        config.addDefault("spawner.prefix", "$e");
-        config.addDefault("spawner.prefix-old", "");
-        config.addDefault("spawner.lore", new String[0]);
+        config.addDefault("spawner.destroyable", true);
+        config.addDefault("spawner.item.prefix", "$e");
+        config.addDefault("spawner.item.prefix-old", "");
+        config.addDefault("spawner.item.lore", new String[0]);
         config.addDefault("spawner.explosion.normal", 0);
         config.addDefault("spawner.explosion.silktouch", 0);
         config.addDefault("spawner.message.denyDestroy", true);
         config.addDefault("spawner.message.denyPlace", true);
         config.addDefault("spawner.message.denyChange", true);
-        config.addDefault("spawner.destroyable", true);
         config.addDefault("update.check.enabled", true);
         config.addDefault("update.check.interval", 24);
 
@@ -41,17 +41,18 @@ public class PluginConfig {
     }
 
     public String getSpawnerPrefix() {
-        String prefix = config.getString("spawner.prefix").replace("$", "§");
+        String prefix = config.getString("spawner.item.prefix").replace("$", "§");
         if(prefix.equals("")) prefix = "§f";
         return prefix;
     }
 
     public String getSpawnerPrefixOld() {
-        return config.getString("spawner.prefix-old").replace("$", "§");
+        return config.getString("spawner.item.prefix-old").replace("$", "§");
     }
 
     public List<String> getSpawnerLore() {
-        return ((ArrayList<String>) config.get("spawner.lore")).stream().map(s -> s.replace("$", "§")).toList();
+        if(config.get("spawner.item.lore") != null) return ((ArrayList<String>) config.get("spawner.item.lore")).stream().map(s -> s.replace("$", "§")).toList();
+        return new ArrayList<>();
     }
 
     public Locale getLocale() {

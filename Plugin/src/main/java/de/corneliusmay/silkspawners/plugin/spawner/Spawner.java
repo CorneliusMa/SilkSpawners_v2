@@ -18,6 +18,9 @@ public class Spawner {
     @Getter
     private ItemStack itemStack;
 
+    private final String prefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefix();
+    private final String oldPrefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefixOld();
+
     public Spawner(Block block) {
         if(block == null) return;
         if(block.getType() != SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()) return;
@@ -54,14 +57,10 @@ public class Spawner {
 
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
-        ItemBuilder builder =  new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).addToLore(serializedName());
-        builder.addToLore(SilkSpawners.getInstance().getPluginConfig().getSpawnerLore());
-        return builder.build();
+        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).addToLore(serializedName()).addToLore(SilkSpawners.getInstance().getPluginConfig().getSpawnerLore()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
-        String prefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefix();
-        String oldPrefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefixOld();
         if(lore.startsWith(prefix)) return EntityType.fromName(lore.replace(prefix, "").toLowerCase());
         else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(lore.replace(oldPrefix, "").toLowerCase());
         else return null;
