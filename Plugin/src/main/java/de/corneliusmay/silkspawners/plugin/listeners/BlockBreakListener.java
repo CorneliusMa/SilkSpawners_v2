@@ -63,7 +63,7 @@ public class BlockBreakListener implements Listener {
     private boolean itemHasSilktouch(ItemStack[] items, int i) {
         if(items.length == i) return false;
 
-        if(items[i].containsEnchantment(Enchantment.SILK_TOUCH)) return true;
+        if(items[i].containsEnchantment(Enchantment.SILK_TOUCH) && items[i].getType().toString().contains("PICKAXE")) return true;
         else return itemHasSilktouch(items, i + 1);
     }
 }
