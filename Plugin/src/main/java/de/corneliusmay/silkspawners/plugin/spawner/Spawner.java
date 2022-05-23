@@ -60,7 +60,8 @@ public class Spawner {
 
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
-        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).addToLore(serializedName()).addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
+        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
+                .addToLore(serializedName()).addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
