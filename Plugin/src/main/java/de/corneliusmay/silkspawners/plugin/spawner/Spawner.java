@@ -1,6 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueArray;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -18,8 +21,8 @@ public class Spawner {
     @Getter
     private ItemStack itemStack;
 
-    private final String prefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefix();
-    private final String oldPrefix = SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefixOld();
+    private final String prefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX).get();
+    private final String oldPrefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX_OLD).get();
 
     public Spawner(Block block) {
         if(block == null) return;
@@ -57,7 +60,7 @@ public class Spawner {
 
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
-        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).addToLore(serializedName()).addToLore(SilkSpawners.getInstance().getPluginConfig().getSpawnerLore()).build();
+        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).addToLore(serializedName()).addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
@@ -67,7 +70,7 @@ public class Spawner {
     }
 
     public String serializedName() {
-        return SilkSpawners.getInstance().getPluginConfig().getSpawnerPrefix() + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
+        return prefix + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
     }
 
     public boolean isValid() {
