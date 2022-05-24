@@ -1,6 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueArray;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -17,6 +20,9 @@ public class Spawner {
 
     @Getter
     private ItemStack itemStack;
+
+    private final String prefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX).get();
+    private final String oldPrefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX_OLD).get();
 
     public Spawner(Block block) {
         if(block == null) return;
@@ -54,17 +60,18 @@ public class Spawner {
 
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
-        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial())
-                .addToLore(serializedName()).build();
+        return new ItemBuilder(SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()).setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
+                .addToLore(serializedName()).addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
-        if(!lore.startsWith("§e")) return null;
-        return EntityType.fromName(lore.replaceAll("§e", "").toLowerCase());
+        if(lore.startsWith(prefix)) return EntityType.fromName(lore.replace(prefix, "").toLowerCase());
+        else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(lore.replace(oldPrefix, "").toLowerCase());
+        else return null;
     }
 
     public String serializedName() {
-        return "§e" + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
+        return prefix + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
     }
 
     public boolean isValid() {

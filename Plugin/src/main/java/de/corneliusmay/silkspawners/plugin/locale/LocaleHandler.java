@@ -1,6 +1,8 @@
 package de.corneliusmay.silkspawners.plugin.locale;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import lombok.Getter;
 
 import java.io.File;
@@ -81,6 +83,6 @@ public class LocaleHandler {
     }
 
     public static String getPrefix() {
-        return SilkSpawners.getInstance().getPluginConfig().getPrefix();
+        return new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get();
     }
 }

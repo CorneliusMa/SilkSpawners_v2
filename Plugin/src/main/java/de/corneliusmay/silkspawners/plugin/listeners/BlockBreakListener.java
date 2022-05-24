@@ -1,6 +1,8 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.SpawnerBreakEvent;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.utils.Explosion;
@@ -47,11 +49,11 @@ public class BlockBreakListener implements Listener {
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {
-        if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) {
+        if(!new ConfigValue<Boolean>(PluginConfig.SPAWNER_DESTROYABLE).get()) {
             e.setCancelled(true);
-            if(SilkSpawners.getInstance().getPluginConfig().sendSpawnerDestroyMessage()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
+            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
         }
-        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), SilkSpawners.getInstance().getPluginConfig().getSpawnerExplosion());
+        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<Integer>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
     }
 
     private boolean itemHasSilktouch(ItemStack[] items) {
@@ -61,7 +63,7 @@ public class BlockBreakListener implements Listener {
     private boolean itemHasSilktouch(ItemStack[] items, int i) {
         if(items.length == i) return false;
 
-        if(items[i].containsEnchantment(Enchantment.SILK_TOUCH)) return true;
+        if(items[i].containsEnchantment(Enchantment.SILK_TOUCH) && items[i].getType().toString().contains("PICKAXE")) return true;
         else return itemHasSilktouch(items, i + 1);
     }
 }

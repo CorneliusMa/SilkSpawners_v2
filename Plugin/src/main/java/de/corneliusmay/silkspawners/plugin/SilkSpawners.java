@@ -4,6 +4,8 @@ import de.corneliusmay.silkspawners.api.NMS;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommandHandler;
 import de.corneliusmay.silkspawners.plugin.commands.executors.*;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigLoader;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
 import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
@@ -18,15 +20,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Locale;
+
 public class SilkSpawners extends JavaPlugin {
     @Getter
     private static SilkSpawners instance;
 
     @Getter
     private Logger log;
-
-    @Getter
-    PluginConfig pluginConfig;
 
     @Getter
     private NMS nmsHandler;
@@ -43,9 +44,9 @@ public class SilkSpawners extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        this.pluginConfig = new PluginConfig();
+        new ConfigLoader(this).load();
 
-        this.log = new Logger();
+        this.log = new Logger(new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get());
         log.info("Starting SilkSpawners v" + VersionChecker.getInstalledVersion());
 
         log.info("Loading Cross-Version support");
@@ -54,11 +55,11 @@ public class SilkSpawners extends JavaPlugin {
         nmsHandler = versionHandler.getNmsHandler();
 
         log.info("Loading locale file");
-        locale = new LocaleHandler(pluginConfig.getLocale());
+        locale = new LocaleHandler(new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get());
         if(locale.getResourceBundle() == null) return;
 
         versionChecker = new VersionChecker();
-        if(pluginConfig.checkForUpdates()) startUpdateChecker();
+        if(new ConfigValue<Boolean>(PluginConfig.UPDATE_CHECK_ENABLED).get()) startUpdateChecker();
         else log.warn("Update checking is disabled");
 
         log.info("Starting metrics service. You can disable the collection of anonymous usage data by editing the config file under /plugins/bStats/");
@@ -75,7 +76,7 @@ public class SilkSpawners extends JavaPlugin {
 
     private void startUpdateChecker() {
         log.info("Starting update checker");
-        versionChecker.start(pluginConfig.getUpdateCheckInterval());
+        versionChecker.start(new ConfigValue<Integer>(PluginConfig.UPDATE_CHECK_INTERVAL).get());
     }
 
     private void registerListeners() {
@@ -90,10 +91,11 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler = new SilkSpawnersCommandHandler();
         commandHandler.registerCommand(new HelpCommand());
         commandHandler.registerCommand(new GiveCommand());
-        commandHandler.registerCommand(new PermissionsCommand());
+        commandHandler.registerCommand(new SetCommand());
         commandHandler.registerCommand(new ExplosionCommand());
         commandHandler.registerCommand(new VersionCommand());
         commandHandler.registerCommand(new LocaleCommand());
+        commandHandler.registerCommand(new PermissionsCommand());
 
         getCommand("silkspawners").setExecutor(commandHandler);
         getCommand("silkspawners").setTabCompleter(commandHandler.getTabCompleter());

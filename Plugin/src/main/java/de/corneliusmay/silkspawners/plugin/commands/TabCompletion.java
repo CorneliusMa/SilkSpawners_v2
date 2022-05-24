@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TabCompletion {
 
-    List<String> update(CommandSender sender);
+    List<String> update(SilkSpawnersCommand command, CommandSender sender);
 }

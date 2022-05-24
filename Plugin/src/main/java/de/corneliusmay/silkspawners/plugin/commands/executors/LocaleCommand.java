@@ -3,11 +3,14 @@ package de.corneliusmay.silkspawners.plugin.commands.executors;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.StaticTabCompletion;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import org.bukkit.command.CommandSender;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.Locale;
 import java.util.MissingResourceException;
 
 public class LocaleCommand extends SilkSpawnersCommand {
@@ -30,7 +33,7 @@ public class LocaleCommand extends SilkSpawnersCommand {
                             sender.sendMessage(getMessage("RELOAD_ERROR"));
                         }
                     }
-                    case "setting" -> sender.sendMessage(getMessage("SETTING", SilkSpawners.getInstance().getPluginConfig().getLocale(), SilkSpawners.getInstance().getLocale().getAvailableLocales()));
+                    case "setting" -> sender.sendMessage(getMessage("SETTING", new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get().toString(), SilkSpawners.getInstance().getLocale().getAvailableLocales()));
                     case "update" -> sender.sendMessage(getMessage("UPDATE_WARNING"));
                     default -> invalidSyntax(sender);
                 }

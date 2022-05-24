@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class HelpCommand extends SilkSpawnersCommand {
 
     public HelpCommand() {
-        super("help", false, (sender) -> SilkSpawners.getInstance().getCommandHandler().getCommands(sender));
+        super("help", false, (command, sender) -> SilkSpawners.getInstance().getCommandHandler().getCommands(sender));
     }
 
     @Override

@@ -3,6 +3,8 @@
 This is a new version of a small Minecraft Spigot plugin i originally programmed 4 years ago.
 
 
+Visit on [spigotmc.org](https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/).
+
 # Deployment
 
 [![Deploy](https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/deploy.yml/badge.svg)](https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/deploy.yml)
@@ -12,6 +14,6 @@ You can download the latest build [here](https://storage.googleapis.com/silkspaw
 
 Alternatively you can build the Plugin yourself using Maven.
 
-
-
-
+# Statistics
+![Statistics](https://bstats.org/signatures/bukkit/Silk%20Spawners.svg)
+Statistics (from bStats)

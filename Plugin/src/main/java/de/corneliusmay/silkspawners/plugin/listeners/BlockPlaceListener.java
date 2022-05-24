@@ -2,6 +2,8 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.SpawnerPlaceEvent;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,9 +26,9 @@ public class BlockPlaceListener implements Listener {
         if(!spawner.isValid()) return;
 
         if(!p.hasPermission("silkspawners.place." + spawner.getEntityType().getName())) {
-            if(!SilkSpawners.getInstance().getPluginConfig().isSpawnerDestroyable()) {
+            if(!new ConfigValue<Boolean>(PluginConfig.SPAWNER_DESTROYABLE).get()) {
                 e.setCancelled(true);
-                if(SilkSpawners.getInstance().getPluginConfig().sendSpawnerPlaceMessage()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_PLACE_DENIED"));
+                if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_PLACE).get()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_PLACE_DENIED"));
             }
             return;
         }
