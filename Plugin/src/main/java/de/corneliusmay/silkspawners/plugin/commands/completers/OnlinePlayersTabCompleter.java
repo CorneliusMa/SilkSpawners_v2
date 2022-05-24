@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.commands.completers;
 
+import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.TabCompletion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -10,7 +11,7 @@ import java.util.List;
 public class OnlinePlayersTabCompleter implements TabCompletion {
 
     @Override
-    public List<String> update(CommandSender sender) {
+    public List<String> update(SilkSpawnersCommand command, CommandSender sender) {
         return Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).toList();
     }
 }
