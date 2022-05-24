@@ -22,7 +22,11 @@ public abstract class SilkSpawnersCommand {
 
     public final boolean hasPermission(CommandSender sender) {
         if(!requiresPermission) return true;
-        return sender.hasPermission("silkspawners.command." + command);
+        return sender.hasPermission(getPermissionString());
+    }
+
+    public final String getPermissionString() {
+        return "silkspawners.command." + command;
     }
 
     protected final String getMessage(String key, Object... args) {
