@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands.executors;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
@@ -10,13 +10,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 public class GiveCommand extends SilkSpawnersCommand {
 
     public GiveCommand() {
-        super("give", true, new OnlinePlayersTabCompleter(), (sender) -> Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList());
+        super("give", true, new OnlinePlayersTabCompleter(), new EntityTabCompleter());
     }
 
     @Override
@@ -34,6 +31,7 @@ public class GiveCommand extends SilkSpawnersCommand {
             sender.sendMessage(getMessage("ENTITY_NOT_FOUND", args[1]));
             return false;
         }
+        if(!p.hasPermission(getPermissionString() + "." + spawner.getEntityType().getName())) return insufficientPermission(sender);
 
         int amount = 1;
         if(args.length == 3) amount = parseAmount(args[2]);
