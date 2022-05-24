@@ -28,7 +28,10 @@ public class SetCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        if(!player.hasPermission(getPermissionString() + "." + newSpawner.getEntityType().getName())) return insufficientPermission(sender);
+        if(!player.hasPermission(getPermissionString() + "." + newSpawner.getEntityType().getName())) {
+            sender.sendMessage(getMessage("INSUFFICIENT_ENTITY_PERMISSION", newSpawner.serializedName()));
+            return false;
+        }
 
         Block block = player.getTargetBlockExact(5);
         Spawner spawner = new Spawner(block);
