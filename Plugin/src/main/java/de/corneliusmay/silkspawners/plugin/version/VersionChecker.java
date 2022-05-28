@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -64,10 +65,21 @@ public class VersionChecker {
     }
 
     public boolean check() {
-        return latestVersion.equals(getInstalledVersion());
+        Integer[] installedVersion = castVersionString(getInstalledVersion());
+        Integer[] latestVersion = castVersionString(this.latestVersion);
+
+        for(int i = 0; i < latestVersion.length; i++) {
+            if(latestVersion[i] > installedVersion[i]) return false;
+        }
+
+        return true;
     }
 
     public static String getInstalledVersion() {
         return SilkSpawners.getInstance().getDescription().getVersion();
+    }
+
+    private Integer[] castVersionString(String version) {
+        return Arrays.stream(version.split("\\.")).map((Integer::parseInt)).toArray(Integer[]::new);
     }
 }
