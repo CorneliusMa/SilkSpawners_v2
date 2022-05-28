@@ -39,7 +39,7 @@ jobs:
         uses: 'google-github-actions/upload-cloud-storage@v0.6.0'
         with:
           path: '/home/runner/work/SilkSpawners_v2/SilkSpawners_v2/target/SilkSpawners_v2.jar'
-          destination: '${{ secrets.GCS_BUCKET }}'
+          destination: '${{ secrets.GCS_BUCKET }}/${{ steps.yaml-data.outputs.data }}'
       - name: 'Update version'
         uses: 'google-github-actions/upload-cloud-storage@v0.6.0'
         with:
