@@ -36,7 +36,7 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner.getEntityType(), e.getBlock());
+        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation());
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()) {
@@ -45,7 +45,7 @@ public class BlockBreakListener implements Listener {
         }
 
         e.setExpToDrop(0);
-        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawner.getItemStack());
+        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {

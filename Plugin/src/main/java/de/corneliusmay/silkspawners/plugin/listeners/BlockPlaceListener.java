@@ -31,7 +31,7 @@ public class BlockPlaceListener implements Listener {
             return;
         }
 
-        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner.getEntityType(), e.getBlock());
+        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation());
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()) {
@@ -39,7 +39,7 @@ public class BlockPlaceListener implements Listener {
             return;
         }
 
-        spawner.setSpawnerBlockType(e.getBlock());
+        event.getSpawner().setSpawnerBlockType(e.getBlock());
     }
 
     private ItemStack itemIsSpawner(ItemStack[] items) {
