@@ -20,7 +20,9 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     @Getter(AccessLevel.PACKAGE)
     private final String mainCommand;
 
-    private final SilkSpawnersCommand defaultCommand;
+    private final SilkSpawnersCommand helpCommand;
+
+    private SilkSpawnersCommand defaultCommand;
 
     @Getter
     private final List<SilkSpawnersCommand> commands;
@@ -32,7 +34,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         this.mainCommand = command;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
-        this.defaultCommand = registerHelpCommand();
+        this.helpCommand = addHelpCommand();
     }
 
     public SilkSpawnersCommandHandler(SilkSpawners plugin, String command, SilkSpawnersCommand defaultCommand) {
@@ -40,14 +42,15 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         this.mainCommand = command;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
+        this.helpCommand = addHelpCommand();
         this.defaultCommand = defaultCommand;
-        registerHelpCommand();
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
         if(args.length < 1) {
-            return defaultCommand.execute(commandSender, new String[0]);
+            if(defaultCommand == null || !defaultCommand.hasPermission(commandSender)) return helpCommand.execute(commandSender, new String[0]);
+            else return defaultCommand.execute(commandSender, new String[0]);
         }
 
         SilkSpawnersCommand command = getCommand(args[0]);
@@ -68,6 +71,12 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         commands.add(command);
     }
 
+    private SilkSpawnersCommand addHelpCommand() {
+        HelpCommand help = new HelpCommand(this);
+        addCommand(help);
+        return help;
+    }
+
     public void register() {
         PluginCommand command = plugin.getCommand(mainCommand);
         if(command == null) throw new RuntimeException("Command is not registered in plugin.yml");
@@ -85,11 +94,5 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     public String getAvailableCommandsString(CommandSender cs) {
         return " - /" + mainCommand + " " + Arrays.toString(getCommands(cs).toArray(String[]::new)).replace("[", "").replace("]", "").replace(", ", "\n - /" + mainCommand + " ");
-    }
-
-    private SilkSpawnersCommand registerHelpCommand() {
-        HelpCommand help = new HelpCommand(this);
-        addCommand(help);
-        return help;
     }
 }
