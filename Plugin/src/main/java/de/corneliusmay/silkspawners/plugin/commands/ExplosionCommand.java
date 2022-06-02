@@ -1,7 +1,7 @@
-package de.corneliusmay.silkspawners.plugin.commands.executors;
+package de.corneliusmay.silkspawners.plugin.commands;
 
-import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
-import de.corneliusmay.silkspawners.plugin.commands.StaticTabCompletion;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

@@ -1,6 +1,6 @@
-package de.corneliusmay.silkspawners.plugin.commands.executors;
+package de.corneliusmay.silkspawners.plugin.commands;
 
-import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;

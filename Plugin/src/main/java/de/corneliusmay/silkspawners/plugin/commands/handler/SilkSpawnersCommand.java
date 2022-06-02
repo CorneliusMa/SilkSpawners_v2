@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.plugin.commands;
+package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import lombok.AccessLevel;
@@ -7,6 +7,9 @@ import lombok.Setter;
 import org.bukkit.command.CommandSender;
 
 public abstract class SilkSpawnersCommand {
+
+    @Setter(AccessLevel.PACKAGE)
+    private SilkSpawnersCommandHandler commandHandler;
 
     @Setter(AccessLevel.PACKAGE)
     protected SilkSpawners plugin;
@@ -31,11 +34,11 @@ public abstract class SilkSpawnersCommand {
     }
 
     public final String getPermissionString() {
-        return "silkspawners.command." + command;
+        return commandHandler.getMainCommand() + ".command." + command;
     }
 
     protected final String getMessage(String key, Object... args) {
-        return plugin.getLocale().getMessage("COMMAND_" + command.toUpperCase() + "_" + key, args);
+        return plugin.getLocale().getMessage("COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_" + key, args);
     }
 
     public boolean insufficientPermission(CommandSender sender) {

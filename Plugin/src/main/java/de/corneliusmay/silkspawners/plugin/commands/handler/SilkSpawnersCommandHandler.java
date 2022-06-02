@@ -1,10 +1,12 @@
-package de.corneliusmay.silkspawners.plugin.commands;
+package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,23 +17,37 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private final SilkSpawners plugin;
 
+    @Getter(AccessLevel.PACKAGE)
+    private final String mainCommand;
+
+    private final SilkSpawnersCommand defaultCommand;
+
     @Getter
     private final List<SilkSpawnersCommand> commands;
 
-    @Getter
     private final SilkSpawnersTabCompleter tabCompleter;
 
-    public SilkSpawnersCommandHandler(SilkSpawners plugin) {
+    public SilkSpawnersCommandHandler(SilkSpawners plugin, String command) {
         this.plugin = plugin;
+        this.mainCommand = command;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
+        this.defaultCommand = registerHelpCommand();
+    }
+
+    public SilkSpawnersCommandHandler(SilkSpawners plugin, String command, SilkSpawnersCommand defaultCommand) {
+        this.plugin = plugin;
+        this.mainCommand = command;
+        this.commands = new ArrayList<>();
+        this.tabCompleter = new SilkSpawnersTabCompleter(this);
+        this.defaultCommand = defaultCommand;
+        registerHelpCommand();
     }
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
         if(args.length < 1) {
-            commandSender.sendMessage(plugin.getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
-            return false;
+            return defaultCommand.execute(commandSender, new String[0]);
         }
 
         SilkSpawnersCommand command = getCommand(args[0]);
@@ -45,10 +61,18 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         return command.execute(commandSender, Arrays.copyOfRange(args, 1, args.length));
     }
 
-    public void registerCommand(SilkSpawnersCommand command) {
+    public void addCommand(SilkSpawnersCommand command) {
         if(getCommand(command.getCommand()) != null) return;
+        command.setCommandHandler(this);
         command.setPlugin(plugin);
         commands.add(command);
+    }
+
+    public void register() {
+        PluginCommand command = plugin.getCommand(mainCommand);
+        if(command == null) throw new RuntimeException("Command is not registered in plugin.yml");
+        command.setExecutor(this);
+        command.setTabCompleter(tabCompleter);
     }
 
     public SilkSpawnersCommand getCommand(String command) {
@@ -60,6 +84,12 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     }
 
     public String getAvailableCommandsString(CommandSender cs) {
-        return " - /silkspawners " + Arrays.toString(getCommands(cs).toArray(String[]::new)).replace("[", "").replace("]", "").replace(", ", "\n - /silkspawners ");
+        return " - /" + mainCommand + " " + Arrays.toString(getCommands(cs).toArray(String[]::new)).replace("[", "").replace("]", "").replace(", ", "\n - /" + mainCommand + " ");
+    }
+
+    private SilkSpawnersCommand registerHelpCommand() {
+        HelpCommand help = new HelpCommand(this);
+        addCommand(help);
+        return help;
     }
 }

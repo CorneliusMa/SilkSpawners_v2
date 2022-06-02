@@ -15,7 +15,7 @@ import java.util.*;
 
 public class LocaleHandler {
 
-    private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}.§7\n Use /silkspawners locale update to update the locale files.";
+    private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}.§7\n Use §l§n/silkspawners locale update confirm§7 to update the locale files.\n §eWarning!§7 Updating the locale files will overwrite all changes§7.";
 
     private final SilkSpawners plugin;
 

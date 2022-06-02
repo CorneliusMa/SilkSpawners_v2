@@ -1,8 +1,8 @@
 package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.api.NMS;
-import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommandHandler;
-import de.corneliusmay.silkspawners.plugin.commands.executors.*;
+import de.corneliusmay.silkspawners.plugin.commands.*;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
@@ -80,17 +80,14 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerCommands() {
-        commandHandler = new SilkSpawnersCommandHandler(this);
-        commandHandler.registerCommand(new HelpCommand(commandHandler));
-        commandHandler.registerCommand(new GiveCommand());
-        commandHandler.registerCommand(new SetCommand());
-        commandHandler.registerCommand(new ExplosionCommand());
-        commandHandler.registerCommand(new VersionCommand());
-        commandHandler.registerCommand(new LocaleCommand());
-        commandHandler.registerCommand(new PermissionsCommand());
-
-        getCommand("silkspawners").setExecutor(commandHandler);
-        getCommand("silkspawners").setTabCompleter(commandHandler.getTabCompleter());
+        commandHandler = new SilkSpawnersCommandHandler(this, "silkspawners");
+        commandHandler.addCommand(new GiveCommand());
+        commandHandler.addCommand(new SetCommand());
+        commandHandler.addCommand(new ExplosionCommand());
+        commandHandler.addCommand(new VersionCommand());
+        commandHandler.addCommand(new LocaleCommand());
+        commandHandler.addCommand(new PermissionsCommand());
+        commandHandler.register();
     }
 
     @Override

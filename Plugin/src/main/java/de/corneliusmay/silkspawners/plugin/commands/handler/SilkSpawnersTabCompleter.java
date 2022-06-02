@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.plugin.commands;
+package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
