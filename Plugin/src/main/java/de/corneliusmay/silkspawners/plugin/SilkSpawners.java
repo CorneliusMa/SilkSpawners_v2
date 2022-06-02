@@ -86,7 +86,7 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.addCommand(new ExplosionCommand());
         commandHandler.addCommand(new VersionCommand());
         commandHandler.addCommand(new LocaleCommand());
-        commandHandler.addCommand(new PermissionsCommand());
+        commandHandler.addCommand(new EntitiesCommand());
         commandHandler.register();
     }
 
