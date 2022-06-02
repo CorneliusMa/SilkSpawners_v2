@@ -2,7 +2,7 @@ package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import org.bukkit.command.CommandSender;
 
-public class HelpCommand extends SilkSpawnersCommand {
+class HelpCommand extends SilkSpawnersCommand {
 
     private final SilkSpawnersCommandHandler commandHandler;
 

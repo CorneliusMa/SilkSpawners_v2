@@ -35,9 +35,6 @@ public class SilkSpawners extends JavaPlugin {
     @Getter
     private VersionChecker versionChecker;
 
-    @Getter
-    private SilkSpawnersCommandHandler commandHandler;
-
     @Override
     public void onEnable() {
         new ConfigLoader(this).load();
@@ -80,7 +77,7 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerCommands() {
-        commandHandler = new SilkSpawnersCommandHandler(this, "silkspawners");
+        SilkSpawnersCommandHandler commandHandler = new SilkSpawnersCommandHandler(this, "silkspawners");
         commandHandler.addCommand(new GiveCommand());
         commandHandler.addCommand(new SetCommand());
         commandHandler.addCommand(new ExplosionCommand());

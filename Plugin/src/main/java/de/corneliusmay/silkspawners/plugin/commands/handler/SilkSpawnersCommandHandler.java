@@ -24,7 +24,6 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private SilkSpawnersCommand defaultCommand;
 
-    @Getter
     private final List<SilkSpawnersCommand> commands;
 
     private final SilkSpawnersTabCompleter tabCompleter;

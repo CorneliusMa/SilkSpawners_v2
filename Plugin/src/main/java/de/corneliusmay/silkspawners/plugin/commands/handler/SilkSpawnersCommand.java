@@ -14,13 +14,13 @@ public abstract class SilkSpawnersCommand {
     @Setter(AccessLevel.PACKAGE)
     protected SilkSpawners plugin;
 
-    @Getter
+    @Getter(AccessLevel.PACKAGE)
     private final String command;
 
-    private final boolean requiresPermission;
-
-    @Getter
+    @Getter(AccessLevel.PACKAGE)
     private final TabCompletion[] completions;
+
+    private final boolean requiresPermission;
 
     public SilkSpawnersCommand(String command, Boolean requiresPermission, TabCompletion... completions) {
         this.command = command;
