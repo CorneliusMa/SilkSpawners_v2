@@ -17,15 +17,18 @@ public class VersionChecker {
 
     private boolean running;
 
+    private final SilkSpawners plugin;
+
     @Getter
     private String latestVersion;
     private final ExecutorService pool;
 
     private final HttpClient client;
 
-    public VersionChecker() {
-        pool = Executors.newFixedThreadPool(1);
-        client = HttpClient.newHttpClient();
+    public VersionChecker(SilkSpawners plugin) {
+        this.plugin = plugin;
+        this.pool = Executors.newFixedThreadPool(1);
+        this.client = HttpClient.newHttpClient();
     }
 
     public void start(int interval) {
@@ -43,10 +46,10 @@ public class VersionChecker {
     private void run(int interval) {
         while(running) {
             try {
-                SilkSpawners.getInstance().getLog().info("Checking for updates");
-                if(!updateLatestVersion()) SilkSpawners.getInstance().getLog().error("Error getting latest version");
-                else if(!check()) SilkSpawners.getInstance().getLog().warn("§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v" + getInstalledVersion() + "\nLatest version: v" + latestVersion);
-                else SilkSpawners.getInstance().getLog().info("The plugin is up to date (v" + latestVersion + ")");
+                plugin.getLog().info("Checking for updates");
+                if(!updateLatestVersion()) plugin.getLog().error("Error getting latest version");
+                else if(!check()) plugin.getLog().warn("§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v" + getInstalledVersion() + "\nLatest version: v" + latestVersion);
+                else plugin.getLog().info("The plugin is up to date (v" + latestVersion + ")");
 
                 TimeUnit.HOURS.sleep(interval);
             } catch (InterruptedException ignored) {}
@@ -75,8 +78,8 @@ public class VersionChecker {
         return true;
     }
 
-    public static String getInstalledVersion() {
-        return SilkSpawners.getInstance().getDescription().getVersion();
+    public String getInstalledVersion() {
+        return plugin.getDescription().getVersion();
     }
 
     private Integer[] castVersionString(String version) {

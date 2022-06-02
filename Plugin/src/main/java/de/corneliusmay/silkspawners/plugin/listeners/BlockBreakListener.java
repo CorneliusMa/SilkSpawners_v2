@@ -11,17 +11,20 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockBreakListener implements Listener {
+public class BlockBreakListener extends SilkSpawnersListener {
+
+    public BlockBreakListener(SilkSpawners plugin) {
+        super(plugin);
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent e) {
         if(e.isCancelled()) return;
 
-        Spawner spawner = new Spawner(e.getBlock());
+        Spawner spawner = new Spawner(plugin, e.getBlock());
         if(!spawner.isValid()) return;
 
         Player p = e.getPlayer();
@@ -30,13 +33,13 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
+        ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)) {
             destroySpawner(p, e);
             return;
         }
 
-        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation());
+        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), plugin);
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()) {
@@ -51,7 +54,7 @@ public class BlockBreakListener implements Listener {
     private void destroySpawner(Player p, BlockBreakEvent e) {
         if(!new ConfigValue<Boolean>(PluginConfig.SPAWNER_DESTROYABLE).get()) {
             e.setCancelled(true);
-            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
+            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
         }
         else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<Integer>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
     }

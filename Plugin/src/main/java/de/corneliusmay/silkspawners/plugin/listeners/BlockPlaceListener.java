@@ -9,11 +9,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockPlaceListener implements Listener {
+public class BlockPlaceListener extends SilkSpawnersListener {
+
+    public BlockPlaceListener(SilkSpawners plugin) {
+        super(plugin);
+    }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent e) {
@@ -21,17 +24,17 @@ public class BlockPlaceListener implements Listener {
 
         Player p = e.getPlayer();
 
-        ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
-        Spawner spawner = new Spawner(itemIsSpawner(itemsInHand));
+        ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
+        Spawner spawner = new Spawner(plugin, itemIsSpawner(itemsInHand));
         if(!spawner.isValid()) return;
 
         if(!p.hasPermission("silkspawners.place." + spawner.getEntityType().getName())) {
             e.setCancelled(true);
-            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_PLACE).get()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_PLACE_DENIED"));
+            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_PLACE).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_PLACE_DENIED"));
             return;
         }
 
-        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation());
+        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation(), plugin);
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()) {
@@ -49,7 +52,7 @@ public class BlockPlaceListener implements Listener {
     private ItemStack itemIsSpawner(ItemStack[] items, int i) {
         if(items.length == i) return null;
 
-        if(items[i].getType() == SilkSpawners.getInstance().getNmsHandler().getSpawnerMaterial()) return items[i];
+        if(items[i].getType() == plugin.getNmsHandler().getSpawnerMaterial()) return items[i];
         else return itemIsSpawner(items, i + 1);
     }
 }

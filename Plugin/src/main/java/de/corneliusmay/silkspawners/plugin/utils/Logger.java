@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.utils;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import org.bukkit.Bukkit;
 
 import java.util.Arrays;

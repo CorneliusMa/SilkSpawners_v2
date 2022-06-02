@@ -1,9 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.events;
 
+import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -14,11 +15,13 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
     @Getter
     private final Player player;
 
-    @Getter @Setter
+    @Getter
     private Spawner spawner;
 
     @Getter
     private final Location location;
+
+    private final SilkSpawners plugin;
 
     /**
      * This event is called, when a spawner is broken
@@ -26,12 +29,14 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
      * @param player   The player who broke the spawner
      * @param spawner  The spawner
      * @param location The spawner location
+     * @param plugin   The plugin instance
      */
 
-    public SpawnerBreakEvent(Player player, Spawner spawner, Location location) {
+    public SpawnerBreakEvent(Player player, Spawner spawner, Location location, SilkSpawners plugin) {
         this.player = player;
         this.spawner = spawner;
         this.location = location;
+        this.plugin = plugin;
     }
 
     private boolean cancelled;
@@ -52,5 +57,9 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
 
     public void setCancelled(boolean b) {
         cancelled = b;
+    }
+
+    public void setSpawner(EntityType entityType) {
+        this.spawner = new Spawner(plugin, entityType);
     }
 }

@@ -1,10 +1,15 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 
 public abstract class SilkSpawnersCommand {
+
+    @Setter(AccessLevel.PACKAGE)
+    protected SilkSpawners plugin;
 
     @Getter
     private final String command;
@@ -30,11 +35,11 @@ public abstract class SilkSpawnersCommand {
     }
 
     protected final String getMessage(String key, Object... args) {
-        return  SilkSpawners.getInstance().getLocale().getMessage("COMMAND_" + command.toUpperCase() + "_" + key, args);
+        return plugin.getLocale().getMessage("COMMAND_" + command.toUpperCase() + "_" + key, args);
     }
 
     public boolean insufficientPermission(CommandSender sender) {
-        sender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
+        sender.sendMessage(plugin.getLocale().getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
         return false;
     }
 
@@ -43,6 +48,6 @@ public abstract class SilkSpawnersCommand {
         return false;
     }
 
-    public abstract boolean execute(CommandSender sender, String[] args);
+    protected abstract boolean execute(CommandSender sender, String[] args);
 
 }

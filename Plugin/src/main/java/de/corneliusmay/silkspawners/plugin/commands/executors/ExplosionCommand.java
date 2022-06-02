@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.commands.executors;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
@@ -16,7 +15,7 @@ public class ExplosionCommand extends SilkSpawnersCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(CommandSender sender, String[] args) {
         if(args.length != 2) return invalidSyntax(sender);
 
         Player p = Bukkit.getPlayer(args[1]);
@@ -25,7 +24,7 @@ public class ExplosionCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        PermissionAttachment attachment = p.addAttachment(SilkSpawners.getInstance());
+        PermissionAttachment attachment = p.addAttachment(plugin);
         switch (args[0].toLowerCase()) {
             case "enable", "e" -> {
                 attachment.setPermission("silkspawners.explosion", true);

@@ -13,13 +13,16 @@ import java.util.stream.Collectors;
 
 public class SilkSpawnersCommandHandler implements CommandExecutor {
 
+    private final SilkSpawners plugin;
+
     @Getter
     private final List<SilkSpawnersCommand> commands;
 
     @Getter
     private final SilkSpawnersTabCompleter tabCompleter;
 
-    public SilkSpawnersCommandHandler() {
+    public SilkSpawnersCommandHandler(SilkSpawners plugin) {
+        this.plugin = plugin;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
     }
@@ -27,13 +30,13 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
         if(args.length < 1) {
-            commandSender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
+            commandSender.sendMessage(plugin.getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
             return false;
         }
 
         SilkSpawnersCommand command = getCommand(args[0]);
         if(command == null) {
-            commandSender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
+            commandSender.sendMessage(plugin.getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
             return false;
         }
 
@@ -44,6 +47,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     public void registerCommand(SilkSpawnersCommand command) {
         if(getCommand(command.getCommand()) != null) return;
+        command.setPlugin(plugin);
         commands.add(command);
     }
 

@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.commands.executors;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.StaticTabCompletion;
 import org.bukkit.command.CommandSender;
@@ -15,7 +14,7 @@ public class PermissionsCommand extends SilkSpawnersCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(CommandSender sender, String[] args) {
         if(args.length != 1) return invalidSyntax(sender);
 
         switch (args[0].toLowerCase()) {
@@ -33,7 +32,7 @@ public class PermissionsCommand extends SilkSpawnersCommand {
 
     private String getCommandPermissions() {
         StringBuilder msg = new StringBuilder("Command Permissions: ");
-        for(SilkSpawnersCommand command : SilkSpawners.getInstance().getCommandHandler().getCommands()) {
+        for(SilkSpawnersCommand command : plugin.getCommandHandler().getCommands()) {
             msg.append("\n - silkspawners.command.").append(command.getCommand());
         }
 

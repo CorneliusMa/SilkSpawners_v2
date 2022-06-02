@@ -17,13 +17,16 @@ import java.util.zip.ZipInputStream;
 
 public class VersionHandler {
 
+    private final SilkSpawners plugin;
+
     @Getter
     private final String version;
 
     @Getter
     private NMS nmsHandler;
 
-    public VersionHandler() {
+    public VersionHandler(SilkSpawners plugin) {
+        this.plugin = plugin;
         this.version = getServerVersion();
     }
 
@@ -31,23 +34,23 @@ public class VersionHandler {
         try {
             this.nmsHandler = getNMS(this.version);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
-            SilkSpawners.getInstance().getLog().error("The detected Server Version (" + this.version + ") is not supported by the currently installed version of SilkSpawners");
+            plugin.getLog().error("The detected Server Version (" + this.version + ") is not supported by the currently installed version of SilkSpawners");
 
-            SilkSpawners.getInstance().getLog().info("Currently supported Versions are: " + Arrays.toString(getSupportedVersions()));
-            SilkSpawners.getInstance().getLog().info("You can check for updates at https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/");
+            plugin.getLog().info("Currently supported Versions are: " + Arrays.toString(getSupportedVersions()));
+            plugin.getLog().info("You can check for updates at https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/");
 
 
-            SilkSpawners.getInstance().getLog().warn("Disabling plugin due to version incompatibility");
-            SilkSpawners.getInstance().getPluginLoader().disablePlugin(SilkSpawners.getInstance());
+            plugin.getLog().warn("Disabling plugin due to version incompatibility");
+            plugin.getPluginLoader().disablePlugin(plugin);
             return false;
         }
 
-        SilkSpawners.getInstance().getLog().info("Loading support for NMS-Version " + this.version);
+        plugin.getLog().info("Loading support for NMS-Version " + this.version);
         return true;
     }
 
     private String getServerVersion() {
-        String packageName = SilkSpawners.getInstance().getServer().getClass().getPackage().getName();
+        String packageName = plugin.getServer().getClass().getPackage().getName();
         return packageName.substring(packageName.lastIndexOf('.') + 1);
     }
 
