@@ -3,8 +3,8 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -14,14 +14,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockBreakListener extends SilkSpawnersListener {
+public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
-    public BlockBreakListener(SilkSpawners plugin) {
-        super(plugin);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockBreak(BlockBreakEvent e) {
+    @Override @EventHandler(priority = EventPriority.HIGHEST)
+    protected void onCall(BlockBreakEvent e) {
         if(e.isCancelled()) return;
 
         Spawner spawner = new Spawner(plugin, e.getBlock());

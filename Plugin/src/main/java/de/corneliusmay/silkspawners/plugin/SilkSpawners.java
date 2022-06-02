@@ -10,14 +10,13 @@ import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
 import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
+import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHandler;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.plugin.version.VersionHandler;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Locale;
@@ -73,11 +72,11 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerListeners() {
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new PlayerInteractListener(this), this);
-        pm.registerEvents(new BlockPlaceListener(this), this);
-        pm.registerEvents(new BlockBreakListener(this), this);
-        pm.registerEvents(new SpawnerBreakListener(), this);
+        SilkSpawnersEventHandler eventHandler = new SilkSpawnersEventHandler(this);
+        eventHandler.registerListener(new PlayerInteractListener());
+        eventHandler.registerListener(new BlockPlaceListener());
+        eventHandler.registerListener(new BlockBreakListener());
+        eventHandler.registerListener(new SpawnerBreakListener());
     }
 
     private void registerCommands() {

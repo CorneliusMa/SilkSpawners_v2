@@ -1,9 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.plugin.events.SpawnerPlaceEvent;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,14 +12,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockPlaceListener extends SilkSpawnersListener {
+public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
 
-    public BlockPlaceListener(SilkSpawners plugin) {
-        super(plugin);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockPlace(BlockPlaceEvent e) {
+    @Override @EventHandler(priority = EventPriority.HIGHEST)
+    protected void onCall(BlockPlaceEvent e) {
         if(e.isCancelled()) return;
 
         Player p = e.getPlayer();

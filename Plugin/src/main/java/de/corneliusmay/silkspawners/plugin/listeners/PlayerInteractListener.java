@@ -1,8 +1,8 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -15,17 +15,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PlayerInteractListener extends SilkSpawnersListener {
+public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
 
     private final List<Block> editedSpawners;
 
-    public PlayerInteractListener(SilkSpawners plugin) {
-        super(plugin);
+    public PlayerInteractListener() {
         this.editedSpawners = Collections.synchronizedList(new ArrayList<>());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent e) {
+    @Override @EventHandler(priority = EventPriority.HIGHEST)
+    protected void onCall(PlayerInteractEvent e) {
         if(e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = e.getClickedBlock();
         Spawner spawner = new Spawner(plugin, block);
