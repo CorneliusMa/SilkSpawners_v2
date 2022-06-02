@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
-import de.corneliusmay.silkspawners.api.SpawnerPlaceEvent;
+import de.corneliusmay.silkspawners.plugin.events.SpawnerPlaceEvent;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;

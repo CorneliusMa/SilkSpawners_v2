@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.api;
+package de.corneliusmay.silkspawners.plugin.events;
 
 import lombok.Getter;
 import org.bukkit.block.Block;

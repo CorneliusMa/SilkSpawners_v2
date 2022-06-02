@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
-import de.corneliusmay.silkspawners.api.SpawnerBreakEvent;
+import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Explosion;
