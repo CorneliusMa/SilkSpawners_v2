@@ -1,14 +1,13 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PlayerInteractListener implements Listener {
+public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
 
     private final List<Block> editedSpawners;
 
@@ -24,11 +23,11 @@ public class PlayerInteractListener implements Listener {
         this.editedSpawners = Collections.synchronizedList(new ArrayList<>());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent e) {
+    @Override @EventHandler(priority = EventPriority.HIGHEST)
+    protected void onCall(PlayerInteractEvent e) {
         if(e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = e.getClickedBlock();
-        Spawner spawner = new Spawner(block);
+        Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) return;
 
         if(editedSpawners.stream().anyMatch(b -> b.getLocation().equals(block.getLocation()))) {
@@ -37,15 +36,15 @@ public class PlayerInteractListener implements Listener {
         }
         editedSpawners.add(block);
 
-        Bukkit.getScheduler().runTaskLater(SilkSpawners.getInstance(), () -> {
-            Spawner newSpawner = new Spawner(block.getWorld().getBlockAt(block.getLocation()));
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Spawner newSpawner = new Spawner(plugin, block.getWorld().getBlockAt(block.getLocation()));
 
             if(!e.getPlayer().hasPermission("silkspawners.change." + spawner.getEntityType().getName()) && spawner.getEntityType() != newSpawner.getEntityType()) {
                 spawner.setSpawnerBlockType(block);
-                if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get()) e.getPlayer().sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
+                if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get()) e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
             }
 
-            Bukkit.getScheduler().runTaskLater(SilkSpawners.getInstance(), () -> editedSpawners.remove(block), 5);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> editedSpawners.remove(block), 5);
         }, 5);
     }
 }

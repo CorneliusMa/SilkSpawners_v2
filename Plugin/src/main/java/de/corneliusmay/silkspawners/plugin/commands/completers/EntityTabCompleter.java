@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands.completers;
 
-import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
-import de.corneliusmay.silkspawners.plugin.commands.TabCompletion;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.handler.TabCompletion;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 

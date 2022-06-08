@@ -15,8 +15,9 @@ import java.util.*;
 
 public class LocaleHandler {
 
-    private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}.§7\n Use /silkspawners locale update to update the locale files.";
+    private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}.§7\n Use §l§n/silkspawners locale update confirm§7 to update the locale files.\n §eWarning!§7 Updating the locale files will overwrite all changes§7.";
 
+    private final SilkSpawners plugin;
 
     private final File localePath;
     private final Locale locale;
@@ -24,23 +25,24 @@ public class LocaleHandler {
     @Getter
     private ResourceBundle resourceBundle;
 
-    public LocaleHandler(Locale locale) {
+    public LocaleHandler(SilkSpawners plugin, Locale locale) {
+        this.plugin = plugin;
         this.locale = locale;
-        this.localePath = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
+        this.localePath = new File(plugin.getDataFolder() + "/locale");
 
         try {
             copyDefaultLocales(false);
             loadLocale();
         } catch(MissingResourceException | URISyntaxException | IOException ex) {
-            SilkSpawners.getInstance().getLog().error("Error loading locale file", ex);
-            SilkSpawners.getInstance().getLog().warn("Disabling plugin due to missing locale file");
-            SilkSpawners.getInstance().getLog().info("Available locales: " + getAvailableLocales());
-            SilkSpawners.getInstance().getPluginLoader().disablePlugin(SilkSpawners.getInstance());
+            plugin.getLog().error("Error loading locale file", ex);
+            plugin.getLog().warn("Disabling plugin due to missing locale file");
+            plugin.getLog().info("Available locales: " + getAvailableLocales());
+            plugin.getPluginLoader().disablePlugin(plugin);
         }
     }
 
     public void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
-        Path target = Paths.get(SilkSpawners.getInstance().getDataFolder() + "/locale");
+        Path target = Paths.get(plugin.getDataFolder() + "/locale");
         URI resource = getClass().getResource("").toURI();
         FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap());
         final Path jarPath = fileSystem.getPath("/locales");
@@ -70,7 +72,7 @@ public class LocaleHandler {
     }
 
     public String getAvailableLocales() {
-        File localesDir = new File(SilkSpawners.getInstance().getDataFolder() + "/locale");
+        File localesDir = new File(plugin.getDataFolder() + "/locale");
         return Arrays.stream(localesDir.listFiles()).sorted().map((f) -> f.getName().replace("messages_", "").replace(".properties", "")).toList().toString().replace("[", "").replace("]", "");
     }
 

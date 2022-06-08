@@ -1,6 +1,6 @@
-package de.corneliusmay.silkspawners.plugin.commands.executors;
+package de.corneliusmay.silkspawners.plugin.commands;
 
-import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
@@ -17,7 +17,7 @@ public class GiveCommand extends SilkSpawnersCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(CommandSender sender, String[] args) {
         if(args.length < 2 || args.length > 3) return invalidSyntax(sender);
 
         Player p = Bukkit.getPlayer(args[0]);
@@ -26,7 +26,7 @@ public class GiveCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        Spawner spawner = new Spawner(EntityType.fromName(args[1]));
+        Spawner spawner = new Spawner(plugin, EntityType.fromName(args[1]));
         if(!spawner.isValid()) {
             sender.sendMessage(getMessage("ENTITY_NOT_FOUND", args[1]));
             return false;

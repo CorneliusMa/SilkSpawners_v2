@@ -1,27 +1,26 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
-import de.corneliusmay.silkspawners.api.SpawnerBreakEvent;
+import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockBreakListener implements Listener {
+public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockBreak(BlockBreakEvent e) {
+    @Override @EventHandler(priority = EventPriority.HIGHEST)
+    protected void onCall(BlockBreakEvent e) {
         if(e.isCancelled()) return;
 
-        Spawner spawner = new Spawner(e.getBlock());
+        Spawner spawner = new Spawner(plugin, e.getBlock());
         if(!spawner.isValid()) return;
 
         Player p = e.getPlayer();
@@ -30,13 +29,13 @@ public class BlockBreakListener implements Listener {
             return;
         }
 
-        ItemStack[] itemsInHand = SilkSpawners.getInstance().getNmsHandler().getItemsInHand(p);
+        ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)) {
             destroySpawner(p, e);
             return;
         }
 
-        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner.getEntityType(), e.getBlock());
+        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), plugin);
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()) {
@@ -45,13 +44,13 @@ public class BlockBreakListener implements Listener {
         }
 
         e.setExpToDrop(0);
-        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawner.getItemStack());
+        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {
         if(!new ConfigValue<Boolean>(PluginConfig.SPAWNER_DESTROYABLE).get()) {
             e.setCancelled(true);
-            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
+            if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
         }
         else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<Integer>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
     }

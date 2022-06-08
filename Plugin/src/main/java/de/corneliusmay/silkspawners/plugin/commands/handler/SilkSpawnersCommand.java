@@ -1,18 +1,26 @@
-package de.corneliusmay.silkspawners.plugin.commands;
+package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 
 public abstract class SilkSpawnersCommand {
 
-    @Getter
+    @Setter(AccessLevel.PACKAGE)
+    private SilkSpawnersCommandHandler commandHandler;
+
+    @Setter(AccessLevel.PACKAGE)
+    protected SilkSpawners plugin;
+
+    @Getter(AccessLevel.PACKAGE)
     private final String command;
 
-    private final boolean requiresPermission;
-
-    @Getter
+    @Getter(AccessLevel.PACKAGE)
     private final TabCompletion[] completions;
+
+    private final boolean requiresPermission;
 
     public SilkSpawnersCommand(String command, Boolean requiresPermission, TabCompletion... completions) {
         this.command = command;
@@ -26,15 +34,15 @@ public abstract class SilkSpawnersCommand {
     }
 
     public final String getPermissionString() {
-        return "silkspawners.command." + command;
+        return commandHandler.getMainCommand() + ".command." + command;
     }
 
     protected final String getMessage(String key, Object... args) {
-        return  SilkSpawners.getInstance().getLocale().getMessage("COMMAND_" + command.toUpperCase() + "_" + key, args);
+        return plugin.getLocale().getMessage("COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_" + key, args);
     }
 
     public boolean insufficientPermission(CommandSender sender) {
-        sender.sendMessage(SilkSpawners.getInstance().getLocale().getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
+        sender.sendMessage(plugin.getLocale().getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
         return false;
     }
 
@@ -43,6 +51,6 @@ public abstract class SilkSpawnersCommand {
         return false;
     }
 
-    public abstract boolean execute(CommandSender sender, String[] args);
+    protected abstract boolean execute(CommandSender sender, String[] args);
 
 }

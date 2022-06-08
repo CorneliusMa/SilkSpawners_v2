@@ -1,7 +1,9 @@
-package de.corneliusmay.silkspawners.api;
+package de.corneliusmay.silkspawners.plugin.events;
 
+import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import lombok.Getter;
-import org.bukkit.block.Block;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -14,23 +16,27 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
     private final Player player;
 
     @Getter
-    private final EntityType spawnedEntity;
+    private Spawner spawner;
 
     @Getter
-    private final Block spawner;
+    private final Location location;
+
+    private final SilkSpawners plugin;
 
     /**
      * This event is called, when a spawner is broken
      *
-     * @param player The player who broke the spawner
-     * @param spawnedEntity The entity spawned by the spawner
-     * @param spawner The block which was broken
+     * @param player   The player who broke the spawner
+     * @param spawner  The spawner
+     * @param location The spawner location
+     * @param plugin   The plugin instance
      */
 
-    public SpawnerBreakEvent(Player player, EntityType spawnedEntity, Block spawner) {
+    public SpawnerBreakEvent(Player player, Spawner spawner, Location location, SilkSpawners plugin) {
         this.player = player;
-        this.spawnedEntity = spawnedEntity;
         this.spawner = spawner;
+        this.location = location;
+        this.plugin = plugin;
     }
 
     private boolean cancelled;
@@ -51,5 +57,9 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
 
     public void setCancelled(boolean b) {
         cancelled = b;
+    }
+
+    public void setSpawner(EntityType entityType) {
+        this.spawner = new Spawner(plugin, entityType);
     }
 }

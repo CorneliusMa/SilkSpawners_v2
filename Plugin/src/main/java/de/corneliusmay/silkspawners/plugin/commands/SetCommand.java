@@ -1,6 +1,6 @@
-package de.corneliusmay.silkspawners.plugin.commands.executors;
+package de.corneliusmay.silkspawners.plugin.commands;
 
-import de.corneliusmay.silkspawners.plugin.commands.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.block.Block;
@@ -15,14 +15,14 @@ public class SetCommand extends SilkSpawnersCommand {
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args) {
+    protected boolean execute(CommandSender sender, String[] args) {
         if(args.length != 1) return invalidSyntax(sender);
         if(!(sender instanceof Player player)) {
             sender.sendMessage(getMessage("PLAYERS_ONLY"));
             return false;
         }
 
-        Spawner newSpawner = new Spawner(EntityType.fromName(args[0]));
+        Spawner newSpawner = new Spawner(plugin, EntityType.fromName(args[0]));
         if(!newSpawner.isValid()) {
             sender.sendMessage(getMessage("ENTITY_NOT_FOUND", args[0]));
             return false;
@@ -34,7 +34,7 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         Block block = player.getTargetBlockExact(5);
-        Spawner spawner = new Spawner(block);
+        Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) {
             sender.sendMessage(getMessage("INVALID_TARGET"));
             return false;
