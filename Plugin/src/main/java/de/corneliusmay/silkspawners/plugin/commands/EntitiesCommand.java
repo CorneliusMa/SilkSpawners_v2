@@ -17,8 +17,8 @@ public class EntitiesCommand extends SilkSpawnersCommand {
     protected boolean execute(CommandSender sender, String[] args) {
         if(args.length != 0) return invalidSyntax(sender);
 
-        sender.sendMessage(getMessage("MESSAGE", Arrays.toString(Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toArray())
-                .replace("[", "").replace("]", "")));
+        sendMessage(sender, "MESSAGE", Arrays.toString(
+                Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toArray()).replace("[", "").replace("]", ""));
 
         return true;
     }

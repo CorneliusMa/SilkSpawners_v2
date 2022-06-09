@@ -26,14 +26,14 @@ public class LocaleCommand extends SilkSpawnersCommand {
                     case "reload" -> {
                         try {
                             plugin.getLocale().loadLocale();
-                            sender.sendMessage(getMessage("RELOAD_SUCCESSFUL"));
+                            sendMessage(sender, "RELOAD_SUCCESSFUL");
                         } catch (MalformedURLException | MissingResourceException ex) {
                             ex.printStackTrace();
-                            sender.sendMessage(getMessage("RELOAD_ERROR"));
+                            sendMessage(sender, "RELOAD_ERROR");
                         }
                     }
-                    case "setting" -> sender.sendMessage(getMessage("SETTING", new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get().toString(), plugin.getLocale().getAvailableLocales()));
-                    case "update" -> sender.sendMessage(getMessage("UPDATE_WARNING"));
+                    case "setting" -> sendMessage(sender, "SETTING", new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get().toString(), plugin.getLocale().getAvailableLocales());
+                    case "update" -> sendMessage(sender, "UPDATE_WARNING");
                     default -> invalidSyntax(sender);
                 }
             }
@@ -43,9 +43,9 @@ public class LocaleCommand extends SilkSpawnersCommand {
                 try {
                     plugin.getLocale().copyDefaultLocales(true);
                     plugin.getLocale().loadLocale();
-                    sender.sendMessage(getMessage("UPDATE_SUCCESSFUL"));
+                    sendMessage(sender, "UPDATE_SUCCESSFUL");
                 } catch (URISyntaxException | MissingResourceException | IOException ex) {
-                    sender.sendMessage(getMessage("UPDATE_ERROR"));
+                    sendMessage(sender, "UPDATE_ERROR");
                 }
             }
             default -> invalidSyntax(sender);
