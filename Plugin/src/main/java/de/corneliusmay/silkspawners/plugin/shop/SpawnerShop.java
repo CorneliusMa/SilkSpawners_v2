@@ -6,6 +6,7 @@ import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHa
 import de.corneliusmay.silkspawners.plugin.shop.commands.OpenShopCommand;
 import de.corneliusmay.silkspawners.plugin.shop.config.ConfigHandler;
 import de.corneliusmay.silkspawners.plugin.shop.listeners.InventoryClickListener;
+import de.corneliusmay.silkspawners.plugin.shop.listeners.InventoryCloseListener;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
@@ -70,7 +71,8 @@ public class SpawnerShop {
 
     private void registerListeners() {
         SilkSpawnersEventHandler eventHandler = new SilkSpawnersEventHandler(plugin);
-        eventHandler.registerListener(new InventoryClickListener(this));
+        eventHandler.registerListener(new InventoryClickListener());
+        eventHandler.registerListener(new InventoryCloseListener());
     }
 
     private void registerCommands() {
