@@ -2,7 +2,10 @@ name: SilkSpawners
 version: 2.1.4
 main: de.corneliusmay.silkspawners.plugin.SilkSpawners
 api-version: 1.13
+softdepend:
+  - Vault
 
 commands:
   silkspawners:
+  spawnershop:
 

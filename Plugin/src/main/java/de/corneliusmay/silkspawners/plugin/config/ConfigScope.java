@@ -8,6 +8,7 @@ public enum ConfigScope {
     SPAWNER_MESSAGES("message", SPAWNER),
     UPDATE("update"),
     UPDATE_CHECK("check", UPDATE),
+    SHOP("shop"),
     ;
 
     private final String name;

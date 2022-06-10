@@ -1,16 +1,33 @@
 package de.corneliusmay.silkspawners.plugin.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ItemBuilder {
 
     private final ItemStack stack;
     private final ItemMeta meta;
+
+    public ItemBuilder(UUID skull) {
+        this.stack = new ItemStack(Material.PLAYER_HEAD, 1);
+        this.meta = this.stack.getItemMeta();
+
+        SkullMeta skullMeta = (SkullMeta) this.meta;
+        skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(skull));
+        this.stack.setItemMeta(skullMeta);
+    }
+
+    public ItemBuilder(ItemStack stack) {
+        this.stack = stack;
+        this.meta = this.stack.getItemMeta();
+    }
 
     public ItemBuilder(Material material, int amount) {
         this.stack = new ItemStack(material, amount);

@@ -27,6 +27,8 @@ public enum PluginConfig {
     SPAWNER_MESSAGE_DENY_CHANGE(ConfigScope.SPAWNER_MESSAGES, "denyChange", true, new BooleanConfigValue()),
     UPDATE_CHECK_ENABLED(ConfigScope.UPDATE_CHECK, "enabled", true, new BooleanConfigValue()),
     UPDATE_CHECK_INTERVAL(ConfigScope.UPDATE_CHECK, "interval", 24, new IntegerConfigValue()),
+    SHOP_ENABLED(ConfigScope.SHOP, "enabled", false, new BooleanConfigValue()),
+    SHOP_CONFIG(ConfigScope.SHOP, "config", "default", new MessageConfigValue()),
     ;
 
     @Getter
