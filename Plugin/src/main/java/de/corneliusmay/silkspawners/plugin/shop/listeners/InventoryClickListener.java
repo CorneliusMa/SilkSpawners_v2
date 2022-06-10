@@ -48,19 +48,13 @@ public class InventoryClickListener extends SilkSpawnersListener<InventoryClickE
             if (shopItem == null) return;
 
             if(buy) {
-                if(shopItem.buy(player)) {
-                    player.sendMessage("Successfully bought 1 spawner.");
-                    update(player, true, inventoryTitle);
-                }
-                else player.sendMessage("You can't buy this spawner.");
+                if(shopItem.buy(player)) player.sendMessage(plugin.getLocale().getMessage("SHOP_SUCCESS_BUY", shopItem.getSpawner().serializedName()));
+                else player.sendMessage(plugin.getLocale().getMessage("SHOP_ERROR_BUY"));
             } else {
-                if(shopItem.sell(player)) {
-                    player.sendMessage("Successfully sold 1 spawner.");
-                    update(player, false, inventoryTitle);
-                }
-                else player.sendMessage("You can't sell this spawner.");
+                if(shopItem.sell(player)) player.sendMessage(plugin.getLocale().getMessage("SHOP_SUCCESS_SELL", shopItem.getSpawner().serializedName()));
+                else player.sendMessage(plugin.getLocale().getMessage("SHOP_ERROR_SELL", shopItem.getSpawner().serializedName()));
             }
-
+            update(player, buy, inventoryTitle);
         } else {
             switch (actionName) {
                 case "§2Buy", "§cSell" -> {
