@@ -1,5 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.shop.handler;
 
+import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
@@ -10,10 +12,12 @@ import java.util.Objects;
 
 public class ShopItem {
 
+    private final SilkSpawners plugin;
+
     private final Economy economy;
 
     @Getter
-    private final ItemStack item;
+    private final Spawner spawner;
 
     @Getter
     private final Integer buyPrice;
@@ -21,9 +25,10 @@ public class ShopItem {
     @Getter
     private final Integer sellPrice;
 
-    public ShopItem(Economy economy, ItemStack item, Integer buyPrice, Integer sellPrice) {
+    public ShopItem(SilkSpawners plugin, Economy economy, Spawner spawner, Integer buyPrice, Integer sellPrice) {
+        this.plugin = plugin;
         this.economy = economy;
-        this.item = item;
+        this.spawner = spawner;
         this.buyPrice = buyPrice;
         this.sellPrice = sellPrice;
     }
@@ -34,36 +39,34 @@ public class ShopItem {
     }
 
     public boolean canSell(Player player) {
-        if(sellPrice < 0) return false;
-
-        for(String item : Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull)
-                .map((itemStack -> itemStack.getItemMeta().getLore())).filter(Objects::nonNull).filter((lore) -> lore.size() > 0).map((lore) -> lore.get(0)).toList()) {
-            if(this.item.getItemMeta().getLore().get(0).equals(item)) return true;
-        }
-
-        return false;
+        return sellPrice >= 0 && getSpawnerFromInventory(player) != null;
     }
 
     public boolean buy(Player player) {
         if(!canBuy(player)) return false;
 
-        player.getInventory().addItem(item);
+        player.getInventory().addItem(spawner.getItemStack());
         economy.withdrawPlayer(player, buyPrice);
         return true;
     }
 
     public boolean sell(Player player) {
         if(!canSell(player)) return false;
-
-        for(ItemStack itemStack :  Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull)
-                .filter((item) -> (item.getItemMeta() != null && item.getItemMeta().getLore() != null)).filter((item) -> item.getItemMeta().getLore().size() > 0).toList()) {
-            if(this.item.getItemMeta().getLore().get(0).equals(itemStack.getItemMeta().getLore().get(0))) {
-                player.getInventory().removeItem(itemStack);
-                break;
-            }
-        }
+        Spawner inventorySpawner = getSpawnerFromInventory(player);
+        player.getInventory().removeItem(inventorySpawner.getItemStack());
 
         economy.depositPlayer(player, sellPrice);
         return true;
+    }
+
+    private Spawner getSpawnerFromInventory(Player player) {
+        for(Spawner inventorySpawner : Arrays.stream(player.getInventory().getContents()).filter(Objects::nonNull).map(itemStack -> {
+                    ItemStack newStack = itemStack.clone();
+                    newStack.setAmount(1);
+                    return newStack;
+        }).map((itemStack) -> new Spawner(plugin, itemStack)).filter(Spawner::isValid).toList()) {
+            if(this.spawner.getEntityType() == inventorySpawner.getEntityType()) return inventorySpawner;
+        }
+        return null;
     }
 }

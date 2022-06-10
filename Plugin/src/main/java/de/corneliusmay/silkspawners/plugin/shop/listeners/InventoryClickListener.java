@@ -40,7 +40,7 @@ public class InventoryClickListener extends SilkSpawnersListener<InventoryClickE
             if (!spawner.isValid()) return;
 
             ShopItem shopItem = spawnerShop.getConfigHandler().getShopItems(new ConfigValue<String>(PluginConfig.SHOP_CONFIG).get()).stream().filter((item) -> {
-                Spawner configSpawner = new Spawner(plugin, item.getItem());
+                Spawner configSpawner = item.getSpawner();
                 if (!configSpawner.isValid()) return false;
 
                 return configSpawner.getEntityType() == spawner.getEntityType();

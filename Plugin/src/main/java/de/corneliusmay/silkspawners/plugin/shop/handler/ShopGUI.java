@@ -40,8 +40,8 @@ public class ShopGUI {
             int index = i + page * 21;
             if(content.size() <= index) continue;
 
-            ShopItem spawner = content.get(index);
-            String spawnerEntity = new Spawner(plugin, spawner.getItem()).getEntityType().getName();
+            ShopItem shopItem = content.get(index);
+            String spawnerEntity = shopItem.getSpawner().getEntityType().getName();
 
             boolean canBuy = player.hasPermission("shop.buy." + spawnerEntity);
             boolean canSell = player.hasPermission("shop.sell." + spawnerEntity);
@@ -52,9 +52,9 @@ public class ShopGUI {
 
             if((i + modifier) % 9 == 0) modifier += 2;
 
-            inventory.setItem(i + modifier + 8, new ItemBuilder(spawner.getItem().clone())
-                    .addToLore(canBuy? "§2Buy§7: " + (spawner.canBuy(player)? spawner.getBuyPrice() : "§eNot enough coins") : "")
-                    .addToLore(canSell? "§cSell§7: " + (spawner.canSell(player)? spawner.getSellPrice() : "§eSpawner not owned") : "")
+            inventory.setItem(i + modifier + 8, new ItemBuilder(shopItem.getSpawner().getItemStack().clone())
+                    .addToLore(canBuy? "§2Buy§7: " + (shopItem.canBuy(player)? shopItem.getBuyPrice() : "§eNot enough coins") : "")
+                    .addToLore(canSell? "§cSell§7: " + (shopItem.canSell(player)? shopItem.getSellPrice() : "§eSpawner not owned") : "")
                     .build());
         }
 
@@ -72,7 +72,7 @@ public class ShopGUI {
 
     private void fill(Inventory inventory) {
         for(int i = 0; i < inventory.getSize(); i++) {
-            if(inventory.getItem(i) == null) inventory.setItem(i, new ItemBuilder(plugin.getNmsHandler().getPlaceholderMaterial()).setDisplayName("").build());
+            if(inventory.getItem(i) == null) inventory.setItem(i, new ItemBuilder(plugin.getNmsHandler().getPlaceholderMaterial()).setDisplayName("§f").build());
         }
     }
 

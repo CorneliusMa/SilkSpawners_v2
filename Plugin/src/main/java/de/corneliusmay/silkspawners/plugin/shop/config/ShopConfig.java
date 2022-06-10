@@ -56,8 +56,7 @@ class ShopConfig {
         ArrayList<ShopItem> items = new ArrayList<>();
 
         for(EntityType entity : Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).toArray(EntityType[]::new)) {
-            items.add(new ShopItem(
-                    shop.getEconomy(), new Spawner(plugin, entity).getItemStack(),
+            items.add(new ShopItem(plugin, shop.getEconomy(), new Spawner(plugin, entity),
                     config.getInt(getEntityPath(entity.getName()) + "buy"),
                     config.getInt(getEntityPath(entity.getName()) + "sell")
             ));
