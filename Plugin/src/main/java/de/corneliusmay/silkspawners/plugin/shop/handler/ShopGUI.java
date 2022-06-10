@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.shop.handler;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
-import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.shop.SpawnerShop;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,6 +10,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 
 public class ShopGUI {
 
@@ -17,12 +18,18 @@ public class ShopGUI {
 
     private final Player player;
 
+    private final String shopName;
+
+    private final ExecutorService pool;
+
     private final List<ShopItem> content;
 
-    public ShopGUI(SilkSpawners plugin, Player player, List<ShopItem> content) {
+    public ShopGUI(SpawnerShop shop, SilkSpawners plugin, Player player, String shopName) {
         this.plugin = plugin;
         this.player = player;
-        this.content = content;
+        this.shopName = shopName;
+        this.pool = shop.getPool();
+        this.content = shop.getConfigHandler().getShopItems(shopName);
     }
 
     public void open() {
@@ -30,11 +37,14 @@ public class ShopGUI {
     }
 
     public void open(boolean buy, int page) {
-        player.openInventory(build(buy, player, page));
+        pool.execute(() -> {
+            Inventory inventory = build(buy, player, page);
+            Bukkit.getScheduler().runTask(plugin, () -> player.openInventory(inventory));
+        });
     }
 
     private Inventory build(boolean buy, Player player, int page) {
-        Inventory inventory = Bukkit.createInventory(null, 45, "§bSpawner Shop §8Page " + (page + 1) + "/" + getPages());
+        Inventory inventory = Bukkit.createInventory(null, 45, "§b" + shopName.substring(0, 1).toUpperCase() + shopName.substring(1) + " Shop §8Page " + (page + 1) + "/" + getPages());
         int modifier = 0;
         for(int i = 0; i < 21; i++) {
             int index = i + page * 21;

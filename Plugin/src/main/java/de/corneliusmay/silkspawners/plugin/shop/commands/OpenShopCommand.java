@@ -2,7 +2,7 @@ package de.corneliusmay.silkspawners.plugin.shop.commands;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueArray;
 import de.corneliusmay.silkspawners.plugin.shop.SpawnerShop;
 import de.corneliusmay.silkspawners.plugin.shop.handler.ShopGUI;
 import org.bukkit.command.CommandSender;
@@ -13,7 +13,8 @@ public class OpenShopCommand extends SilkSpawnersCommand {
     private final SpawnerShop spawnerShop;
 
     public OpenShopCommand(SpawnerShop spawnerShop) {
-        super("open", true);
+        super("open", true,
+                (command, sender) -> new ConfigValueArray<String>(PluginConfig.SHOP_CONFIG).get().stream().filter((shop) -> sender.hasPermission("spawnershop.use." + shop.toLowerCase())).toList());
         this.spawnerShop = spawnerShop;
     }
 
@@ -23,9 +24,19 @@ public class OpenShopCommand extends SilkSpawnersCommand {
             sendMessage(sender, "PLAYERS_ONLY");
             return false;
         }
-        if(args.length > 0) return invalidSyntax(sender);
+        if(args.length > 1) return invalidSyntax(sender);
 
-        new ShopGUI(plugin, player, spawnerShop.getConfigHandler().getShopItems(new ConfigValue<String>(PluginConfig.SHOP_CONFIG).get())).open();
+        if(args.length == 0) new ShopGUI(spawnerShop, plugin, player, new ConfigValueArray<String>(PluginConfig.SHOP_CONFIG).get().get(0)).open();
+        else {
+            String shop = spawnerShop.getConfigHandler().getShop(player, args[0]);
+            if(shop == null) {
+                sendMessage(sender, "SHOP_NOT_FOUND", args[0]);
+                return false;
+            }
+
+            new ShopGUI(spawnerShop, plugin, player, shop).open();
+        }
+
         return true;
     }
 }

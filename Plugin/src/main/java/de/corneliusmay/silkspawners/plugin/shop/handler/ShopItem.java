@@ -31,6 +31,8 @@ public class ShopItem {
         this.spawner = spawner;
         this.buyPrice = buyPrice;
         this.sellPrice = sellPrice;
+
+        if(!spawner.isValid()) throw new RuntimeException("The spawner " + spawner.getEntityType().getName() +  " is invalid");
     }
 
     public boolean canBuy(Player player) {

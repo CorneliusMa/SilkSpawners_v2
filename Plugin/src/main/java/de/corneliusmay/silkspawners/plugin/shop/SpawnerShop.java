@@ -11,12 +11,18 @@ import lombok.Getter;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class SpawnerShop {
 
     private final SilkSpawners plugin;
 
     @Getter
     private final Logger log;
+
+    @Getter
+    private final ExecutorService pool;
 
     @Getter
     private Economy economy;
@@ -28,6 +34,8 @@ public class SpawnerShop {
         this.plugin = plugin;
         this.log = plugin.getLog();
         this.log.info("Starting SilkSpawners shop");
+
+        this.pool = Executors.newCachedThreadPool();
 
         this.log.info("Registering economy plugin");
         if(!registerEconomy()) return;
@@ -71,6 +79,7 @@ public class SpawnerShop {
     }
 
     public void disable() {
-
+        this.log.info("Disabling SilkSpawners shop");
+        pool.shutdownNow();
     }
 }

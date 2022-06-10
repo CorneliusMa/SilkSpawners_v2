@@ -28,7 +28,7 @@ public enum PluginConfig {
     UPDATE_CHECK_ENABLED(ConfigScope.UPDATE_CHECK, "enabled", true, new BooleanConfigValue()),
     UPDATE_CHECK_INTERVAL(ConfigScope.UPDATE_CHECK, "interval", 24, new IntegerConfigValue()),
     SHOP_ENABLED(ConfigScope.SHOP, "enabled", false, new BooleanConfigValue()),
-    SHOP_CONFIG(ConfigScope.SHOP, "config", "default", new MessageConfigValue()),
+    SHOP_CONFIG(ConfigScope.SHOP, "configs", new String[]{"spawner"}, new MessageConfigValue()),
     ;
 
     @Getter
