@@ -12,7 +12,6 @@ import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHandler;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
-import de.corneliusmay.silkspawners.plugin.shop.SpawnerShop;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.plugin.version.VersionHandler;
@@ -35,8 +34,6 @@ public class SilkSpawners extends JavaPlugin {
 
     @Getter
     private VersionChecker versionChecker;
-
-    private SpawnerShop shopExtension;
 
     @Override
     public void onEnable() {
@@ -69,8 +66,6 @@ public class SilkSpawners extends JavaPlugin {
         registerCommands();
 
         log.info("Started SilkSpawners v" + versionChecker.getInstalledVersion());
-
-        if(new ConfigValue<Boolean>(PluginConfig.SHOP_ENABLED).get()) shopExtension = new SpawnerShop(this);
     }
 
     private void registerListeners() {
@@ -94,7 +89,6 @@ public class SilkSpawners extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if(shopExtension != null) shopExtension.disable();
         if(versionChecker == null) return;
         log.info("Stopping version checker");
         versionChecker.stop();
