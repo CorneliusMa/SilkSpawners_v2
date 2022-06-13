@@ -20,7 +20,7 @@ public class ExplosionCommand extends SilkSpawnersCommand {
 
         Player p = Bukkit.getPlayer(args[1]);
         if(p == null) {
-            sender.sendMessage(getMessage("PLAYER_NOT_FOUND", args[1]));
+            sendMessage(sender, "PLAYER_NOT_FOUND", args[1]);
             return false;
         }
 
@@ -28,13 +28,13 @@ public class ExplosionCommand extends SilkSpawnersCommand {
         switch (args[0].toLowerCase()) {
             case "enable", "e" -> {
                 attachment.setPermission("silkspawners.explosion", true);
-                sender.sendMessage(getMessage("ENABLED", p.getName()));
+                sendMessage(sender, "ENABLED", p.getName());
             }
             case "disable", "d" -> {
                 attachment.setPermission("silkspawners.explosion", false);
-                sender.sendMessage(getMessage("DISABLED", p.getName()));
+                sendMessage(sender, "DISABLED", p.getName());
             }
-            case "setting", "s" -> sender.sendMessage(getMessage("SETTING_" + (p.hasPermission("silkspawners.explosion")? "ENABLED" : "DISABLED"), p.getName()));
+            case "setting", "s" -> sendMessage(sender, "SETTING_" + (p.hasPermission("silkspawners.explosion")? "ENABLED" : "DISABLED"), p.getName());
             default -> invalidSyntax(sender);
         }
         return true;

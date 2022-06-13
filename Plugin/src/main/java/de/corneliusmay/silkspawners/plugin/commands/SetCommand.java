@@ -18,30 +18,30 @@ public class SetCommand extends SilkSpawnersCommand {
     protected boolean execute(CommandSender sender, String[] args) {
         if(args.length != 1) return invalidSyntax(sender);
         if(!(sender instanceof Player player)) {
-            sender.sendMessage(getMessage("PLAYERS_ONLY"));
+            sendMessage(sender, "PLAYERS_ONLY");
             return false;
         }
 
         Spawner newSpawner = new Spawner(plugin, EntityType.fromName(args[0]));
         if(!newSpawner.isValid()) {
-            sender.sendMessage(getMessage("ENTITY_NOT_FOUND", args[0]));
+            sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
         }
 
         if(!player.hasPermission(getPermissionString() + "." + newSpawner.getEntityType().getName())) {
-            sender.sendMessage(getMessage("INSUFFICIENT_ENTITY_PERMISSION", newSpawner.serializedName()));
+            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", newSpawner.serializedName());
             return false;
         }
 
-        Block block = player.getTargetBlockExact(5);
+        Block block = plugin.getNmsHandler().getTargetBlock(player);
         Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) {
-            sender.sendMessage(getMessage("INVALID_TARGET"));
+            sendMessage(sender, "INVALID_TARGET");
             return false;
         }
 
         newSpawner.setSpawnerBlockType(block);
-        sender.sendMessage(getMessage("SUCCESS", newSpawner.serializedName()));
+        sendMessage(sender, "SUCCESS", newSpawner.serializedName());
         return true;
     }
 }

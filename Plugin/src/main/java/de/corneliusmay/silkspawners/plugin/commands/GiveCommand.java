@@ -22,18 +22,18 @@ public class GiveCommand extends SilkSpawnersCommand {
 
         Player p = Bukkit.getPlayer(args[0]);
         if(p == null) {
-            sender.sendMessage(getMessage("PLAYER_NOT_FOUND", args[0]));
+            sendMessage(sender, "PLAYER_NOT_FOUND", args[0]);
             return false;
         }
 
         Spawner spawner = new Spawner(plugin, EntityType.fromName(args[1]));
         if(!spawner.isValid()) {
-            sender.sendMessage(getMessage("ENTITY_NOT_FOUND", args[1]));
+            sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
             return false;
         }
 
         if(!sender.hasPermission(getPermissionString() + "." + spawner.getEntityType().getName())) {
-            sender.sendMessage(getMessage("INSUFFICIENT_ENTITY_PERMISSION", spawner.serializedName()));
+            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.serializedName());
             return false;
         }
 
@@ -41,20 +41,20 @@ public class GiveCommand extends SilkSpawnersCommand {
         if(args.length == 3) amount = parseAmount(args[2]);
 
         if(amount == -1) {
-            sender.sendMessage(getMessage("INVALID_AMOUNT", args[2]));
+            sendMessage(sender, "INVALID_AMOUNT", args[2]);
             return false;
         }
 
         if(amount < 1) {
-            sender.sendMessage(getMessage("TOO_SMALL_AMOUNT"));
+            sendMessage(sender, "TOO_SMALL_AMOUNT");
             return false;
         }
 
         ItemStack item = spawner.getItemStack();
         item.setAmount(amount);
         p.getInventory().addItem(item);
-        sender.sendMessage(getMessage("SUCCESS", amount, spawner.serializedName(), amount > 1? "s" : "", p.getName()));
-        p.sendMessage(getMessage("SUCCESS_TARGET", amount, spawner.serializedName(), amount > 1? "s" : "", sender.getName()));
+        sendMessage(sender, "SUCCESS", amount, spawner.serializedName(), amount > 1? "s" : "", p.getName());
+        sendMessage(p, "SUCCESS_TARGET", amount, spawner.serializedName(), amount > 1? "s" : "", sender.getName());
         return true;
     }
 

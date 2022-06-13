@@ -1,8 +1,35 @@
 name: SilkSpawners
-version: 2.1.4
+version: 2.1.5
 main: de.corneliusmay.silkspawners.plugin.SilkSpawners
 api-version: 1.13
+softdepend:
+  - Vault
 
 commands:
   silkspawners:
 
+permissions:
+  silkspawners.break.*:
+    description: Permission to set, if spawners can be mined. You also can set only specific entities.
+  silkspawners.place.*:
+    description: Permission to set, if spawners can be place. You also can set only specific entities.
+  silkspawners.change.*:
+    description: Permission to set, if spawners can be changed with eggs. You also can set only specific entities.
+  silkspawners.explosion:
+    description: Permission to set, if spawners explode.
+  silkspawners.command.locale:
+    description: Use this command, to reload and update locale files.
+  silkspawners.command.entities:
+    description: Use this command to see the entities you can use in permissions and commands.
+  silkspawners.command.version:
+    description: Use this command to see, if updates are available.
+  silkspawners.command.give:
+    description: Use this command to give spawners to players.
+    children:
+      silkspawners.command.give.*:
+        description: Use this permission to set the entities that can be used.
+  silkspawners.command.set:
+    description: Use this command to give spawners to players.
+    children:
+      silkspawners.command.set.*:
+        description: Use this permission to set the entities that can be used.

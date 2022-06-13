@@ -16,12 +16,12 @@ public class VersionCommand extends SilkSpawnersCommand {
         if(args.length != 0) return invalidSyntax(sender);
 
         if(!new ConfigValue<Boolean>(PluginConfig.UPDATE_CHECK_ENABLED).get()) {
-            sender.sendMessage(getMessage("ERROR", plugin.getVersionChecker().getInstalledVersion()));
+            sendMessage(sender, "ERROR", plugin.getVersionChecker().getInstalledVersion());
             return false;
         }
 
-        if(plugin.getVersionChecker().check()) sender.sendMessage(getMessage("INFO", plugin.getVersionChecker().getInstalledVersion()));
-        else sender.sendMessage(getMessage("UPDATE_AVAILABLE", plugin.getVersionChecker().getInstalledVersion(), plugin.getVersionChecker().getLatestVersion()));
+        if(plugin.getVersionChecker().check()) sendMessage(sender, "INFO", plugin.getVersionChecker().getInstalledVersion());
+        else sendMessage(sender, "UPDATE_AVAILABLE", plugin.getVersionChecker().getInstalledVersion(), plugin.getVersionChecker().getLatestVersion());
         return true;
     }
 }

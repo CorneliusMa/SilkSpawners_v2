@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public abstract class SilkSpawnersCommand {
 
@@ -37,8 +38,16 @@ public abstract class SilkSpawnersCommand {
         return commandHandler.getMainCommand() + ".command." + command;
     }
 
-    protected final String getMessage(String key, Object... args) {
+    private String getMessage(String key, Object... args) {
         return plugin.getLocale().getMessage("COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_" + key, args);
+    }
+
+    protected final void sendMessage(CommandSender sender, String key, Object... args) {
+        sender.sendMessage(getMessage(key, args));
+    }
+
+    protected final void sendMessage(Player player, String key, Object... args) {
+        player.sendMessage(getMessage(key, args));
     }
 
     public boolean insufficientPermission(CommandSender sender) {
@@ -47,7 +56,7 @@ public abstract class SilkSpawnersCommand {
     }
 
     public boolean invalidSyntax(CommandSender sender) {
-        sender.sendMessage(getMessage("USAGE"));
+        sendMessage(sender, "USAGE");
         return false;
     }
 

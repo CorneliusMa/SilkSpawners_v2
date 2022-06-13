@@ -76,9 +76,13 @@ public class LocaleHandler {
         return Arrays.stream(localesDir.listFiles()).sorted().map((f) -> f.getName().replace("messages_", "").replace(".properties", "")).toList().toString().replace("[", "").replace("]", "");
     }
 
+    public String getMessageClean(String key, Object... args) {
+        return MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
+    }
+
     public String getMessage(String key, Object... args) {
         try {
-            return getPrefix() + "§f " + MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
+            return getPrefix() + "§f " + getMessageClean(key, args);
         } catch (MissingResourceException ex) {
             return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, locale.toString());
         }

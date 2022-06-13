@@ -42,7 +42,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
         this.helpCommand = addHelpCommand();
-        this.defaultCommand = defaultCommand;
+        this.defaultCommand = addDefaultCommand(defaultCommand);
     }
 
     @Override
@@ -74,6 +74,11 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         HelpCommand help = new HelpCommand(this);
         addCommand(help);
         return help;
+    }
+
+    private SilkSpawnersCommand addDefaultCommand(SilkSpawnersCommand command) {
+        addCommand(command);
+        return command;
     }
 
     public void register() {
