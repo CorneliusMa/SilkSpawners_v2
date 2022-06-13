@@ -18,14 +18,13 @@ public class InventoryClickListener extends SilkSpawnersListener<InventoryClickE
         event.setCancelled(true);
 
         ItemStack clickedItem = gui.getInventory().getItem(event.getSlot());
+        String clickedItemName = clickedItem.getItemMeta().getDisplayName();
         Spawner spawner = new Spawner(plugin, clickedItem);
         if(spawner.isValid()) onSpawnerClick(gui, spawner);
-        else switch (clickedItem.getItemMeta().getDisplayName()) {
-            case "§2Buy", "§cSell" -> gui.setModeBuy(!gui.isModeBuy());
-            case "§7Next page" -> gui.setPage(gui.getPage() + 1);
-            case "§7Previous page" -> gui.setPage(gui.getPage() - 1);
-            case "§cClose" -> gui.close(event.getView());
-        }
+        else if(clickedItemName.equals(plugin.getLocale().getMessageClean("SHOP_BUY")) || clickedItemName.equals(plugin.getLocale().getMessageClean("SHOP_SELL"))) gui.setModeBuy(!gui.isModeBuy());
+        else if(clickedItemName.equals(plugin.getLocale().getMessageClean("SHOP_PREVIOUS_PAGE"))) gui.setPage(gui.getPage() - 1);
+        else if(clickedItemName.equals(plugin.getLocale().getMessageClean("SHOP_NEXT_PAGE"))) gui.setPage(gui.getPage() + 1);
+        else if(clickedItemName.equals(plugin.getLocale().getMessageClean("SHOP_CLOSE"))) gui.close(event.getView());
     }
 
     private void onSpawnerClick(ShopGUI gui, Spawner spawner) {

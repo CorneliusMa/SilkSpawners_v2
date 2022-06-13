@@ -83,13 +83,13 @@ public class ShopGUI {
 
             setSpawners(inventory);
 
-            if(page > 0) inventory.setItem(39, new ItemBuilder(UUID.fromString("a68f0b64-8d14-4000-a95f-4b9ba14f8df9")).setDisplayName("§7Previous page").build());
-            if((page + 1) < getPages()) inventory.setItem(41, new ItemBuilder(UUID.fromString("50c8510b-5ea0-4d60-be9a-7d542d6cd156")).setDisplayName("§7Next page").build());
+            if(page > 0) inventory.setItem(39, new ItemBuilder(UUID.fromString("a68f0b64-8d14-4000-a95f-4b9ba14f8df9")).setDisplayName(plugin.getLocale().getMessageClean("SHOP_PREVIOUS_PAGE")).build());
+            if((page + 1) < getPages()) inventory.setItem(41, new ItemBuilder(UUID.fromString("50c8510b-5ea0-4d60-be9a-7d542d6cd156")).setDisplayName(plugin.getLocale().getMessageClean("SHOP_NEXT_PAGE")).build());
 
-            if(modeBuy) inventory.setItem(37, new ItemBuilder(Material.GREEN_WOOL).setDisplayName("§2Buy").build());
-            else inventory.setItem(37, new ItemBuilder(Material.RED_WOOL).setDisplayName("§cSell").build());
+            if(modeBuy) inventory.setItem(37, new ItemBuilder(Material.GREEN_WOOL).setDisplayName(plugin.getLocale().getMessageClean("SHOP_BUY")).build());
+            else inventory.setItem(37, new ItemBuilder(Material.RED_WOOL).setDisplayName(plugin.getLocale().getMessageClean("SHOP_SELL")).build());
 
-            inventory.setItem(43, new ItemBuilder(Material.BARRIER).setDisplayName("§cClose").build());
+            inventory.setItem(43, new ItemBuilder(Material.BARRIER).setDisplayName(plugin.getLocale().getMessageClean("SHOP_CLOSE")).build());
 
             fill(inventory);
             this.inventory = inventory;
@@ -107,8 +107,8 @@ public class ShopGUI {
             if((i + modifier) % 9 == 0) modifier += 2;
 
             inventory.setItem(i + modifier + 8, new ItemBuilder(shopItem.getSpawner().getItemStack().clone())
-                    .addToLore("§2Buy§7: " + (shopItem.canBuy(player) ? shopItem.getBuyPrice() : "§eNot enough coins"))
-                    .addToLore("§cSell§7: " + (shopItem.canSell(player) ? shopItem.getSellPrice() : "§eSpawner not owned"))
+                    .addToLore(plugin.getLocale().getMessageClean("SHOP_BUY") + "§7: " + (shopItem.canBuy(player) ? shopItem.getBuyPrice() : plugin.getLocale().getMessageClean("SHOP_NO_COINS")))
+                    .addToLore(plugin.getLocale().getMessageClean("SHOP_SELL") + "§7: " + (shopItem.canSell(player) ? shopItem.getSellPrice() : plugin.getLocale().getMessageClean("SHOP_NOT_OWNED")))
                     .build());
         }
     }
