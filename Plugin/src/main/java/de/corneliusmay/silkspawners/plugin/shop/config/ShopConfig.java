@@ -43,8 +43,9 @@ class ShopConfig {
 
     private void init(FileConfiguration config) {
         for(String entity : Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toList()) {
+            config.addDefault(getEntityPath(entity) + "enabled", true);
             config.addDefault(getEntityPath(entity) + "buy", 25000);
-            config.addDefault(getEntityPath(entity) + ".sell", 15000);
+            config.addDefault(getEntityPath(entity) + "sell", 15000);
         }
     }
 
@@ -56,6 +57,8 @@ class ShopConfig {
         ArrayList<ShopItem> items = new ArrayList<>();
 
         for(EntityType entity : Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).toArray(EntityType[]::new)) {
+            if(!config.getBoolean(getEntityPath(entity.getName()) + "enabled")) continue;
+
             items.add(new ShopItem(plugin, shop.getEconomy(), new Spawner(plugin, entity),
                     config.getInt(getEntityPath(entity.getName()) + "buy"),
                     config.getInt(getEntityPath(entity.getName()) + "sell")

@@ -77,15 +77,15 @@ public class LocaleHandler {
     }
 
     public String getMessageClean(String key, Object... args) {
-        return MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
-    }
-
-    public String getMessage(String key, Object... args) {
         try {
-            return getPrefix() + "§f " + getMessageClean(key, args);
+            return MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
         } catch (MissingResourceException ex) {
             return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, locale.toString());
         }
+    }
+
+    public String getMessage(String key, Object... args) {
+        return getPrefix() + "§f " + getMessageClean(key, args);
     }
 
     public static String getPrefix() {
