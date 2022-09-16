@@ -32,7 +32,7 @@ public class GiveCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        if(!sender.hasPermission(getPermissionString() + "." + spawner.getEntityType().getName())) {
+        if(!sender.hasPermission(getPermissionString() + "." + spawner.getEntityType().getName()) && !sender.hasPermission(getPermissionString() + ".*")) {
             sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.serializedName());
             return false;
         }
