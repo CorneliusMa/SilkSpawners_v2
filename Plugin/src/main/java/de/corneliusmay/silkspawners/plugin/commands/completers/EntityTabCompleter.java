@@ -13,6 +13,9 @@ public class EntityTabCompleter implements TabCompletion {
 
     @Override
     public List<String> update(SilkSpawnersCommand command, CommandSender sender) {
-        return Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).filter((entity) -> sender.hasPermission(command.getPermissionString() + "." + entity)).toList();
+        return Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).filter((entity) -> {
+            if(sender.hasPermission(command.getPermissionString() + "." + entity)) return true;
+            else return sender.hasPermission(command.getPermissionString() + ".*");
+        }).toList();
     }
 }
