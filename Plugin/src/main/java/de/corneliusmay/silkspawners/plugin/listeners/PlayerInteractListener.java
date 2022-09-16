@@ -44,7 +44,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
                 if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get()) e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
             }
 
-            Bukkit.getScheduler().runTaskLater(plugin, () -> editedSpawners.remove(block), 5);
-        }, 5);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> editedSpawners.remove(block), 1);
+        }, 1);
     }
 }

@@ -60,7 +60,7 @@ public class Spawner {
             CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
             creatureSpawner.setSpawnedType(this.entityType);
             blockState.update();
-        }, 5);
+        }, 1);
     }
 
     private ItemStack generateItemStack() {
