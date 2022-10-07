@@ -14,19 +14,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
 
     private final List<Block> editedSpawners;
 
-    public PlayerInteractListener() {
-        this.editedSpawners = Collections.synchronizedList(new ArrayList<>());
+    public PlayerInteractListener(List<Block> editedSpawners) {
+        this.editedSpawners = editedSpawners;
     }
 
     @Override @EventHandler(priority = EventPriority.HIGHEST)
     protected void onCall(PlayerInteractEvent e) {
         if(e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = e.getClickedBlock();
+
         Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) return;
 
@@ -40,11 +42,10 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
             Spawner newSpawner = new Spawner(plugin, block.getWorld().getBlockAt(block.getLocation()));
 
             if(!e.getPlayer().hasPermission("silkspawners.change." + newSpawner.getEntityType().getName()) && !e.getPlayer().hasPermission("silkspawners.change.*") && spawner.getEntityType() != newSpawner.getEntityType()) {
-                spawner.setSpawnerBlockType(block);
+                spawner.setSpawnerBlockType(block, this.editedSpawners);
+                Bukkit.getLogger().log(Level.INFO,"[SPAWNER CHANGE]");
                 if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get()) e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
             }
-
-            Bukkit.getScheduler().runTaskLater(plugin, () -> editedSpawners.remove(block), 1);
         }, 1);
     }
 }

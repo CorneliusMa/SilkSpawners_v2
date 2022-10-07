@@ -7,12 +7,16 @@ import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListene
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.logging.Level;
 
 public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
@@ -21,7 +25,9 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
         if(e.isCancelled()) return;
 
         Spawner spawner = new Spawner(plugin, e.getBlock());
-        if(!spawner.isValid()) return;
+        if(!spawner.isValid()){
+            return;
+        }
 
         Player p = e.getPlayer();
         if(!p.hasPermission("silkspawners.break." + spawner.getEntityType().getName()) && !p.hasPermission("silkspawners.break.*")) {
@@ -30,7 +36,8 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
         }
 
         ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
-        if(!itemHasSilktouch(itemsInHand)) {
+        if(!itemHasSilktouch(itemsInHand)){
+            Bukkit.getLogger().log(Level.INFO,"[User " + p.getName()+"] dont have silk touch");
             destroySpawner(p, e);
             return;
         }
@@ -42,7 +49,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             return;
         }
-
+        Bukkit.getLogger().log(Level.INFO,"Spawner break " + event.getSpawner().getEntityType() + " " + e.getPlayer().getName());
         e.setExpToDrop(0);
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
     }
