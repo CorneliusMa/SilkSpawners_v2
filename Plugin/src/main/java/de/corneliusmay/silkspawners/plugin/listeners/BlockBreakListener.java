@@ -37,7 +37,6 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
         ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)){
-            Bukkit.getLogger().log(Level.INFO,"[User " + p.getName()+"] dont have silk touch");
             destroySpawner(p, e);
             return;
         }
@@ -49,7 +48,6 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             return;
         }
-        Bukkit.getLogger().log(Level.INFO,"Spawner break " + event.getSpawner().getEntityType() + " " + e.getPlayer().getName());
         e.setExpToDrop(0);
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
     }
