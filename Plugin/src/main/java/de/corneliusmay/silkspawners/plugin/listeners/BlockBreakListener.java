@@ -37,6 +37,12 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
 
+        int dropChance = new ConfigValue<Integer>(PluginConfig.SPAWNER_DROP_CHANCE).get();
+        if(Math.random() > dropChance / 100F) {
+            destroySpawner(p, e);
+            return;
+        }
+
         SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), plugin);
         Bukkit.getPluginManager().callEvent(event);
 
