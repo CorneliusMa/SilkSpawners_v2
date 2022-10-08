@@ -11,10 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 
 public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
 

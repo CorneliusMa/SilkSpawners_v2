@@ -73,8 +73,8 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerListeners() {
+        List<Block> editedSpawners = Collections.synchronizedList(new ArrayList<>());
         SilkSpawnersEventHandler eventHandler = new SilkSpawnersEventHandler(this);
-        List<Block> editedSpawners = getEditedSpawnersArray();
         eventHandler.registerListener(new PlayerInteractListener(editedSpawners));
         eventHandler.registerListener(new BlockPlaceListener(editedSpawners));
         eventHandler.registerListener(new BlockBreakListener());
@@ -90,10 +90,6 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.addCommand(new LocaleCommand());
         commandHandler.addCommand(new EntitiesCommand());
         commandHandler.register();
-    }
-
-    private List<Block> getEditedSpawnersArray(){
-        return Collections.synchronizedList(new ArrayList<>());
     }
 
     @Override

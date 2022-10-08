@@ -14,11 +14,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
-import java.util.logging.Level;
 
 public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
 
-    protected final List<Block> editedSpawners;
+    private final List<Block> editedSpawners;
 
     public BlockPlaceListener(List<Block> editedSpawners){
         this.editedSpawners = editedSpawners;

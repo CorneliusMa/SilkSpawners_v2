@@ -7,16 +7,12 @@ import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListene
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
-import java.util.logging.Level;
 
 public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
