@@ -26,7 +26,8 @@ public class NMSHandler implements NMS {
     }
 
     @Override
-    public Material getPlaceholderMaterial() {
+    public Material getPlaceholderMaterial(){
         return Material.STAINED_GLASS_PANE;
     }
+
 }

@@ -20,5 +20,14 @@ public class ConfigLoader {
         config.options().copyDefaults(true);
         plugin.saveConfig();
         plugin.reloadConfig();
+
+        for(PluginConfig value : PluginConfig.values()) {
+            try {
+                new ConfigValue<>(value).get();
+            } catch (Exception ex) {
+                plugin.getLogger().severe("Disabling plugin due to invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()));
+                plugin.getPluginLoader().disablePlugin(plugin);
+            }
+        }
     }
 }

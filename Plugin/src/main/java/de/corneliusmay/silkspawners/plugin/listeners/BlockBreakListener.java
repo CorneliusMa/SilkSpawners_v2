@@ -21,7 +21,9 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
         if(e.isCancelled()) return;
 
         Spawner spawner = new Spawner(plugin, e.getBlock());
-        if(!spawner.isValid()) return;
+        if(!spawner.isValid()){
+            return;
+        }
 
         Player p = e.getPlayer();
         if(!p.hasPermission("silkspawners.break." + spawner.getEntityType().getName()) && !p.hasPermission("silkspawners.break.*")) {
@@ -30,7 +32,13 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
         }
 
         ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
-        if(!itemHasSilktouch(itemsInHand)) {
+        if(!itemHasSilktouch(itemsInHand)){
+            destroySpawner(p, e);
+            return;
+        }
+
+        int dropChance = new ConfigValue<Integer>(PluginConfig.SPAWNER_DROP_CHANCE).get();
+        if(Math.random() > dropChance / 100F) {
             destroySpawner(p, e);
             return;
         }
@@ -42,7 +50,6 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             return;
         }
-
         e.setExpToDrop(0);
         p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
     }

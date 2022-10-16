@@ -13,6 +13,8 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class Spawner {
 
     private final SilkSpawners plugin;
@@ -52,14 +54,18 @@ public class Spawner {
         this.itemStack = generateItemStack();
     }
 
-    public void setSpawnerBlockType(Block block) {
-        if(!isValid()) return;
+    public void setSpawnerBlockType(Block block, List<Block> editedList) {
+        if(!isValid()){
+            editedList.remove(block);
+            return;
+        }
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
             BlockState blockState = block.getState();
             if(!(blockState instanceof CreatureSpawner)) return;
             CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
             creatureSpawner.setSpawnedType(this.entityType);
             blockState.update();
+            editedList.remove(block);
         }, 1);
     }
 

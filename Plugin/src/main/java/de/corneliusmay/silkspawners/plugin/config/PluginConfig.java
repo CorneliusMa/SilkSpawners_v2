@@ -12,6 +12,7 @@ import java.util.Locale;
 public enum PluginConfig {
     MESSAGE_PREFIX(ConfigScope.MESSAGES, "prefix", "$8[$bSilkSpawners$8]", new MessageConfigValue()),
     MESSAGE_LOCALE(ConfigScope.MESSAGES, "lcoale", "en", (ConfigValueFormatter<Locale>) Locale::forLanguageTag),
+    SPAWNER_DROP_CHANCE(ConfigScope.SPAWNER, "dropChance", 100, new IntegerConfigValue()),
     SPAWNER_DESTROYABLE(ConfigScope.SPAWNER, "destroyable", true, new BooleanConfigValue()),
     SPAWNER_ITEM_NAME(ConfigScope.SPAWNER_ITEM, "name", "$dSpawner", new MessageConfigValue()),
     SPAWNER_ITEM_PREFIX(ConfigScope.SPAWNER_ITEM, "prefix", "$e", (ConfigValueFormatter<String>) value -> {
