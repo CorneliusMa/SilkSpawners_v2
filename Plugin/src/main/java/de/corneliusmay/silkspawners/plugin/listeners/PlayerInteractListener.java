@@ -41,6 +41,8 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
             if(!e.getPlayer().hasPermission("silkspawners.change." + newSpawner.getEntityType().getName()) && !e.getPlayer().hasPermission("silkspawners.change.*") && spawner.getEntityType() != newSpawner.getEntityType()) {
                 spawner.setSpawnerBlockType(block, this.editedSpawners);
                 if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get()) e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
+            } else {
+                editedSpawners.remove(block);
             }
         }, 1);
     }
