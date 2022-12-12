@@ -136,6 +136,14 @@
         </dependency>
         <dependency>
             <groupId>de.corneliusmay</groupId>
+            <artifactId>SilkSpawners_v2-v1_19_R2</artifactId>
+            <version>v1_19_R2</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.corneliusmay</groupId>
             <artifactId>SilkSpawners_v2-API</artifactId>
             <version>API</version>
             <type>jar</type>
