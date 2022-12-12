@@ -4,6 +4,7 @@ import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import lombok.Getter;
+import org.bukkit.entity.EntityType;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,10 @@ public class LocaleHandler {
     private final SilkSpawners plugin;
 
     private final File localePath;
+
     private final Locale locale;
+
+    private Map<String, String> bukkitSpawnerNames;
 
     @Getter
     private ResourceBundle resourceBundle;
@@ -65,10 +69,34 @@ public class LocaleHandler {
         fileSystem.close();
     }
 
+    private Map<String, String> initSpawnerNames() {
+        Map<String, String> spawnerNames = new HashMap<>();
+
+        for(String key : resourceBundle.keySet()) {
+            if(!key.startsWith("ENTITY_")) continue;
+            String[] names =resourceBundle.getString(key).split(",");
+            for(String name : names) {
+                spawnerNames.put(name, key.replace("ENTITY_", ""));
+            }
+        }
+
+        if(spawnerNames.size() == 0) {
+            String entities = Arrays.toString(Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toArray()).replace("[", "").replace("]", "").replace(" ", "");
+            StringBuilder entitiesLocale = new StringBuilder("\n");
+            for(String entity : entities.split(",")) {
+                entitiesLocale.append("ENTITY_").append(entity.toUpperCase()).append(" = ").append(entity.substring(0, 1).toUpperCase()).append(entity.substring(1)).append("\n");
+            }
+            plugin.getLog().error("§cIt seems like all entity names are missing in your locale file. \n§7Please run §l§n/silkspawners locale update§7 to update the files or add the following Part: \n" + entitiesLocale);
+        }
+
+        return spawnerNames;
+    }
+
     public void loadLocale() throws MalformedURLException {
         URL[] urls = {localePath.toURI().toURL()};
         ClassLoader loader = new URLClassLoader(urls);
         this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
+        this.bukkitSpawnerNames = initSpawnerNames();
     }
 
     public String getAvailableLocales() {
@@ -76,7 +104,7 @@ public class LocaleHandler {
         return Arrays.stream(localesDir.listFiles()).sorted().map((f) -> f.getName().replace("messages_", "").replace(".properties", "")).toList().toString().replace("[", "").replace("]", "");
     }
 
-    public String getMessageClean(String key, Object... args) {
+    public String getMessageClean(String key, Object... args) throws MissingResourceException {
         return MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
     }
 
@@ -85,6 +113,15 @@ public class LocaleHandler {
             return getPrefix() + "§f " + getMessageClean(key, args);
         } catch (MissingResourceException ex) {
             return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, locale.toString());
+        }
+    }
+
+    public String getSpawnerEntityName(String key) {
+        try {
+            return getMessageClean(key).split(",")[0];
+        } catch (MissingResourceException ex) {
+            if(!bukkitSpawnerNames.containsKey(key)) return "§cMissing Key: " + key;
+            return bukkitSpawnerNames.get(key);
         }
     }
 

@@ -76,13 +76,17 @@ public class Spawner {
     }
 
     private EntityType getSpawnerEntity(String lore) {
-        if(lore.startsWith(prefix)) return EntityType.fromName(lore.replace(prefix, "").toLowerCase());
-        else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(lore.replace(oldPrefix, "").toLowerCase());
+        if(lore.startsWith(prefix)) return EntityType.fromName(getEntityBukkitName(lore.replace(prefix, "")));
+        else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(getEntityBukkitName(lore.replace(oldPrefix, "")));
         else return null;
     }
 
+    private String getEntityBukkitName(String name) {
+        return plugin.getLocale().getSpawnerEntityName(name).toLowerCase();
+    }
+
     public String serializedName() {
-        return prefix + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
+        return prefix + plugin.getLocale().getSpawnerEntityName("ENTITY_" + entityType.getName().toUpperCase());
     }
 
     public boolean isValid() {
