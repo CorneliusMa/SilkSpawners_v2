@@ -80,13 +80,12 @@ public class LocaleHandler {
             }
         }
 
-        if(spawnerNames.size() == 0) {
-            String entities = Arrays.toString(Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toArray()).replace("[", "").replace("]", "").replace(" ", "");
-            StringBuilder entitiesLocale = new StringBuilder("\n");
-            for(String entity : entities.split(",")) {
-                entitiesLocale.append("ENTITY_").append(entity.toUpperCase()).append(" = ").append(entity.substring(0, 1).toUpperCase()).append(entity.substring(1)).append("\n");
+        for(String key : Arrays.toString(Arrays.stream(EntityType.values()).filter(EntityType::isSpawnable).map(EntityType::getName).filter(Objects::nonNull).toArray()).replace("[", "").replace("]", "").replace(" ", "").split(",")) {
+            try {
+                resourceBundle.getString("ENTITY_" + key.toUpperCase());
+            } catch (MissingResourceException ex) {
+                plugin.getLog().error("The entity name §l§nENTITY_" + key.toUpperCase() + "§7 is missing in your locale file. §cThe spawner type won't work!§7\nTo update the locale files run the §l§n/silkspawners locale update§7 command.");
             }
-            plugin.getLog().error("§cIt seems like all entity names are missing in your locale file. \n§7Please run §l§n/silkspawners locale update§7 to update the files or add the following Part: \n" + entitiesLocale);
         }
 
         return spawnerNames;
