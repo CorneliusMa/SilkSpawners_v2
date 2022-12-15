@@ -13,6 +13,7 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Spawner {
@@ -69,6 +70,10 @@ public class Spawner {
         }, 1);
     }
 
+    public void setSpawnerBlockType(Block block) {
+        setSpawnerBlockType(block, new ArrayList<>());
+    }
+
     private ItemStack generateItemStack() {
         if(this.entityType == null || this.entityType.getName() == null) return null;
         return new ItemBuilder(this.plugin.getNmsHandler().getSpawnerMaterial()).setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
@@ -76,13 +81,14 @@ public class Spawner {
     }
 
     private EntityType getSpawnerEntity(String lore) {
-        if(lore.startsWith(prefix)) return EntityType.fromName(getEntityBukkitName(lore.replace(prefix, "")));
-        else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(getEntityBukkitName(lore.replace(oldPrefix, "")));
-        else return null;
+        if(lore.startsWith(prefix)) return getBukkitEntity(prefix, lore);
+        if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return getBukkitEntity(oldPrefix, lore);
+        return null;
     }
 
-    private String getEntityBukkitName(String name) {
-        return plugin.getLocale().getSpawnerEntityName(name).toLowerCase();
+    private EntityType getBukkitEntity(String prefix, String name) {
+        name = name.replace(prefix, "");
+        return EntityType.fromName(plugin.getLocale().getSpawnerEntityName(name).toLowerCase());
     }
 
     public String serializedName() {

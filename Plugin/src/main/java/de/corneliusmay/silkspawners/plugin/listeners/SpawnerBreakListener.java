@@ -13,6 +13,5 @@ public class SpawnerBreakListener extends SilkSpawnersListener<SpawnerBreakEvent
     @Override @EventHandler(priority = EventPriority.HIGHEST)
     protected void onCall(SpawnerBreakEvent e) {
         new Explosion(e.getPlayer(), e.getLocation().getWorld(), e.getLocation(), new ConfigValue<Integer>(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).get());
-
     }
 }
