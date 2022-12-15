@@ -51,7 +51,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
         e.setExpToDrop(0);
-        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
+        if(!event.isDropCancelled()) p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {

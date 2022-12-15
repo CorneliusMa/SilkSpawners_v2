@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.events;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -17,6 +18,9 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
 
     @Getter
     private Spawner spawner;
+
+    @Getter @Setter
+    private boolean dropCancelled;
 
     @Getter
     private final Location location;
@@ -37,6 +41,7 @@ public class SpawnerBreakEvent extends Event implements Cancellable {
         this.spawner = spawner;
         this.location = location;
         this.plugin = plugin;
+        this.dropCancelled = false;
     }
 
     private boolean cancelled;
