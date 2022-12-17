@@ -26,7 +26,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2      
     - name: Build project with Maven
       run: mvn -B package --file pom.xml -DskipTests
-    - run: mkdir staging && cp target/*.jar staging
+    - run: mkdir staging && cp target/SilkSpawners_v2.jar staging
     - name: Publish package
       uses: actions/upload-artifact@v1
       with:
