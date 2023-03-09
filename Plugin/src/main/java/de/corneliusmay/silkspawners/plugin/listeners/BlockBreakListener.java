@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
+import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
@@ -15,6 +16,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
+
+    public boolean allowSpawnerDrop = true;
 
     @Override @EventHandler(priority = EventPriority.HIGHEST)
     protected void onCall(BlockBreakEvent e) {
@@ -51,7 +54,13 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
         e.setExpToDrop(0);
-        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
+        if (allowSpawnerDrop){
+            p.getWorld().dropItem(e.getBlock().getLocation(), event.getSpawner().getItemStack());
+            allowSpawnerDrop = false;
+        }
+        else {
+            allowSpawnerDrop = true;
+        }
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {
