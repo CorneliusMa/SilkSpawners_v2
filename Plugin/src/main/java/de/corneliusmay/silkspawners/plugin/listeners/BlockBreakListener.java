@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
 public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
@@ -54,8 +56,9 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
         e.setExpToDrop(0);
+
         if (allowSpawnerDrop){
-            p.getWorld().dropItem(e.getBlock().getLocation(), event.getSpawner().getItemStack());
+            p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
             allowSpawnerDrop = false;
         }
         else {
