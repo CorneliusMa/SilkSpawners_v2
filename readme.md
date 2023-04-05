@@ -10,7 +10,7 @@ Visit on [spigotmc.org](https://www.spigotmc.org/resources/silkspawners-versions
 [![Deploy](https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/deploy.yml/badge.svg)](https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/deploy.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/corneliusma/silkspawners_v2/badge/master)](https://www.codefactor.io/repository/github/corneliusma/silkspawners_v2/overview/master)
 
-You can download the latest build [here](https://storage.googleapis.com/silkspawners/SilkSpawners_v2.jar).
+You can download the latest build [here](https://storage.googleapis.com/silkspawners/2.2.0/SilkSpawners_v2.jar).
 
 Alternatively you can build the Plugin yourself using Maven.
 
