@@ -14,3 +14,7 @@ Alternatively you can build the Plugin yourself using Maven.
 # Statistics
 ![Statistics](https://bstats.org/signatures/bukkit/Silk%20Spawners.svg)
 Statistics (from bStats)
+
+# Contributing
+
+See [Contributing](CONTRIBUTING.md)
