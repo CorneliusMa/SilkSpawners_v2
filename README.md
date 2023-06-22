@@ -1,8 +1,5 @@
 # SilkSpawners
 
-This is a new version of a small Minecraft Spigot plugin i originally programmed 4 years ago.
-
-
 Visit on [spigotmc.org](https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/).
 
 # Deployment
