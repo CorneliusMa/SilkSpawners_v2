@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.plugin;
 
+import com.tcoded.folialib.FoliaLib;
 import de.corneliusmay.silkspawners.api.NMS;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
@@ -39,11 +40,17 @@ public class SilkSpawners extends JavaPlugin {
     @Getter
     private VersionChecker versionChecker;
 
+    @Getter
+    private FoliaLib scheduler;
+
     @Override
     public void onEnable() {
         new ConfigLoader(this).load();
 
         log = new Logger(new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get());
+
+        scheduler = new FoliaLib(this);
+        log.info("Initialized scheduler cross-compatible with Folia");
 
         versionChecker = new VersionChecker(this);
         if(new ConfigValue<Boolean>(PluginConfig.UPDATE_CHECK_ENABLED).get()) versionChecker.start(new ConfigValue<Integer>(PluginConfig.UPDATE_CHECK_INTERVAL).get());
