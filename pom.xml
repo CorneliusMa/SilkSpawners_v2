@@ -48,7 +48,7 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-         
+
     <distributionManagement>
         <repository>
             <id>github</id>
