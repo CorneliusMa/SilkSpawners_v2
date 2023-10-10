@@ -4,6 +4,7 @@ main: de.corneliusmay.silkspawners.plugin.SilkSpawners
 api-version: 1.13
 softdepend:
   - Vault
+folia-supported: true
 
 commands:
   silkspawners:

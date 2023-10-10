@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,6 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
 
@@ -29,14 +31,15 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) return;
 
-        if(editedSpawners.stream().anyMatch(b -> b.getLocation().equals(block.getLocation()))) {
+        Location blockLocation = block.getLocation();
+        if(editedSpawners.stream().anyMatch(b -> b.getLocation().equals(blockLocation))) {
             e.setCancelled(true);
             return;
         }
         editedSpawners.add(block);
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Spawner newSpawner = new Spawner(plugin, block.getWorld().getBlockAt(block.getLocation()));
+        plugin.getScheduler().getImpl().runAtLocationLater(blockLocation, () -> {
+            Spawner newSpawner = new Spawner(plugin, block.getWorld().getBlockAt(blockLocation));
 
             if(!e.getPlayer().hasPermission("silkspawners.change." + newSpawner.getEntityType().getName()) && !e.getPlayer().hasPermission("silkspawners.change.*") && spawner.getEntityType() != newSpawner.getEntityType()) {
                 spawner.setSpawnerBlockType(block, this.editedSpawners);
@@ -44,6 +47,6 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
             } else {
                 editedSpawners.remove(block);
             }
-        }, 1);
+        }, 50L, TimeUnit.MILLISECONDS);
     }
 }

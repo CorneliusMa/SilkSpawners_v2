@@ -14,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Spawner {
 
@@ -59,14 +60,14 @@ public class Spawner {
             editedList.remove(block);
             return;
         }
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+        plugin.getScheduler().getImpl().runAtLocationLater(block.getLocation(), () -> {
             BlockState blockState = block.getState();
             if(!(blockState instanceof CreatureSpawner)) return;
             CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
             creatureSpawner.setSpawnedType(this.entityType);
             blockState.update();
             editedList.remove(block);
-        }, 1);
+        }, 50L, TimeUnit.MILLISECONDS);
     }
 
     private ItemStack generateItemStack() {
