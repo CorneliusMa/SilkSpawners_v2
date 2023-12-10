@@ -168,6 +168,14 @@
         </dependency>
         <dependency>
             <groupId>de.corneliusmay</groupId>
+            <artifactId>SilkSpawners_v2-v1_20_R3</artifactId>
+            <version>v1_20_R3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.corneliusmay</groupId>
             <artifactId>SilkSpawners_v2-API</artifactId>
             <version>API</version>
             <type>jar</type>
