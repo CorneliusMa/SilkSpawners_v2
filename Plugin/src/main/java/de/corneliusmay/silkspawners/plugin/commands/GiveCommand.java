@@ -26,13 +26,24 @@ public class GiveCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        Spawner spawner = new Spawner(plugin, EntityType.fromName(args[1]));
+        EntityType entityType;
+        if (args[1].equalsIgnoreCase("none")) {
+            entityType = null;
+        } else {
+            entityType = EntityType.fromName(args[1]);
+            if(entityType == null) {
+                sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
+                return false;
+            }
+        }
+
+        Spawner spawner = new Spawner(plugin, entityType);
         if(!spawner.isValid()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
             return false;
         }
 
-        if(!sender.hasPermission(getPermissionString() + "." + spawner.getEntityType().getName()) && !sender.hasPermission(getPermissionString() + ".*")) {
+        if(!sender.hasPermission(getPermissionString() + "." + spawner.serializedEntityType()) && !sender.hasPermission(getPermissionString() + ".*")) {
             sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.serializedName());
             return false;
         }

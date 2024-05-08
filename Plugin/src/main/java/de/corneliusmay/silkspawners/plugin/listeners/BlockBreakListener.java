@@ -26,7 +26,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
         }
 
         Player p = e.getPlayer();
-        if(!p.hasPermission("silkspawners.break." + spawner.getEntityType().getName()) && !p.hasPermission("silkspawners.break.*")) {
+        if(!p.hasPermission("silkspawners.break." + spawner.serializedEntityType()) && !p.hasPermission("silkspawners.break.*")) {
             destroySpawner(p, e);
             return;
         }
