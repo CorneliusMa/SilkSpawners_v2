@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>LATEST</version>
+            <version>1.13-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -170,6 +170,14 @@
             <groupId>de.corneliusmay</groupId>
             <artifactId>SilkSpawners_v2-v1_20_R3</artifactId>
             <version>v1_20_R3</version>
+            <type>jar</type>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>de.corneliusmay</groupId>
+            <artifactId>SilkSpawners_v2-v1_20_R4</artifactId>
+            <version>v1_20_R4</version>
             <type>jar</type>
             <scope>compile</scope>
             <optional>true</optional>
