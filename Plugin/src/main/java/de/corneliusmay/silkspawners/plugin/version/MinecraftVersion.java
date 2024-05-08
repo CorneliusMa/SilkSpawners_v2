@@ -2,6 +2,8 @@ package de.corneliusmay.silkspawners.plugin.version;
 
 import org.bukkit.Bukkit;
 
+import java.util.logging.Level;
+
 public class MinecraftVersion {
     private static String version;
     private static int majorVersion, minorVersion, patchVersion;
@@ -16,8 +18,7 @@ public class MinecraftVersion {
             minorVersion = Integer.parseInt(splitVersion[1]);
             patchVersion = Integer.parseInt(splitVersion[2]);
         } catch (Exception e) {
-            System.err.println("Failed to load Reflector");
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "[SilkSpawners] Failed to parse server version!", e);
         }
     }
 
