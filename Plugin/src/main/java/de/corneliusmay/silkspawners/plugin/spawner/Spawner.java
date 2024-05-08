@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueArray;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
+import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -70,22 +71,36 @@ public class Spawner {
     }
 
     private ItemStack generateItemStack() {
-        if(this.entityType == null || this.entityType.getName() == null) return null;
-        return new ItemBuilder(this.plugin.getNmsHandler().getSpawnerMaterial()).setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
-                .addToLore(serializedName()).addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
+        return new ItemBuilder(this.plugin.getNmsHandler().getSpawnerMaterial())
+                .setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
+                .addToLore(serializedName())
+                .addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {
-        if(lore.startsWith(prefix)) return EntityType.fromName(lore.replace(prefix, "").toLowerCase());
-        else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) return EntityType.fromName(lore.replace(oldPrefix, "").toLowerCase());
-        else return null;
+        String name;
+        if(lore.startsWith(prefix)) {
+            name = lore.replaceFirst(prefix, "").replace(" ", "_").toLowerCase();
+        }else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) {
+            name = lore.replaceFirst(oldPrefix, "").replace(" ", "_").toLowerCase();
+        }else {
+            return null; // Invalid lore
+        }
+        if (name.equalsIgnoreCase("none")) {
+            return null;
+        }
+        return EntityType.fromName(name);
+    }
+
+    public String serializedEntityType() {
+        return entityType == null ? "none" : entityType.getName().toLowerCase();
     }
 
     public String serializedName() {
-        return prefix + entityType.getName().substring(0, 1).toUpperCase() + entityType.getName().substring(1);
+        return prefix + StringUtils.capitalizeFully(serializedEntityType().replace("_", " "));
     }
 
     public boolean isValid() {
-        return itemStack != null && entityType != null && entityType.isSpawnable();
+        return itemStack != null && (entityType == null || entityType.isSpawnable());
     }
 }

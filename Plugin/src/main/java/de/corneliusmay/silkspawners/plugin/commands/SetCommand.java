@@ -9,7 +9,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SetCommand extends SilkSpawnersCommand {
 
@@ -25,13 +24,24 @@ public class SetCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        Spawner newSpawner = new Spawner(plugin, EntityType.fromName(args[0]));
+        EntityType entityType;
+        if (args[0].equalsIgnoreCase("none")) {
+            entityType = null;
+        } else {
+            entityType = EntityType.fromName(args[0]);
+            if(entityType == null) {
+                sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
+                return false;
+            }
+        }
+
+        Spawner newSpawner = new Spawner(plugin, entityType);
         if(!newSpawner.isValid()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
         }
 
-        if(!player.hasPermission(getPermissionString() + "." + newSpawner.getEntityType().getName()) && !sender.hasPermission(getPermissionString() + ".*")) {
+        if(!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType()) && !sender.hasPermission(getPermissionString() + ".*")) {
             sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", newSpawner.serializedName());
             return false;
         }
