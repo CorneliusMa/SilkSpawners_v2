@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 
 public class Spawner {
+    public static String EMPTY = "empty";
 
     private final SilkSpawners plugin;
 
@@ -86,14 +87,14 @@ public class Spawner {
         }else {
             return null; // Invalid lore
         }
-        if (name.equalsIgnoreCase("none")) {
+        if (name.equalsIgnoreCase(Spawner.EMPTY)) {
             return null;
         }
         return EntityType.fromName(name);
     }
 
     public String serializedEntityType() {
-        return entityType == null ? "none" : entityType.getName().toLowerCase();
+        return entityType == null ? Spawner.EMPTY : entityType.getName().toLowerCase();
     }
 
     public String serializedName() {
