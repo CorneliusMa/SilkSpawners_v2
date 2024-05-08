@@ -25,7 +25,7 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         EntityType entityType;
-        if (args[0].equalsIgnoreCase("none")) {
+        if (args[0].equalsIgnoreCase(Spawner.EMPTY)) {
             entityType = null;
         } else {
             entityType = EntityType.fromName(args[0]);
