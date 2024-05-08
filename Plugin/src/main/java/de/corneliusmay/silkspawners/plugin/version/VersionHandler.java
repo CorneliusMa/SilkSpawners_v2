@@ -50,6 +50,15 @@ public class VersionHandler {
     }
 
     private String getServerVersion() {
+        // As of Minecraft version 1.20.5, Paper ships with a Mojang-mapped runtime instead of reobfuscating the server
+        // to Spigot mappings. This means that the package name of the server implementation is no longer a reliable
+        // way to determine the server version. Instead, we can use the Bukkit version string.
+        //
+        // The following code also means that we don't have to update the plugin for every new Minecraft version
+        // unless the Bukkit API changes in a way that explicitly breaks it.
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 20, 5)) {
+            return "v1_20_R4";
+        }
         String packageName = plugin.getServer().getClass().getPackage().getName();
         return packageName.substring(packageName.lastIndexOf('.') + 1);
     }
