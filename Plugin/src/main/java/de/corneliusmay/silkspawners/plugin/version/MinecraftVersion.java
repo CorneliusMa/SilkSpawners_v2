@@ -16,7 +16,9 @@ public class MinecraftVersion {
 
             majorVersion = Integer.parseInt(splitVersion[0]);
             minorVersion = Integer.parseInt(splitVersion[1]);
-            patchVersion = Integer.parseInt(splitVersion[2]);
+            if (splitVersion.length > 2) {
+                patchVersion = Integer.parseInt(splitVersion[2]);
+            }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "[SilkSpawners] Failed to parse server version!", e);
         }
@@ -35,9 +37,16 @@ public class MinecraftVersion {
      * @return true if the server version is newer or equal to the one provided
      */
     public static boolean versionIsNewerOrEqualTo(int major, int minor, int patch) {
-        if (getMajorVersion() < major) return false;
-        if (getMinorVersion() < minor) return false;
-        return getPatchVersion() >= patch;
+        if (getMajorVersion() > major) {
+            return true;
+        } else if (getMajorVersion() == major) {
+            if (getMinorVersion() > minor) {
+                return true;
+            } else if (getMinorVersion() == minor) {
+                return getPatchVersion() >= patch;
+            }
+        }
+        return false;
     }
 
     private static int getMajorVersion() {
