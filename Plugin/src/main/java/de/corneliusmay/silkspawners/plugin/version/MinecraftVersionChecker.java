@@ -4,25 +4,14 @@ import de.corneliusmay.silkspawners.api.NMS;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import lombok.Getter;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-public class VersionHandler {
+public class MinecraftVersionChecker {
 
     private final SilkSpawners plugin;
 
     @Getter
     private NMS nmsHandler;
 
-    public VersionHandler(SilkSpawners plugin) {
+    public MinecraftVersionChecker(SilkSpawners plugin) {
         this.plugin = plugin;
     }
 
