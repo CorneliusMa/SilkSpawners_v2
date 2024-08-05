@@ -10,21 +10,16 @@ public class NMSHandler implements NMS {
 
     @Override
     public Block getTargetBlock(Player player) {
-        return player.getTargetBlockExact( 5);
+        return player.getTargetBlockExact(5);
     }
 
     @Override
     public ItemStack[] getItemsInHand(Player player) {
-        return new ItemStack[]{ player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()};
+        return new ItemStack[]{ player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() };
     }
 
     @Override
     public Material getSpawnerMaterial() {
         return Material.SPAWNER;
-    }
-
-    @Override
-    public Material getPlaceholderMaterial() {
-        return Material.GRAY_STAINED_GLASS_PANE;
     }
 }

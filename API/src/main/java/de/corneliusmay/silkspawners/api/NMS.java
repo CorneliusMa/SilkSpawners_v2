@@ -13,6 +13,4 @@ public interface NMS {
 
     Material getSpawnerMaterial();
 
-    Material getPlaceholderMaterial();
-
 }

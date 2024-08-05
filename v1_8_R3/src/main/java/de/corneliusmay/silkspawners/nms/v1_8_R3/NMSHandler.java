@@ -24,9 +24,4 @@ public class NMSHandler implements NMS {
     public Material getSpawnerMaterial() {
         return Material.MOB_SPAWNER;
     }
-
-    @Override
-    public Material getPlaceholderMaterial() {
-        return Material.STAINED_GLASS_PANE;
-    }
 }
