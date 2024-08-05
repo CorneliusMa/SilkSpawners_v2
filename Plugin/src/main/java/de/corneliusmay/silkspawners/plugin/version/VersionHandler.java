@@ -20,32 +20,31 @@ public class VersionHandler {
     private final SilkSpawners plugin;
 
     @Getter
-    private final String version;
-
-    @Getter
     private NMS nmsHandler;
 
     public VersionHandler(SilkSpawners plugin) {
         this.plugin = plugin;
-        this.version = getServerVersion();
     }
 
     public boolean load() {
-        try {
-            this.nmsHandler = getNMS(this.version);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException ex) {
-            plugin.getLog().error("The detected Server Version (" + this.version + ") is not supported by the currently installed version of SilkSpawners");
+        String version = getServerVersion();
 
-            plugin.getLog().info("Currently supported Versions are: " + Arrays.toString(getSupportedVersions()));
+        if (version == null) {
+            plugin.getLog().error("The detected Server Version (" + MinecraftVersion.getVersion() + ") is not supported by the currently installed version of SilkSpawners");
             plugin.getLog().info("You can check for updates at https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/");
-
-
             plugin.getLog().warn("Disabling plugin due to version incompatibility");
             plugin.getPluginLoader().disablePlugin(plugin);
             return false;
         }
 
-        plugin.getLog().info("Loading support for NMS-Version " + this.version);
+        try {
+            Class<?> clazz = Class.forName("de.corneliusmay.silkspawners.nms." + version + ".NMSHandler");
+            this.nmsHandler = (NMS) clazz.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        plugin.getLog().info("Loading support for version " + MinecraftVersion.getVersion());
         return true;
     }
 
@@ -59,48 +58,18 @@ public class VersionHandler {
         if(MinecraftVersion.versionIsNewerOrEqualTo(1, 20, 5)) {
             return "v1_20_R4";
         }
-        String packageName = plugin.getServer().getClass().getPackage().getName();
-        return packageName.substring(packageName.lastIndexOf('.') + 1);
-    }
-
-
-    private NMS getNMS(String version) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        final Class<?> clazz = Class.forName("de.corneliusmay.silkspawners.nms." + version + ".NMSHandler");
-        if(NMS.class.isAssignableFrom(clazz)) {
-            return (NMS) clazz.getConstructor().newInstance();
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 13, 1)) {
+            return "1_13_R2";
         }
-
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 12, 0)) {
+            return "v1_12_R1";
+        }
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 9, 4)) {
+            return "v1_9_R2";
+        }
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 8, 4)) {
+            return "v1_8_R3";
+        }
         return null;
-    }
-
-    private String[] getSupportedVersions() {
-        List<String> versions = new ArrayList<>();
-        try {
-            CodeSource src = SilkSpawners.class.getProtectionDomain().getCodeSource();
-            if(src == null) return new String[]{"Cannot get supported versions"};
-
-            URL jar = src.getLocation();
-            ZipInputStream zip = new ZipInputStream(jar.openStream());
-            zipIterator(zip, (zipEntry -> addPackageName(zipEntry.getName(), versions)));
-        } catch (IOException ex) {
-            return new String[]{"Cannot get supported versions: " + ex.getMessage()};
-        }
-
-        return versions.toArray(new String[0]);
-    }
-
-    private void zipIterator(ZipInputStream zip, Consumer<ZipEntry> consumer) throws IOException {
-        while (true) {
-            ZipEntry e = zip.getNextEntry();
-            if (e == null) break;
-            consumer.accept(e);
-        }
-    }
-
-    private void addPackageName(String name, List<String> names) {
-        if(!name.startsWith("de/corneliusmay/silkspawners/nms/v") || name.contains(".class")) return;
-
-        String[] nameSplit = name.split("/");
-        names.add(nameSplit[nameSplit.length - 1]);
     }
 }

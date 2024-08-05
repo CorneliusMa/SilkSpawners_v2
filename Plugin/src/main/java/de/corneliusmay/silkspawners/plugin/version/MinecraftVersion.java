@@ -1,11 +1,16 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
 
 public class MinecraftVersion {
+
+    @Getter
     private static String version;
+
+    @Getter
     private static int majorVersion, minorVersion, patchVersion;
 
     static {
@@ -22,10 +27,6 @@ public class MinecraftVersion {
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "[SilkSpawners] Failed to parse server version!", e);
         }
-    }
-
-    public static String getVersion() {
-        return version;
     }
 
     /**
@@ -47,17 +48,5 @@ public class MinecraftVersion {
             }
         }
         return false;
-    }
-
-    private static int getMajorVersion() {
-        return majorVersion;
-    }
-
-    private static int getMinorVersion() {
-        return minorVersion;
-    }
-
-    private static int getPatchVersion() {
-        return patchVersion;
     }
 }
