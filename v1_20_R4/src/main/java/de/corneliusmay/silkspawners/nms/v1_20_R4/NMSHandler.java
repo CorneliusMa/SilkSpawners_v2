@@ -33,9 +33,4 @@ public class NMSHandler implements NMS {
     public Material getSpawnerMaterial() {
         return Material.SPAWNER;
     }
-
-    @Override
-    public Material getPlaceholderMaterial() {
-        return Material.GRAY_STAINED_GLASS_PANE;
-    }
 }
