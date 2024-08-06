@@ -48,7 +48,7 @@ public class MinecraftVersionChecker {
             return "v1_20_R4";
         }
         if(MinecraftVersion.versionIsNewerOrEqualTo(1, 13, 1)) {
-            return "1_13_R2";
+            return "v1_13_R2";
         }
         if(MinecraftVersion.versionIsNewerOrEqualTo(1, 12, 0)) {
             return "v1_12_R1";
