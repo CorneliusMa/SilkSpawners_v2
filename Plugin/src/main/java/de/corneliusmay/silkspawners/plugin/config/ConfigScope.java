@@ -6,6 +6,7 @@ public enum ConfigScope {
     SPAWNER_ITEM("item", SPAWNER),
     SPAWNER_EXPLOSION("explosion", SPAWNER),
     SPAWNER_MESSAGES("message", SPAWNER),
+    SPAWNER_PERMISSIONS("permission", SPAWNER),
     UPDATE("update"),
     UPDATE_CHECK("check", UPDATE),
     ;

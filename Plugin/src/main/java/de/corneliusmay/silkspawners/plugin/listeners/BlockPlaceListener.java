@@ -33,7 +33,9 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
         Spawner spawner = new Spawner(plugin, itemIsSpawner(itemsInHand));
         if(!spawner.isValid()) return;
 
-        if(!p.hasPermission("silkspawners.place." + spawner.serializedEntityType()) && !p.hasPermission("silkspawners.place.*")) {
+        if(!p.hasPermission("silkspawners.place." + spawner.serializedEntityType())
+                && !p.hasPermission("silkspawners.place.*")
+                && !new ConfigValue<Boolean>(PluginConfig.SPAWNER_PERMISSION_DISABLE_PLACE).get()) {
             e.setCancelled(true);
             if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_PLACE).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_PLACE_DENIED"));
             return;

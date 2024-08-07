@@ -26,6 +26,9 @@ public enum PluginConfig {
     SPAWNER_MESSAGE_DENY_DESTROY(ConfigScope.SPAWNER_MESSAGES, "denyDestroy", true, new BooleanConfigValue()),
     SPAWNER_MESSAGE_DENY_PLACE(ConfigScope.SPAWNER_MESSAGES, "denyPlace", true, new BooleanConfigValue()),
     SPAWNER_MESSAGE_DENY_CHANGE(ConfigScope.SPAWNER_MESSAGES, "denyChange", true, new BooleanConfigValue()),
+    SPAWNER_PERMISSION_DISABLE_DESTROY(ConfigScope.SPAWNER_PERMISSIONS, "disableDestroy", false, new BooleanConfigValue()),
+    SPAWNER_PERMISSION_DISABLE_PLACE(ConfigScope.SPAWNER_PERMISSIONS, "disablePlace", false, new BooleanConfigValue()),
+    SPAWNER_PERMISSION_DISABLE_CHANGE(ConfigScope.SPAWNER_PERMISSIONS, "disableChange", false, new BooleanConfigValue()),
     UPDATE_CHECK_ENABLED(ConfigScope.UPDATE_CHECK, "enabled", true, new BooleanConfigValue()),
     UPDATE_CHECK_INTERVAL(ConfigScope.UPDATE_CHECK, "interval", 24, new IntegerConfigValue()),
     ;
