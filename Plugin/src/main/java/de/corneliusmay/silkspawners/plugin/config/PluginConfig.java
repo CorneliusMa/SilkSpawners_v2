@@ -14,6 +14,8 @@ public enum PluginConfig {
     MESSAGE_LOCALE(ConfigScope.MESSAGES, "lcoale", "en", (ConfigValueFormatter<Locale>) Locale::forLanguageTag),
     SPAWNER_DROP_CHANCE(ConfigScope.SPAWNER, "dropChance", 100, new IntegerConfigValue()),
     SPAWNER_DESTROYABLE(ConfigScope.SPAWNER, "destroyable", true, new BooleanConfigValue()),
+    SPAWNER_PICKAXE_REQUIRED(ConfigScope.SPAWNER, "pickaxeRequired", true, new BooleanConfigValue()),
+    SPAWNER_SILKTOUCH_REQUIRED(ConfigScope.SPAWNER, "silktouchRequired", true, new BooleanConfigValue()),
     SPAWNER_ITEM_NAME(ConfigScope.SPAWNER_ITEM, "name", "$dSpawner", new MessageConfigValue()),
     SPAWNER_ITEM_PREFIX(ConfigScope.SPAWNER_ITEM, "prefix", "$e", (ConfigValueFormatter<String>) value -> {
         if(value.equals("")) return "§f";

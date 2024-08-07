@@ -71,7 +71,12 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
     private boolean itemHasSilktouch(ItemStack[] items, int i) {
         if(items.length == i) return false;
 
-        if(items[i].containsEnchantment(Enchantment.SILK_TOUCH) && items[i].getType().toString().contains("PICKAXE")) return true;
-        else return itemHasSilktouch(items, i + 1);
+        boolean isPickaxe = items[i].getType().toString().contains("PICKAXE")
+                || !new ConfigValue<Boolean>(PluginConfig.SPAWNER_PICKAXE_REQUIRED).get();
+        boolean hasSilktouch = items[i].containsEnchantment(Enchantment.SILK_TOUCH)
+                || !new ConfigValue<Boolean>(PluginConfig.SPAWNER_SILKTOUCH_REQUIRED).get();
+        if(isPickaxe && hasSilktouch) return true;
+
+        return itemHasSilktouch(items, i + 1);
     }
 }
