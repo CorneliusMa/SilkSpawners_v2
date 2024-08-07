@@ -64,8 +64,13 @@ public class GiveCommand extends SilkSpawnersCommand {
         ItemStack item = spawner.getItemStack();
         item.setAmount(amount);
         p.getInventory().addItem(item);
-        sendMessage(sender, "SUCCESS", amount, spawner.serializedName(), amount > 1? "s" : "", p.getName());
-        sendMessage(p, "SUCCESS_TARGET", amount, spawner.serializedName(), amount > 1? "s" : "", sender.getName());
+        String trailingLetter = amount > 1? "s" : "";
+        if(p != sender) {
+            sendMessage(sender, "SUCCESS", amount, spawner.serializedName(), trailingLetter, p.getName());
+            sendMessage(p, "SUCCESS_TARGET", amount, spawner.serializedName(), trailingLetter, sender.getName());
+        } else {
+            sendMessage(sender, "SUCCESS_SELF", amount, spawner.serializedName(), trailingLetter);
+        }
         return true;
     }
 
