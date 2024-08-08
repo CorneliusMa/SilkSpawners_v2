@@ -62,7 +62,7 @@ spawner:
   item:
     name: $dSpawner # The name of the spawner item dropped
     prefix: $e # The text before the spawner name in the lore
-    prefix-old: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
+    prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
     normal: 0 # The explosion intensity when spawners are mined without SilkTouch
