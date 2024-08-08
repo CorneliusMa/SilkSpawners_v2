@@ -14,8 +14,6 @@
     <a href="https://hangar.papermc.io/SilkSpawners/SilkSpawners"><img alt="Visit on Hangar" src=".assests/img/hangar.png"></a>
 </p>
 
-Alternatively to downloading the prebuilt releases you can build the Plugin yourself using Maven.
-
 ## Contributing
 
 Contributions are welcome. See [Contributing](CONTRIBUTING.md) for more.
