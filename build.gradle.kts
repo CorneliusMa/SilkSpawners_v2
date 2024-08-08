@@ -3,7 +3,6 @@ plugins {
 }
 
 group = "de.corneliusmay.silkspawners"
-version = "2.3.0"
 
 subprojects {
     apply(plugin = "java")
