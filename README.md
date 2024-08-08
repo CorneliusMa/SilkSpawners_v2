@@ -20,6 +20,18 @@ Alternatively to downloading the prebuilt releases you can build the Plugin your
 
 Contributions are welcome. See [Contributing](CONTRIBUTING.md) for more.
 
+## Building
+
+Requirements: JDK 17 (any distribution)
+
+Simply download the source and build it using Gradle.
+
+```bash
+./gradlew :Plugin:assemble --no-daemon
+```
+
+Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`.
+
 ## Commands
 - `/silkspawners help [command]`
 - `/silkspawners give <Player> <Type> [Amount]`
