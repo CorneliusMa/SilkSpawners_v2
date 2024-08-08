@@ -19,7 +19,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew :Plugin:assemble
+      - run: ./gradlew :Plugin:assemble --no-daemon --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
