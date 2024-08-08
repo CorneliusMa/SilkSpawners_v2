@@ -27,7 +27,7 @@ Your commit messages should be structured as follows:
 Where `type` can be any of the following:
 
 * **`build`**: Changes that affect the build system or external dependencies (example scopes: npm, gradle, maven)
-* **`ci`**: Changes to our CI configuration files and scripts (example scopes: Actions, Travis, Circle* )
+* **`ci`**: Changes to our CI configuration files and scripts (example scopes: Actions, Travis, Circle)
 * **`docs`**: Documentation only changes
 * **`feat`**: A new feature
 * **`fix`**: A bug fix
