@@ -33,7 +33,7 @@ public class Spawner {
     public Spawner(SilkSpawners plugin, Block block) {
         this.plugin = plugin;
         if(block == null) return;
-        if(block.getType() != this.plugin.getNmsHandler().getSpawnerMaterial()) return;
+        if(block.getType() != this.plugin.getBukkitHandler().getSpawnerMaterial()) return;
 
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
         this.entityType = creatureSpawner.getSpawnedType();
@@ -44,7 +44,7 @@ public class Spawner {
         this.plugin = plugin;
         this.itemStack = itemStack;
         if(itemStack == null) return;
-        if(itemStack.getType() != this.plugin.getNmsHandler().getSpawnerMaterial()) return;
+        if(itemStack.getType() != this.plugin.getBukkitHandler().getSpawnerMaterial()) return;
         if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getLore() == null) return;
 
         this.entityType = getSpawnerEntity(itemStack.getItemMeta().getLore().get(0));
@@ -72,7 +72,7 @@ public class Spawner {
     }
 
     private ItemStack generateItemStack() {
-        return new ItemBuilder(this.plugin.getNmsHandler().getSpawnerMaterial())
+        return new ItemBuilder(this.plugin.getBukkitHandler().getSpawnerMaterial())
                 .setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
                 .addToLore(serializedName())
                 .addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();

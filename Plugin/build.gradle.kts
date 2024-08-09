@@ -12,11 +12,11 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
 
     implementation(project(":API"))
-    implementation(project(":v1_8_R3"))
-    implementation(project(":v1_9_R2"))
-    implementation(project(":v1_12_R1"))
-    implementation(project(":v1_13_R2"))
-    implementation(project(":v1_20_R4"))
+    implementation(project(":v1_8_4"))
+    implementation(project(":v1_9_4"))
+    implementation(project(":v1_12_0"))
+    implementation(project(":v1_13_1"))
+    implementation(project(":v1_20_5"))
 }
 
 tasks {

@@ -46,7 +46,7 @@ public class SetCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        Block block = plugin.getNmsHandler().getTargetBlock(player);
+        Block block = plugin.getBukkitHandler().getTargetBlock(player);
         Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) {
             sendMessage(sender, "INVALID_TARGET");

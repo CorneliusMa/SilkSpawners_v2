@@ -1,17 +1,17 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import de.corneliusmay.silkspawners.api.NMS;
+import de.corneliusmay.silkspawners.api.Bukkit;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import lombok.Getter;
 
-import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker.getServerVersion;
+import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker.getBukkitVersion;
 
 public class CrossVersionHandler {
 
     private final SilkSpawners plugin;
 
     @Getter
-    private NMS nmsHandler;
+    private Bukkit bukkitHandler;
 
     public CrossVersionHandler(SilkSpawners plugin) {
         this.plugin = plugin;
@@ -29,20 +29,19 @@ public class CrossVersionHandler {
     }
 
     public boolean load() {
-        String version = getServerVersion();
-
-        if (version == null) {
+        String bukkitVersion = getBukkitVersion();
+        if (bukkitVersion == null) {
             return disablePlugin("The detected Server Version (" + MinecraftVersion.getVersion() + ") is too old for the currently installed version of SilkSpawners");
         }
 
         try {
-            Class<?> clazz = loadClass("nms." + version + ".NMSHandler");
-            this.nmsHandler = (NMS) clazz.getConstructor().newInstance();
+            Class<?> clazz = loadClass("bukkit." + bukkitVersion + ".BukkitHandler");
+            this.bukkitHandler = (Bukkit) clazz.getConstructor().newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        plugin.getLog().info("Loading support for version " + MinecraftVersion.getVersion());
+        plugin.getLog().info("Loaded support for version " + MinecraftVersion.getVersion() + " (Bukkit " + bukkitVersion + ")");
         return true;
     }
 }
