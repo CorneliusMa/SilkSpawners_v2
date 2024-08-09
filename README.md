@@ -96,7 +96,7 @@ update:
 If you want to create your own locale file, you should create a new file to prevent your changes from being overwritten when you update the locale files.
 Locale files must be named accordingly to the messages_myfile.properties naming schema and can be used by setting myfile as locale.
 
-*If you have created your own translation, it would be awesome if you write me a message here, or create a pull request directly on GitHub, so other people can use it too.*
+*If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.*
 
 ## Statistics
 ![Statistics](https://bstats.org/signatures/bukkit/Silk%20Spawners.svg)
