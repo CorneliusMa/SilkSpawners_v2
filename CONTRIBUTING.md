@@ -3,6 +3,10 @@
 Thank you for being interested in contributing to SilkSpawners. Please make sure to read the guidelines
 below.
 
+## Translations
+
+We will not accept pull requests adding translations. Please use our Crowdin [translation program](https://crowdin.com/project/silkspawners/de).
+
 ## Pull Requests
 
 We will often add small changes to your pull request directly before merging it. These changes may range from formatting, slight refactoring where necessary to more advanced additions.
