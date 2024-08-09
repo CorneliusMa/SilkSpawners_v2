@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
 
-public class MinecraftVersion {
+class MinecraftVersion {
 
     @Getter
     private static String version;
@@ -37,7 +37,7 @@ public class MinecraftVersion {
      * @param patch the target patch version. 0 for all
      * @return true if the server version is newer or equal to the one provided
      */
-    public static boolean versionIsNewerOrEqualTo(int major, int minor, int patch) {
+    static boolean versionIsNewerOrEqualTo(int major, int minor, int patch) {
         if (getMajorVersion() > major) {
             return true;
         } else if (getMajorVersion() == major) {

@@ -1,43 +1,8 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import de.corneliusmay.silkspawners.api.NMS;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
-import lombok.Getter;
+class MinecraftVersionChecker {
 
-public class MinecraftVersionChecker {
-
-    private final SilkSpawners plugin;
-
-    @Getter
-    private NMS nmsHandler;
-
-    public MinecraftVersionChecker(SilkSpawners plugin) {
-        this.plugin = plugin;
-    }
-
-    public boolean load() {
-        String version = getServerVersion();
-
-        if (version == null) {
-            plugin.getLog().error("The detected Server Version (" + MinecraftVersion.getVersion() + ") is not supported by the currently installed version of SilkSpawners");
-            plugin.getLog().info("You can check for updates at https://www.spigotmc.org/resources/silkspawners-versions-1-8-8-1-18-2.60063/");
-            plugin.getLog().warn("Disabling plugin due to version incompatibility");
-            plugin.getPluginLoader().disablePlugin(plugin);
-            return false;
-        }
-
-        try {
-            Class<?> clazz = Class.forName("de.corneliusmay.silkspawners.nms." + version + ".NMSHandler");
-            this.nmsHandler = (NMS) clazz.getConstructor().newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        plugin.getLog().info("Loading support for version " + MinecraftVersion.getVersion());
-        return true;
-    }
-
-    private String getServerVersion() {
+    static String getServerVersion() {
         // As of Minecraft version 1.20.5, Paper ships with a Mojang-mapped runtime instead of reobfuscating the server
         // to Spigot mappings. This means that the package name of the server implementation is no longer a reliable
         // way to determine the server version. Instead, we can use the Bukkit version string.

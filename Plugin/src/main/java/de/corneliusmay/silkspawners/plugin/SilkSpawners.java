@@ -14,7 +14,7 @@ import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHa
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
-import de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker;
+import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.block.Block;
@@ -52,7 +52,7 @@ public class SilkSpawners extends JavaPlugin {
         log.info("Starting SilkSpawners v" + versionChecker.getInstalledVersion());
 
         log.info("Loading Cross-Version support");
-        MinecraftVersionChecker versionHandler = new MinecraftVersionChecker(this);
+        CrossVersionHandler versionHandler = new CrossVersionHandler(this);
         if(!versionHandler.load()) return;
         nmsHandler = versionHandler.getNmsHandler();
 
