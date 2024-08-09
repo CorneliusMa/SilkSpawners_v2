@@ -13,7 +13,7 @@ jobs:
           translation: "Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
           source: "Plugin/src/main/resources/locales/messages_en.properties"
           upload_sources: true
-          upload_translations: true
+          upload_translations: false
           download_sources: false
           download_translations: true
           create_pull_request: false
