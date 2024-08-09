@@ -17,7 +17,7 @@
 
 ## Contributing
 
-Contributions are welcome. See [Contributing](CONTRIBUTING.md) for more.
+Contributions and [translations](https://crowdin.com/project/silkspawners) are welcome. See [Contributing](CONTRIBUTING.md) for more.
 
 ## Building
 
