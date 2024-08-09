@@ -1,0 +1,25 @@
+name: Translate
+
+on:
+  workflow_dispatch:
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    env:
+      CROWDIN_API_KEY: ${{ secrets.CROWDIN_API_KEY }}
+      CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: crowdin/github-action@v2
+        with:
+          translation: "/Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
+          commit_message: "chore(locales): new crowdin translations"
+          localization_branch_name: master
+          push_translations: true
+          upload_sources: false
+          upload_translations: true
+          downlaod_sources: false
+          download_translations: true
+          create_pull_request: false
