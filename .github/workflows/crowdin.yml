@@ -9,7 +9,6 @@ jobs:
     env:
       CROWDIN_API_KEY: ${{ secrets.CROWDIN_API_KEY }}
       CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: crowdin/github-action@v2
