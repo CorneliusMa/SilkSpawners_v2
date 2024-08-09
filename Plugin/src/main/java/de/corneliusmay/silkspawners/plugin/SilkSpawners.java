@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin;
 
-import de.corneliusmay.silkspawners.api.NMS;
+import de.corneliusmay.silkspawners.api.Bukkit;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
@@ -31,7 +31,7 @@ public class SilkSpawners extends JavaPlugin {
     private Logger log;
 
     @Getter
-    private NMS nmsHandler;
+    private Bukkit bukkitHandler;
 
     @Getter
     private LocaleHandler locale;
@@ -54,7 +54,7 @@ public class SilkSpawners extends JavaPlugin {
         log.info("Loading Cross-Version support");
         CrossVersionHandler versionHandler = new CrossVersionHandler(this);
         if(!versionHandler.load()) return;
-        nmsHandler = versionHandler.getNmsHandler();
+        bukkitHandler = versionHandler.getBukkitHandler();
 
         log.info("Loading locale file");
         locale = new LocaleHandler(this, new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get());

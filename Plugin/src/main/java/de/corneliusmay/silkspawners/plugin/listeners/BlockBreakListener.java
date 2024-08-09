@@ -33,7 +33,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
 
-        ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
+        ItemStack[] itemsInHand = plugin.getBukkitHandler().getItemsInHand(p);
         if(!itemHasSilktouch(itemsInHand)){
             destroySpawner(p, e);
             return;

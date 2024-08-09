@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.nms.v1_20_5;
+package de.corneliusmay.silkspawners.bukkit.v1_20_5;
 
 import de.corneliusmay.silkspawners.api.Bukkit;
 import org.bukkit.Material;
@@ -16,7 +16,7 @@ public class BukkitHandler implements Bukkit {
         double range = 5;
 
         AttributeInstance blockRange = player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE);
-        if(blockRange != null) {
+        if (blockRange != null) {
             range = blockRange.getValue();
         }
 
@@ -26,7 +26,7 @@ public class BukkitHandler implements Bukkit {
 
     @Override
     public ItemStack[] getItemsInHand(Player player) {
-        return new ItemStack[]{ player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() };
+        return new ItemStack[]{player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()};
     }
 
     @Override

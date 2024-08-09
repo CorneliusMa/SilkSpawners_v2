@@ -29,7 +29,7 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
 
         Player p = e.getPlayer();
 
-        ItemStack[] itemsInHand = plugin.getNmsHandler().getItemsInHand(p);
+        ItemStack[] itemsInHand = plugin.getBukkitHandler().getItemsInHand(p);
         Spawner spawner = new Spawner(plugin, itemIsSpawner(itemsInHand));
         if(!spawner.isValid()) return;
 
@@ -59,7 +59,7 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
     private ItemStack itemIsSpawner(ItemStack[] items, int i) {
         if(items.length == i) return null;
 
-        if(items[i].getType() == plugin.getNmsHandler().getSpawnerMaterial()) return items[i];
+        if(items[i].getType() == plugin.getBukkitHandler().getSpawnerMaterial()) return items[i];
         else return itemIsSpawner(items, i + 1);
     }
 }

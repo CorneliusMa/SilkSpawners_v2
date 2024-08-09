@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.nms.v1_13_1;
+package de.corneliusmay.silkspawners.bukkit.v1_13_1;
 
 import de.corneliusmay.silkspawners.api.Bukkit;
 import org.bukkit.Material;
