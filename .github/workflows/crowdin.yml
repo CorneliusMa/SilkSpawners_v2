@@ -14,6 +14,10 @@ jobs:
           source: "/Plugin/src/main/resources/locales/messages_en.properties"
           upload_sources: true
           upload_translations: false
+          create_pull_request: false
+          commit_message: "chore(locales): new crowdin translations"
+          localization_branch_name: master
+          push_translations: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
