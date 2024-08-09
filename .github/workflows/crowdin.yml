@@ -22,6 +22,7 @@ jobs:
           localization_branch_name: master
           push_translations: true
           export_only_approved: true
+          skip_untranslated_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
