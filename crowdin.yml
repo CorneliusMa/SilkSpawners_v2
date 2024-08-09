@@ -1,3 +1,0 @@
-files:
-  - source: /Plugin/src/main/resources/locales/messages_en.properties
-    translation: /Plugin/src/main/resources/locales/messages_%two_letters_code%.properties
