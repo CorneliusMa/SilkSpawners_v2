@@ -10,8 +10,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: crowdin/github-action@v2
         with:
-          translation: "/Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
-          source: "/Plugin/src/main/resources/locales/messages_en.properties"
+          translation: "Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
+          source: "Plugin/src/main/resources/locales/messages_en.properties"
           upload_sources: true
           upload_translations: false
           create_pull_request: false
