@@ -5,7 +5,7 @@ below.
 
 ## Translations
 
-We will not accept pull requests adding translations. Please use our Crowdin [translation program](https://crowdin.com/project/silkspawners/de).
+We will not accept pull requests adding translations. Please use our Crowdin [translation program](https://crowdin.com/project/silkspawners).
 
 ## Pull Requests
 
