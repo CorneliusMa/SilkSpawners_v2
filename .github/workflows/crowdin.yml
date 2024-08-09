@@ -13,7 +13,9 @@ jobs:
           translation: "Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
           source: "Plugin/src/main/resources/locales/messages_en.properties"
           upload_sources: true
-          upload_translations: false
+          upload_translations: true
+          download_sources: true
+          download_translations: true
           create_pull_request: false
           commit_message: "chore(locales): new crowdin translations"
           localization_branch_name: master
