@@ -41,7 +41,7 @@ public class CrossVersionHandler {
             throw new RuntimeException(e);
         }
 
-        plugin.getLog().info("Loaded support for version " + MinecraftVersion.getVersion() + " (Bukkit " + bukkitVersion + ")");
+        plugin.getLog().info("Loaded support for version " + MinecraftVersion.getVersion());
         return true;
     }
 }
