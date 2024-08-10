@@ -19,7 +19,7 @@ public enum PluginConfig {
     SPAWNER_ITEM_NAME(ConfigScope.SPAWNER_ITEM, "name", "$dSpawner", new MessageConfigValue()),
     SPAWNER_ITEM_PREFIX(ConfigScope.SPAWNER_ITEM, "prefix", "$e", value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value)),
     SPAWNER_ITEM_PREFIX_OLD(ConfigScope.SPAWNER_ITEM, "prefixOld", "", new MessageConfigValue(), new String[]{ConfigScope.SPAWNER_ITEM.getPath() + "prefix-old"}),
-    SPAWNER_ITEM_LORE(ConfigScope.SPAWNER_ITEM, "lore", new Object[]{new String[0], new String[0]}, new MessageConfigValue()),
+    SPAWNER_ITEM_LORE(ConfigScope.SPAWNER_ITEM, "lore", new Object[]{new String[0]}, new MessageConfigValue()),
     SPAWNER_EXPLOSION_NORMAL(ConfigScope.SPAWNER_EXPLOSION, "normal", 0, new IntegerConfigValue()),
     SPAWNER_EXPLOSION_SILKTOUCH(ConfigScope.SPAWNER_EXPLOSION, "silktouch", 0, new IntegerConfigValue()),
     SPAWNER_MESSAGE_DENY_DESTROY(ConfigScope.SPAWNER_MESSAGES, "denyDestroy", true, new BooleanConfigValue()),
@@ -28,7 +28,7 @@ public enum PluginConfig {
     SPAWNER_PERMISSION_DISABLE_DESTROY(ConfigScope.SPAWNER_PERMISSIONS, "disableDestroy", false, new BooleanConfigValue()),
     SPAWNER_PERMISSION_DISABLE_PLACE(ConfigScope.SPAWNER_PERMISSIONS, "disablePlace", false, new BooleanConfigValue()),
     SPAWNER_PERMISSION_DISABLE_CHANGE(ConfigScope.SPAWNER_PERMISSIONS, "disableChange", false, new BooleanConfigValue()),
-    UPDATE_CONFIG_VERSION(ConfigScope.UPDATE, "configVersion", 2, new IntegerConfigValue()),
+    UPDATE_CONFIG_VERSION(ConfigScope.UPDATE, "configVersion", PluginConfig.CONFIG_VERSION, new IntegerConfigValue()),
     UPDATE_CHECK_ENABLED(ConfigScope.UPDATE_CHECK, "enabled", true, new BooleanConfigValue()),
     UPDATE_CHECK_INTERVAL(ConfigScope.UPDATE_CHECK, "interval", 24, new IntegerConfigValue()),
     ;
@@ -50,8 +50,7 @@ public enum PluginConfig {
 
     PluginConfig(ConfigScope scope, String key, Object defaultValue, ConfigValueFormatter<?> formatter) {
         this.path = scope.getPath() + key;
-        this.defaultValue = new Object[CONFIG_VERSION];
-        this.defaultValue[CONFIG_VERSION - 1] = defaultValue;
+        this.defaultValue = new Object[]{defaultValue};
         this.formatter = formatter;
     }
 
@@ -63,8 +62,7 @@ public enum PluginConfig {
 
     PluginConfig(ConfigScope scope, String key, Object defaultValue, ConfigValueFormatter<?> formatter, String[] legacyKeys) {
         this.path = scope.getPath() + key;
-        this.defaultValue = new Object[CONFIG_VERSION];
-        this.defaultValue[CONFIG_VERSION - 1] = defaultValue;
+        this.defaultValue = new Object[]{defaultValue};
         this.formatter = formatter;
         this.legacyKeys = legacyKeys;
     }
