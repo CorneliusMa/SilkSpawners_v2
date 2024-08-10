@@ -31,12 +31,8 @@ public class ConfigLoader {
         int currentVersion = config.getInt("update.configVersion");
         if (currentVersion == 0) currentVersion = 1;
         if (CONFIG_VERSION > currentVersion) {
-            if (CONFIG_VERSION - currentVersion > 1) {
-                Bukkit.getLogger().log(Level.WARNING, "[SilkSpawners] Configuration file in version " + currentVersion + " is outdated. Since the  " + CONFIG_VERSION);
-            } else {
-                config.set("update.configVersion", CONFIG_VERSION);
-                Bukkit.getLogger().log(Level.WARNING, "[SilkSpawners] Configuration file in version " + currentVersion + " is automatically converted to the latest version " + CONFIG_VERSION);
-            }
+            config.set("update.configVersion", CONFIG_VERSION);
+            Bukkit.getLogger().log(Level.WARNING, "[SilkSpawners] Configuration file in version " + currentVersion + " is automatically converted to the latest version " + CONFIG_VERSION);
         } else {
             Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Configuration is up to date");
         }
