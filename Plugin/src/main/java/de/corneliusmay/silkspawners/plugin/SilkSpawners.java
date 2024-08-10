@@ -60,7 +60,7 @@ public class SilkSpawners extends JavaPlugin {
         locale = new LocaleHandler(this, new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get());
         if(locale.getResourceBundle() == null) return;
 
-        log.info("Starting metrics service. You can disable the collection of anonymous usage data by editing the config file under /plugins/bStats/");
+        log.info("Starting bStats integration");
         new Metrics(this, 15215);
 
         log.info("Registering listeners");
