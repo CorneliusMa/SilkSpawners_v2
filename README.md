@@ -70,6 +70,8 @@ messages:
 spawner:
   dropChance: 100 # Probability that the spawner will drop when mined (0-100)
   destroyable: true  # If set to false, it won't be possible to destroy spawners without SilkTouch or without the permission
+  pickaxeRequired: true # If set to false, spawners will always drop regardless of what the player is holding in his hand
+  silktouchRequired: true # If set to false, spawners will drop even if the used pickaxe does not have SilkTouch
   item:
     name: $dSpawner # The name of the spawner item dropped
     prefix: $e # The text before the spawner name in the lore
@@ -82,7 +84,12 @@ spawner:
     denyDestroy: true # If set to true, a message will be sent to the player if the spawner cannot be destroyed
     denyPlace: true # If set to true, a message will be sent to the player if the spawner cannot be placed
     denyChange: true # If set to true, a message will be sent to the player if the spawner cannot be changed
+  permission:
+    disableDestroy: false # If set to true, no permission is required to receive destroyed spawners
+    disablePlace: false # If set to true, no permission is required to place spawners
+    disableChange: false # If set to true, no permission is required to change spawners with eggs
 update:
+  configVersion: 2 # Do not change this value manually! It is automatically managed by the plugin
   check:
     enabled: true # If set to true, the plugin will check for updates
     interval: 24 # The interval in hours at which to check for updates
