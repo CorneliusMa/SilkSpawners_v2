@@ -6,7 +6,24 @@ on:
 jobs:
 
   build:
-    uses: ./.github/workflows/build.yml
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - run: ./gradlew :Plugin:assemble --no-daemon --stacktrace
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: build/libs/SilkSpawners_v2.jar
 
   release:
     runs-on: ubuntu-latest
