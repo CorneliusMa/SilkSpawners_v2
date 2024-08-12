@@ -1,4 +1,5 @@
 group = "de.corneliusmay.silkspawners"
+version = "2.3.2"
 
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -23,10 +24,17 @@ tasks {
     assemble {
         dependsOn(shadowJar)
     }
+    processResources {
+        filesMatching("plugin.yml") {
+            expand(project.properties)
+        }
+    }
     shadowJar {
-        destinationDirectory = rootProject.layout.buildDirectory.dir("libs")
-        archiveBaseName = "SilkSpawners_v2"
-        archiveClassifier = ""
+        dependsOn(processResources)
+        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+        archiveBaseName.set("SilkSpawners_v2")
+        archiveClassifier.set("")
+        archiveVersion.set("")
         relocate("org.bstats", "de.corneliusmay.silkspawners.plugin")
         dependencies {
             exclude(dependency(bukkit))
