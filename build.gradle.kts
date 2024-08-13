@@ -1,8 +1,8 @@
+group = "de.corneliusmay.silkspawners"
+
 plugins {
     java
 }
-
-group = "de.corneliusmay.silkspawners"
 
 subprojects {
     apply(plugin = "java")
