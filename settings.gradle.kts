@@ -3,6 +3,7 @@ rootProject.name = "silkspawners"
 include(
     "API",
     "Plugin",
+    "Publication",
     "v1_8_4",
     "v1_9_4",
     "v1_12_0",
