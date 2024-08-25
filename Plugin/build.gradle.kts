@@ -13,6 +13,8 @@ dependencies {
     implementation("org.bstats:bstats-bukkit:3.0.0")
 
     implementation(project(":API"))
+    implementation(project(":PlatformBukkit"))
+    implementation(project(":PlatformFolia"))
     implementation(project(":v1_8_4"))
     implementation(project(":v1_9_4"))
     implementation(project(":v1_12_0"))

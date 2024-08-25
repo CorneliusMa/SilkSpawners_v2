@@ -2,6 +2,7 @@ name: SilkSpawners_v2
 version: ${project.version}
 main: de.corneliusmay.silkspawners.plugin.SilkSpawners
 api-version: 1.13
+folia-supported: true
 
 commands:
   silkspawners:

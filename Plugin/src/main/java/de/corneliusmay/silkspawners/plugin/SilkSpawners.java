@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.api.Bukkit;
+import de.corneliusmay.silkspawners.api.ServerPlatform;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
@@ -12,6 +13,7 @@ import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHandler;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
@@ -25,18 +27,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+@Getter
 public class SilkSpawners extends JavaPlugin {
 
-    @Getter
     private Logger log;
 
-    @Getter
+    private ServerPlatform platform;
+
     private Bukkit bukkitHandler;
 
-    @Getter
     private LocaleHandler locale;
 
-    @Getter
     private VersionChecker versionChecker;
 
     @Override
@@ -50,6 +51,11 @@ public class SilkSpawners extends JavaPlugin {
         else log.warn("Update checking is disabled");
 
         log.info("Starting SilkSpawners v" + versionChecker.getInstalledVersion());
+
+        log.info("Loading server platform");
+        PlatformLoader platformLoader = new PlatformLoader(this);
+        platformLoader.load();
+        platform = platformLoader.getServerPlatform();
 
         log.info("Loading Cross-Version support");
         CrossVersionHandler versionHandler = new CrossVersionHandler(this);

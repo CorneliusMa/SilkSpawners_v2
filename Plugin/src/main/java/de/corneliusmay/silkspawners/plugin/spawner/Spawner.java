@@ -61,7 +61,7 @@ public class Spawner {
             editedList.remove(block);
             return;
         }
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+        this.plugin.getPlatform().runTaskLater(block.getLocation(), () -> {
             BlockState blockState = block.getState();
             if(!(blockState instanceof CreatureSpawner)) return;
             CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
