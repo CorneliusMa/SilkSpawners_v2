@@ -33,10 +33,12 @@ jobs:
         with:
           path: build/libs/SilkSpawners_v2.jar
 
+  build:
+    uses: ./.github/workflows/build.yml
 
   release:
     runs-on: ubuntu-latest
-    needs: publish
+    needs: build
     steps:
       - uses: actions/checkout@v4
         with:
