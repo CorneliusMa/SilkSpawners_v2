@@ -1,21 +1,16 @@
 name: Publish
 
 on:
-  workflow_dispatch:
   push:
     branches: [ master ]
+    tags:
+      - 'v*'
 
 jobs:
 
   publish:
     runs-on: ubuntu-latest
-
-    env:
-      HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
-      HANGAR_ID: ${{ secrets.HANGAR_ID }}
-      HANGAR_PLATFORM_VERSIONS: ${{ secrets.HANGAR_PLATFORM_VERSIONS }}
-      HANGAR_PUB_CHANNEL: ${{ github.event_name == 'push' && 'Preview' || 'Release' }}
-
+    if: false
     steps:
       - uses: actions/checkout@v4
 
@@ -26,4 +21,59 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - run: ./gradlew :Publication:publishPluginPublicationToHangar
+      - name: Publish to Hangar
+        run: ./gradlew :Publication:publishPluginPublicationToHangar --no-daemon --stacktrace
+        env:
+          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+          HANGAR_ID: ${{ secrets.HANGAR_ID }}
+          HANGAR_PLATFORM_VERSIONS: ${{ secrets.HANGAR_PLATFORM_VERSIONS }}
+          HANGAR_PUB_CHANNEL: ${{ github.ref == 'refs/heads/master' && 'Preview' || 'Release' }}
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          path: build/libs/SilkSpawners_v2.jar
+
+
+  release:
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: tree:0
+
+      - uses: actions/download-artifact@v4
+
+      - id: tag
+        run: echo "latest=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+
+      - id: sha
+        run: echo "sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - id: changes
+        run: |
+          echo "changes=" >> $GITHUB_OUTPUT
+          if [ ${{ github.ref }} == "refs/heads/master" ] ; then
+            echo "changes=`git log --oneline $(git tag -l --format='%(objectname)' | tail -n1)..HEAD --pretty=format:%s | grep -E '(feat)|(fix)'` \
+                  >> $GITHUB_OUTPUT
+          fi
+
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          draft: false
+          prerelease: true
+          name: ${{ steps.tag.outputs.latest }}
+          tag_name: ${{ steps.tag.outputs.latest }}+${{ steps.sha.outputs.sha }}
+          files: artifact/*
+
+      - uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/tags/*'
+        with:
+          draft: false
+          prerelease: false
+          name: ${{ steps.tag.outputs.latest }}
+          tag_name: ${{ steps.tag.outputs.latest }}
+          body: ${{ steps.changes.outputs.changes }}
+          files: artifact/*
