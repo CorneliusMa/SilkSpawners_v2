@@ -57,7 +57,7 @@ jobs:
         run: |
           echo "changes=" >> $GITHUB_OUTPUT
           if [ ${{ github.ref }} == "refs/heads/master" ] ; then
-            echo "changes=`git log --oneline $(git tag -l --format='%(objectname)' | tail -n1)..HEAD --pretty=format:%s | grep -E '(feat)|(fix)'` \
+            echo "changes=`git log --oneline $(git tag -l --format='%(objectname)' | tail -n1)..HEAD --pretty=format:%s | grep -E '(feat)|(fix)'`" \
                   >> $GITHUB_OUTPUT
           fi
 
