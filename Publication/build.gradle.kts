@@ -11,13 +11,22 @@ var plugin = project(":Plugin")
 // com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar ext org.gradle.api.tasks.bundling.Jar
 var shadowJar = plugin.tasks.named<Jar>("shadowJar")
 
+var version = plugin.version as String
+var channel = System.getenv("HANGAR_PUB_CHANNEL")
+var shorty = System.getenv("HANGAR_SHORTY")
+
+if (channel == "Preview") {
+    version += "+"
+    version += shorty
+}
+
 hangarPublish {
     publications.register("plugin") {
         apiKey.set(System.getenv("HANGAR_API_TOKEN"))
         id.set(System.getenv("HANGAR_ID"))
-        channel.set(System.getenv("HANGAR_PUB_CHANNEL"))
+        channel.set(channel)
         changelog.set(System.getenv("HANGAR_PUB_CHANGELOG"))
-        version.set(plugin.version as String)
+        version.set(version)
         platforms {
             register(Platforms.PAPER) {
                 jar.set(shadowJar.flatMap { it.archiveFile })

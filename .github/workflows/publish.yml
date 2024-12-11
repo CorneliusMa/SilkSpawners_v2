@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - id: shorty
+        run: echo "shorty=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -27,6 +30,7 @@ jobs:
           HANGAR_ID: ${{ secrets.HANGAR_ID }}
           HANGAR_PLATFORM_VERSIONS: ${{ secrets.HANGAR_PLATFORM_VERSIONS }}
           HANGAR_PUB_CHANNEL: ${{ github.ref == 'refs/heads/master' && 'Preview' || 'Release' }}
+          HANGAR_SHORTY: ${{ steps.shorty.outputs.shorty }}
           
       - uses: actions/upload-artifact@v4
         with:
