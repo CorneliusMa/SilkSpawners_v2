@@ -52,12 +52,7 @@ jobs:
         run: echo "latest=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
       - id: changes
-        run: |
-          echo "changes=" >> $GITHUB_OUTPUT
-          if [ ${{ github.ref }} != "refs/heads/master" ] ; then
-            echo "changes=`git log --oneline $(git tag -l --format='%(objectname)' | tail -n2 | head -n1)..HEAD --pretty=format:%s | grep -E '(^feat)|(^fix)'`" \
-                  >> $GITHUB_OUTPUT
-          fi
+        run: echo "changes=`git log --oneline $(git tag -l --format='%(objectname)' | tail -n2 | head -n1)..HEAD --pretty=format:%s | grep -E '(^feat)|(^fix)'`" >> $GITHUB_OUTPUT
 
       - uses: softprops/action-gh-release@v2
         with:
