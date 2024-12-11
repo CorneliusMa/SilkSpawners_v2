@@ -13,11 +13,9 @@ var shadowJar = plugin.tasks.named<Jar>("shadowJar")
 
 var version = plugin.version as String
 var channel = System.getenv("HANGAR_PUB_CHANNEL")
-var shorty = System.getenv("HANGAR_SHORTY")
 
 if (channel == "Preview") {
-    version += "+"
-    version += shorty
+    version = version + "+" + System.getenv("HANGAR_SHORTY")
 }
 
 hangarPublish {
