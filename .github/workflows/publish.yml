@@ -4,8 +4,19 @@ on:
   workflow_dispatch:
 
 jobs:
+
   publish:
     runs-on: ubuntu-latest
+
     steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
       - uses: gradle/actions/setup-gradle@v4
+
       - run: ./gradlew :Publication:publishPluginPublicationToHangar
