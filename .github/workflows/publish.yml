@@ -2,6 +2,8 @@ name: Publish
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ master ]
 
 jobs:
 
@@ -11,11 +13,10 @@ jobs:
     env:
       HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
       HANGAR_ID: ${{ secrets.HANGAR_ID }}
-      HANGAR_PUB_CHANNEL: ${{ secrets.HANGAR_PUB_CHANNEL }}
       HANGAR_PLATFORM_VERSIONS: ${{ secrets.HANGAR_PLATFORM_VERSIONS }}
+      HANGAR_PUB_CHANNEL: ${{ github.event_name == 'push' && 'Preview' || 'Release' }}
 
     steps:
-
       - uses: actions/checkout@v4
 
       - uses: actions/setup-java@v4
