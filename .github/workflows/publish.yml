@@ -8,6 +8,12 @@ jobs:
   publish:
     runs-on: ubuntu-latest
 
+    env:
+      HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+      HANGAR_ID: ${{ secrets.HANGAR_ID }}
+      HANGAR_PUB_CHANNEL: ${{ secrets.HANGAR_PUB_CHANNEL }}
+      HANGAR_PLATFORM_VERSIONS: ${{ secrets.HANGAR_PLATFORM_VERSIONS }}
+
     steps:
 
       - uses: actions/checkout@v4
