@@ -1,0 +1,11 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew :Publication:publishPluginPublicationToHangar
