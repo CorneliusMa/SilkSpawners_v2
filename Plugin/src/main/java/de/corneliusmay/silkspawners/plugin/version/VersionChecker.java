@@ -36,7 +36,9 @@ public class VersionChecker {
     }
 
     public void stop() {
-        thread.interrupt();
+    if (this.thread != null) {
+        this.thread.interrupt();
+    }
     }
 
     private void run(int interval) {
