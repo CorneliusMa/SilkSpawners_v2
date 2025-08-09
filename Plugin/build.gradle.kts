@@ -1,5 +1,5 @@
 group = "de.corneliusmay.silkspawners"
-version = "2.3.2"
+version = "2.3.3"
 
 plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
