@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":v1_12_0"))
     implementation(project(":v1_13_1"))
     implementation(project(":v1_20_5"))
+    implementation(project(":v1_21_11"))
 }
 
 tasks {
