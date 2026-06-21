@@ -14,13 +14,15 @@ dependencies {
 
     implementation(project(":API"))
     implementation(project(":PlatformBukkit"))
-    implementation(project(":PlatformFolia"))
+   // implementation(project(":PlatformFolia"))
     implementation(project(":v1_8_4"))
     implementation(project(":v1_9_4"))
     implementation(project(":v1_12_0"))
     implementation(project(":v1_13_1"))
     implementation(project(":v1_20_5"))
     implementation(project(":v1_21_11"))
+    implementation(project(":v26_1_2"))
+    implementation(project(":v26_2"))
 }
 
 tasks {
