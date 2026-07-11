@@ -12,14 +12,21 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Explosion {
 
-    public Explosion(Player p, World world, Location location, List<ExplosionTier> tiers) {
-        List<ExplosionTier> sharedTiers = new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_ALL).get();
-        if ((tiers.isEmpty() && sharedTiers.isEmpty()) || !p.hasPermission("silkspawners.explosion")) return;
-        List<ExplosionTier> combined = combined(tiers, sharedTiers);
-        double total = combined.stream().mapToDouble(ExplosionTier::chance).sum();
+    private final List<ExplosionTier> tiers;
+
+    public Explosion(PluginConfig tierList) {
+        this.tiers = combined(new ConfigValue<List<ExplosionTier>>(tierList).get(), new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_ALL).get());
+    }
+
+    public boolean applies(Player p) {
+        return !tiers.isEmpty() && p.hasPermission("silkspawners.explosion");
+    }
+
+    public void run(World world, Location location) {
+        double total = tiers.stream().mapToDouble(ExplosionTier::chance).sum();
         double roll = ThreadLocalRandom.current().nextDouble(Math.max(total, 100));
         double cumulative = 0;
-        for (ExplosionTier tier : combined) {
+        for (ExplosionTier tier : tiers) {
             cumulative += tier.chance();
             if (roll >= cumulative) continue;
             if (tier.power() > 0) world.createExplosion(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5, tier.power(), tier.setFire(), tier.breakBlocks());

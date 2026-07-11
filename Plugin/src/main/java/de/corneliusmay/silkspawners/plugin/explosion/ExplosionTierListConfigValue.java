@@ -37,17 +37,27 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
             if(!KEYS.contains(String.valueOf(key))) throw invalid(index, "contains the unknown key '" + key + "' (allowed: " + KEYS + ")");
         }
 
-        double power = number(values, "power", 0, index);
-        if(power < 0 || !Double.isFinite(power)) throw invalid(index, "must define a finite 'power' of 0 or greater (0 means no explosion)");
+        double power = requiredNumber(values, "power", index);
+        if(power < 0 || !Float.isFinite((float) power)) throw invalid(index, "must define a finite 'power' of 0 or greater (0 means no explosion)");
         double chance = number(values, "chance", 100, index);
         if(!(chance >= 0 && chance <= 100)) throw invalid(index, "must define a 'chance' between 0 and 100");
 
         return new ExplosionTier(chance, (float) power, bool(values, "setFire", false, index), bool(values, "breakBlocks", true, index));
     }
 
+    private double requiredNumber(Map<?, ?> values, String key, int index) {
+        Object value = values.get(key);
+        if(value == null) throw invalid(index, "is missing the required key '" + key + "'");
+        return number(value, key, index);
+    }
+
     private double number(Map<?, ?> values, String key, double defaultValue, int index) {
         Object value = values.get(key);
         if(value == null) return defaultValue;
+        return number(value, key, index);
+    }
+
+    private double number(Object value, String key, int index) {
         if(value instanceof Number number) return number.doubleValue();
         try {
             return Double.parseDouble(String.valueOf(value));
