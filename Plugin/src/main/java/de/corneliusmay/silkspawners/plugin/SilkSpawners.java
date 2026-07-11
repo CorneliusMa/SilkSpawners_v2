@@ -19,12 +19,11 @@ import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.block.Block;
+import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class SilkSpawners extends JavaPlugin {
@@ -83,7 +82,7 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerListeners() {
-        List<Block> editedSpawners = Collections.synchronizedList(new ArrayList<>());
+        Set<Location> editedSpawners = ConcurrentHashMap.newKeySet();
         SilkSpawnersEventHandler eventHandler = new SilkSpawnersEventHandler(this);
         eventHandler.registerListener(new PlayerInteractListener(editedSpawners));
         eventHandler.registerListener(new BlockPlaceListener(editedSpawners));
