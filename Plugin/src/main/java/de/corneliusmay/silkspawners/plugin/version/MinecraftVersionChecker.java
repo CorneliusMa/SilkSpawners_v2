@@ -9,6 +9,9 @@ class MinecraftVersionChecker {
         //
         // The following code also means that we don't have to update the plugin for every new Minecraft version
         // unless the Bukkit API changes in a way that explicitly breaks it.
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 21, 3)) {
+            return "v1_21_3";
+        }
         if(MinecraftVersion.versionIsNewerOrEqualTo(1, 20, 5)) {
             return "v1_20_5";
         }
