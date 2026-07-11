@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class MinecraftVersion {
 
@@ -15,8 +17,9 @@ class MinecraftVersion {
 
     static {
         try {
-            // Split on the "-" to just get the version information
-            version = Bukkit.getServer().getBukkitVersion().split("-")[0];
+            final Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)+").matcher(Bukkit.getServer().getBukkitVersion());
+            if (!matcher.find()) throw new IllegalArgumentException("Unrecognized Minecraft version string");
+            version = matcher.group();
             final String[] splitVersion = version.split("\\.");
 
             majorVersion = Integer.parseInt(splitVersion[0]);
