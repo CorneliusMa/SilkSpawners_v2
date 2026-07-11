@@ -15,9 +15,14 @@ public class Explosion {
     public Explosion(Player p, World world, Location location, List<ExplosionTier> tiers) {
         List<ExplosionTier> sharedTiers = new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_ALL).get();
         if ((tiers.isEmpty() && sharedTiers.isEmpty()) || !p.hasPermission("silkspawners.explosion")) return;
-        for (ExplosionTier tier : combined(tiers, sharedTiers)) {
-            if (ThreadLocalRandom.current().nextDouble(100) >= tier.chance()) continue;
-            world.createExplosion(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5, tier.power(), tier.setFire(), tier.breakBlocks());
+        List<ExplosionTier> combined = combined(tiers, sharedTiers);
+        double total = combined.stream().mapToDouble(ExplosionTier::chance).sum();
+        double roll = ThreadLocalRandom.current().nextDouble(Math.max(total, 100));
+        double cumulative = 0;
+        for (ExplosionTier tier : combined) {
+            cumulative += tier.chance();
+            if (roll >= cumulative) continue;
+            if (tier.power() > 0) world.createExplosion(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5, tier.power(), tier.setFire(), tier.breakBlocks());
             return;
         }
     }

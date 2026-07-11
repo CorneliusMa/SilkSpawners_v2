@@ -102,15 +102,15 @@ update:
 
 **Explosion tiers:**
 
-`explosion.normal` and `explosion.silktouch` each take a list of tiers; `explosion.all` tiers apply to both cases on top of the matching list. When a spawner is broken by a player with the `silkspawners.explosion` permission, the combined tiers are checked strongest first and the first tier whose `chance` roll passes explodes — so at most one explosion fires per break. With the example below, 10% of breaks cause a massive explosion, 36% a large one, 37.8% a small one and 16.2% none at all:
+`explosion.normal` and `explosion.silktouch` each take a list of tiers; `explosion.all` tiers apply to both cases on top of the matching list. When a spawner is broken by a player with the `silkspawners.explosion` permission, a single roll picks at most one tier per break: each tier's `chance` is its share (in percent) of that roll. If the chances add up to less than 100, the remaining share is no explosion; a tier with `power: 0` is an explicit "no explosion" share. If they add up to more than 100, the chances are scaled down proportionally so they still form one roll. With the example below, 50% of breaks cause a small explosion, 30% a large one, 10% a massive one and 10% none at all:
 
 ```yaml
 spawner:
   explosion:
     normal:
-    - chance: 70 # Probability of this tier in percent (decimals allowed)
-      power: 2.0 # Explosion strength (TNT is 4.0)
-    - chance: 40
+    - chance: 50 # This tier's share of a single roll, in percent (decimals allowed)
+      power: 2.0 # Explosion strength (TNT is 4.0); 0 means no explosion
+    - chance: 30
       power: 4.0
     - chance: 10
       power: 8.0

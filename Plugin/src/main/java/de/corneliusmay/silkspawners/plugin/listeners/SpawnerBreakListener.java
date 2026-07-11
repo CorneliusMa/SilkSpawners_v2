@@ -13,9 +13,11 @@ import java.util.List;
 
 public class SpawnerBreakListener extends SilkSpawnersListener<SpawnerBreakEvent> {
 
-    @Override @EventHandler(priority = EventPriority.HIGHEST)
+    @Override
+    @EventHandler(priority = EventPriority.HIGHEST)
     protected void onCall(SpawnerBreakEvent e) {
-        new Explosion(e.getPlayer(), e.getLocation().getWorld(), e.getLocation(), new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).get());
-
+        plugin.getPlatform().runTaskLater(e.getLocation(), () -> {
+            new Explosion(e.getPlayer(), e.getLocation().getWorld(), e.getLocation(), new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).get());
+        }, 1);
     }
 }

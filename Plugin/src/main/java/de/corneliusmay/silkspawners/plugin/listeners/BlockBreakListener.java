@@ -64,7 +64,9 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
         }
-        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
+        else plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> {
+            new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
+        }, 1);
     }
 
     private boolean itemHasSilktouch(ItemStack[] items) {
