@@ -3,7 +3,6 @@ package de.corneliusmay.silkspawners.plugin.explosion;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueFormatter;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
         for(int i = 0; i < entries.size(); i++) {
             tiers.add(tier(entries.get(i), i));
         }
-        tiers.sort(Comparator.comparingDouble(ExplosionTier::power).reversed());
+        tiers.sort(ExplosionTier.STRONGEST_FIRST);
         return List.copyOf(tiers);
     }
 

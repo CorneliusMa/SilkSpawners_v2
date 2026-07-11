@@ -28,6 +28,7 @@ public enum PluginConfig {
     SPAWNER_ITEM_PREFIX(builder(SPAWNER_ITEM, "prefix").def("$e").formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value))),
     SPAWNER_ITEM_PREFIX_OLD(builder(SPAWNER_ITEM, "prefixOld").def("").formatter(new MessageConfigValue()).legacy(SPAWNER_ITEM.getPath() + "prefix-old")),
     SPAWNER_ITEM_LORE(builder(SPAWNER_ITEM, "lore").def(new String[0]).formatter(new MessageConfigValue()).list()),
+    SPAWNER_EXPLOSION_ALL(builder(SPAWNER_EXPLOSION, "all").def(List.of()).formatter(new ExplosionTierListConfigValue())),
     SPAWNER_EXPLOSION_NORMAL(builder(SPAWNER_EXPLOSION, "normal").def(List.of()).formatter(new ExplosionTierListConfigValue()).migrator(3, new ExplosionLegacyPowerMigrator())),
     SPAWNER_EXPLOSION_SILKTOUCH(builder(SPAWNER_EXPLOSION, "silktouch").def(List.of()).formatter(new ExplosionTierListConfigValue()).migrator(3, new ExplosionLegacyPowerMigrator())),
     SPAWNER_MESSAGE_DENY_DESTROY(builder(SPAWNER_MESSAGES, "denyDestroy").def(true).formatter(new BooleanConfigValue())),

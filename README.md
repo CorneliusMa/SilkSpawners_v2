@@ -80,6 +80,7 @@ spawner:
     prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
+    all: [] # Explosion tiers rolled whenever spawners are mined, with or without SilkTouch (see below)
     normal: [] # Explosion tiers rolled when spawners are mined without SilkTouch (see below)
     silktouch: [] # Explosion tiers rolled when spawners are mined with SilkTouch (see below)
   message:
@@ -101,7 +102,7 @@ update:
 
 **Explosion tiers:**
 
-`explosion.normal` and `explosion.silktouch` each take a list of tiers. When a spawner is broken by a player with the `silkspawners.explosion` permission, the tiers are checked strongest first and the first tier whose `chance` roll passes explodes — so at most one explosion fires per break. With the example below, 10% of breaks cause a massive explosion, 36% a large one, 37.8% a small one and 16.2% none at all:
+`explosion.normal` and `explosion.silktouch` each take a list of tiers; `explosion.all` tiers apply to both cases on top of the matching list. When a spawner is broken by a player with the `silkspawners.explosion` permission, the combined tiers are checked strongest first and the first tier whose `chance` roll passes explodes — so at most one explosion fires per break. With the example below, 10% of breaks cause a massive explosion, 36% a large one, 37.8% a small one and 16.2% none at all:
 
 ```yaml
 spawner:
