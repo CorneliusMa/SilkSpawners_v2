@@ -130,6 +130,10 @@ Locale files must be named accordingly to the messages_myfile.properties naming 
 
 *If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.*
 
+## For developers
+
+SilkSpawners fires custom Bukkit events (`SpawnerPlaceEvent`, `SpawnerBreakEvent`) that other plugins can listen to. See [Developer documentation](docs/DEVELOPERS.md) for details.
+
 ## Statistics
 ![Statistics](https://bstats.org/signatures/bukkit/Silk%20Spawners.svg)
 Statistics from bStats
