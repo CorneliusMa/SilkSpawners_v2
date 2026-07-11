@@ -22,6 +22,8 @@ permissions:
     description: Use this command to see the entities you can use in permissions and commands.
   silkspawners.command.version:
     description: Use this command to see, if updates are available.
+  silkspawners.command.config:
+    description: Use this command to reload the config.
   silkspawners.command.give:
     description: Use this command to give spawners to players.
     children:

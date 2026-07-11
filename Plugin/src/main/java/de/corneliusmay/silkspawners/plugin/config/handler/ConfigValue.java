@@ -10,8 +10,13 @@ public class ConfigValue<T> {
         this.config = value;
     }
 
+    @SuppressWarnings("unchecked")
     public T get() {
-        String value = config.getConfig().getString(config.getPath());
-        return (T) config.getFormatter().format(value);
+        return (T) ConfigCache.value(config);
+    }
+
+    @SuppressWarnings("unchecked")
+    T load() {
+        return (T) config.getFormatter().format(config.getConfig().getString(config.getPath()));
     }
 }

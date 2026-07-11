@@ -6,6 +6,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
@@ -14,14 +17,12 @@ public class ConfigLoader {
 
     private final Plugin plugin;
 
-    private final FileConfiguration config;
-
     public ConfigLoader(Plugin plugin) {
         this.plugin = plugin;
-        this.config = plugin.getConfig();
+        this.load();
     }
 
-    private int getConfigVersion() {
+    private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] No config file was found. The config will be generated with the default configuration");
@@ -40,10 +41,21 @@ public class ConfigLoader {
         return currentVersion;
     }
 
-    public void load() {
+    private void load() {
         Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Loading configuration...");
+        apply(true);
+    }
 
-        int configVersion = getConfigVersion();
+    public boolean reload() {
+        Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Reloading configuration...");
+        plugin.reloadConfig();
+        return apply(false);
+    }
+
+    private boolean apply(boolean initialLoad) {
+        FileConfiguration config = plugin.getConfig();
+
+        int configVersion = getConfigVersion(config);
         for (PluginConfig value : PluginConfig.values()) {
             value.init(config, configVersion);
         }
@@ -51,13 +63,25 @@ public class ConfigLoader {
         plugin.saveConfig();
         plugin.reloadConfig();
 
+        Map<PluginConfig, Object> values = new HashMap<>();
+        Map<PluginConfig, List<?>> arrays = new HashMap<>();
+
+        boolean valid = true;
         for (PluginConfig value : PluginConfig.values()) {
             try {
-                new ConfigValue<>(value).get();
+                values.put(value, new ConfigValue<>(value).load());
+                arrays.put(value, new ConfigValueArray<>(value).load());
             } catch (Exception ex) {
-                plugin.getLogger().severe("Disabling plugin due to invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()));
-                plugin.getPluginLoader().disablePlugin(plugin);
+                plugin.getLogger().severe("Invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()));
+                valid = false;
             }
         }
+
+        if (valid) ConfigCache.commit(values, arrays);
+        else if (initialLoad) {
+            plugin.getLogger().severe("Disabling plugin due to invalid configuration value");
+            plugin.getPluginLoader().disablePlugin(plugin);
+        }
+        return valid;
     }
 }

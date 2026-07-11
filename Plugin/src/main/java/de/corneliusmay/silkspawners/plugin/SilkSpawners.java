@@ -40,9 +40,11 @@ public class SilkSpawners extends JavaPlugin {
 
     private VersionChecker versionChecker;
 
+    private ConfigLoader configLoader;
+
     @Override
     public void onEnable() {
-        new ConfigLoader(this).load();
+        configLoader = new ConfigLoader(this);
 
         log = new Logger(new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get());
 
@@ -94,6 +96,7 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.addCommand(new ExplosionCommand());
         commandHandler.addCommand(new VersionCommand());
         commandHandler.addCommand(new LocaleCommand());
+        commandHandler.addCommand(new ConfigCommand());
         commandHandler.addCommand(new EntitiesCommand());
         commandHandler.register();
     }

@@ -12,8 +12,15 @@ public class ConfigValueArray<T> {
         this.config = value;
     }
 
+    @SuppressWarnings("unchecked")
     public List<T> get() {
-        List<String> value = config.getConfig().getStringList(config.getPath());
-        return (List<T>) value.stream().map((s) -> config.getFormatter().format(s)).toList();
+        return (List<T>) ConfigCache.array(config);
+    }
+
+    @SuppressWarnings("unchecked")
+    List<T> load() {
+        return (List<T>) config.getConfig().getStringList(config.getPath()).stream()
+                .map(s -> config.getFormatter().format(s))
+                .toList();
     }
 }
