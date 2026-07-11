@@ -18,6 +18,7 @@ public enum PluginConfig {
     SPAWNER_DESTROYABLE(builder(SPAWNER, "destroyable").defs(true).formatter(new BooleanConfigValue())),
     SPAWNER_PICKAXE_REQUIRED(builder(SPAWNER, "pickaxeRequired").defs(true).formatter(new BooleanConfigValue())),
     SPAWNER_SILKTOUCH_REQUIRED(builder(SPAWNER, "silktouchRequired").defs(true).formatter(new BooleanConfigValue())),
+    SPAWNER_SILKTOUCH_LEVEL(builder(SPAWNER, "silktouchLevel").defs(1).formatter(new IntegerConfigValue())),
     SPAWNER_ITEM_NAME(builder(SPAWNER_ITEM, "name").defs("$dSpawner").formatter(new MessageConfigValue())),
     SPAWNER_ITEM_PREFIX(builder(SPAWNER_ITEM, "prefix").defs("$e").formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value))),
     SPAWNER_ITEM_PREFIX_OLD(builder(SPAWNER_ITEM, "prefixOld").defs("").formatter(new MessageConfigValue()).legacy(SPAWNER_ITEM.getPath() + "prefix-old")),

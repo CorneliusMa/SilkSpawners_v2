@@ -72,6 +72,7 @@ spawner:
   destroyable: true  # If set to false, it won't be possible to destroy spawners without SilkTouch or without the permission
   pickaxeRequired: true # If set to false, spawners will always drop regardless of what the player is holding in his hand
   silktouchRequired: true # If set to false, spawners will drop even if the used pickaxe does not have SilkTouch
+  silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners (useful for custom pickaxes with higher enchantment levels)
   item:
     name: $dSpawner # The name of the spawner item dropped
     prefix: $e # The text before the spawner name in the lore
