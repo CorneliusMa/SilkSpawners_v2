@@ -1,0 +1,31 @@
+name: Stale
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 4 * * *'
+
+permissions:
+  issues: write
+
+jobs:
+
+  stale:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          stale-issue-label: stale
+          exempt-issue-labels: pinned
+          stale-issue-message: >
+            This issue has been inactive for 60 days and will be closed in 14 days.
+            Comment to keep it open.
+          close-issue-message: >
+            This issue was closed due to inactivity. Feel free to reopen or open
+            a new issue if it is still relevant.
