@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.config.handler;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -16,8 +17,12 @@ public class ConfigLoader {
 
     private final Plugin plugin;
 
+    @Getter
+    private boolean loaded;
+
     public ConfigLoader(Plugin plugin) {
         this.plugin = plugin;
+        this.loaded = false;
         this.load();
     }
 
@@ -42,7 +47,7 @@ public class ConfigLoader {
 
     private void load() {
         Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Loading configuration...");
-        apply(true);
+        loaded = apply(true);
     }
 
     public boolean reload() {

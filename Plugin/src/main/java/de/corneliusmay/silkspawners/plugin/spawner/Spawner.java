@@ -26,9 +26,6 @@ public class Spawner {
     @Getter
     private ItemStack itemStack;
 
-    private final String prefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX).get();
-    private final String oldPrefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX_OLD).get();
-
     public Spawner(SilkSpawners plugin, Block block) {
         this.plugin = plugin;
         if(block == null) return;
@@ -77,8 +74,14 @@ public class Spawner {
                 .addToLore(new ConfigValue<List<String>>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
     }
 
+    private String getPrefix() {
+        return new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX).get();
+    }
+
     private EntityType getSpawnerEntity(String lore) {
         String name;
+        String prefix = getPrefix();
+        String oldPrefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX_OLD).get();
         if(lore.startsWith(prefix)) {
             name = lore.replaceFirst(prefix, "").replace(" ", "_").toLowerCase();
         }else if(!oldPrefix.equals("") && lore.startsWith(oldPrefix)) {
@@ -97,7 +100,7 @@ public class Spawner {
     }
 
     public String serializedName() {
-        return prefix + StringUtils.capitalizeFully(serializedEntityType().replace("_", " "));
+        return getPrefix() + StringUtils.capitalizeFully(serializedEntityType().replace("_", " "));
     }
 
     public boolean isValid() {

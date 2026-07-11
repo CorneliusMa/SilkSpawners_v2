@@ -3,21 +3,16 @@ package de.corneliusmay.silkspawners.plugin.config.handler;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 final class ConfigCache {
 
-    private static final Map<PluginConfig, Object> VALUES = new ConcurrentHashMap<>();
-
-    private ConfigCache() {
-    }
+    private static volatile Map<PluginConfig, Object> values = Map.of();
 
     static Object value(PluginConfig key) {
-        return VALUES.get(key);
+        return values.get(key);
     }
 
-    static void commit(Map<PluginConfig, Object> values) {
-        VALUES.clear();
-        VALUES.putAll(values);
+    static void commit(Map<PluginConfig, Object> newValues) {
+        values = Map.copyOf(newValues);
     }
 }

@@ -4,9 +4,7 @@ import de.corneliusmay.silkspawners.api.Bukkit;
 import de.corneliusmay.silkspawners.api.ServerPlatform;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
-import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigLoader;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
 import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
@@ -25,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 @Getter
 public class SilkSpawners extends JavaPlugin {
@@ -45,12 +42,12 @@ public class SilkSpawners extends JavaPlugin {
     @Override
     public void onEnable() {
         configLoader = new ConfigLoader(this);
+        if(!configLoader.isLoaded()) return;
 
-        log = new Logger(new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get());
+        log = new Logger();
 
         versionChecker = new VersionChecker(this);
-        if(new ConfigValue<Boolean>(PluginConfig.UPDATE_CHECK_ENABLED).get()) versionChecker.start(new ConfigValue<Integer>(PluginConfig.UPDATE_CHECK_INTERVAL).get());
-        else log.warn("Update checking is disabled");
+        versionChecker.start();
 
         log.info("Starting SilkSpawners v" + versionChecker.getInstalledVersion());
 
@@ -65,7 +62,7 @@ public class SilkSpawners extends JavaPlugin {
         bukkitHandler = versionHandler.getBukkitHandler();
 
         log.info("Loading locale file");
-        locale = new LocaleHandler(this, new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get());
+        locale = new LocaleHandler(this);
         if(locale.getResourceBundle() == null) return;
 
         log.info("Starting bStats integration");
@@ -99,6 +96,12 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.addCommand(new ConfigCommand());
         commandHandler.addCommand(new EntitiesCommand());
         commandHandler.register();
+    }
+
+    public boolean reloadConfiguration() {
+        if(!configLoader.reload()) return false;
+        versionChecker.restart();
+        return true;
     }
 
     @Override

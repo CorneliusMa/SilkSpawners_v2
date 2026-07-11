@@ -14,7 +14,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
     protected boolean execute(CommandSender sender, String[] args) {
         if (args.length != 1 || !args[0].equalsIgnoreCase("reload")) return invalidSyntax(sender);
 
-        if (plugin.getConfigLoader().reload()) sendMessage(sender, "RELOAD_SUCCESSFUL");
+        if (plugin.reloadConfiguration()) sendMessage(sender, "RELOAD_SUCCESSFUL");
         else sendMessage(sender, "RELOAD_ERROR");
         return true;
     }
