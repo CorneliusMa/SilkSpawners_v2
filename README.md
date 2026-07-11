@@ -10,6 +10,8 @@
     <br>
     This plugin makes spawners minable using SilkTouch tools.
     <br>
+    <sub>Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.</sub>
+    <br>
     <br>
     <a href="https://modrinth.com/plugin/silkspawners"><img alt="Visit on Modrinth" src=".assests/img/modrinth.png"></a>
     <a href="https://hangar.papermc.io/SilkSpawners/SilkSpawners"><img alt="Visit on Hangar" src=".assests/img/hangar.png"></a>
@@ -98,9 +100,13 @@ update:
   check:
     enabled: true # If set to true, the plugin will check for updates
     interval: 24 # The interval in hours at which to check for updates
+hooks:
+  shopguiplus: true # If set to true, SilkSpawners will hook into ShopGUI+ if it is installed
 ```
 
 *If you want to use a dollar sign in a value, you can escape it by putting a backslash in front of it.*
+
+All messages (in the configuration and in locale files) can be formatted with either legacy color codes or [MiniMessage](https://docs.advntr.dev/minimessage/format.html) tags. Mixing both formats within the same message is **not** supported.
 
 **Explosion tiers:**
 
@@ -129,6 +135,11 @@ If you want to create your own locale file, you should create a new file to prev
 Locale files must be named accordingly to the messages_myfile.properties naming schema and can be used by setting myfile as locale.
 
 *If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.*
+
+## Integrations
+
+### ShopGUI+
+If [ShopGUI+](https://www.spigotmc.org/resources/shopgui-1-8-1-21.6515/) is installed, SilkSpawners automatically registers itself as its spawner provider, so spawners bought and sold in shops are SilkSpawners items. The hook can be disabled by setting `hooks.shopguiplus` to `false` in the configuration.
 
 ## For developers
 
