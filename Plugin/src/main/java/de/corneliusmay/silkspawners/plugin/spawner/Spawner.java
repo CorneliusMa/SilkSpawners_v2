@@ -6,7 +6,7 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
 import lombok.Getter;
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
@@ -14,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Set;
 
 public class Spawner {
     public static String EMPTY = "empty";
@@ -52,9 +53,13 @@ public class Spawner {
         this.itemStack = generateItemStack();
     }
 
-    public void setSpawnerBlockType(Block block, List<Block> editedList) {
+    public void setSpawnerBlockType(Block block, Set<Location> editedList) {
+        setSpawnerBlockType(block, () -> editedList.remove(block.getLocation()));
+    }
+
+    private void setSpawnerBlockType(Block block, Runnable removeFromEditedList) {
         if(!isValid()){
-            editedList.remove(block);
+            removeFromEditedList.run();
             return;
         }
         this.plugin.getPlatform().runTaskLater(block.getLocation(), () -> {
@@ -63,7 +68,7 @@ public class Spawner {
             CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
             creatureSpawner.setSpawnedType(this.entityType);
             blockState.update();
-            editedList.remove(block);
+            removeFromEditedList.run();
         }, 1);
     }
 

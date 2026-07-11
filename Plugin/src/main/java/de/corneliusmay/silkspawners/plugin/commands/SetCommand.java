@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class SetCommand extends SilkSpawnersCommand {
 
@@ -52,7 +52,7 @@ public class SetCommand extends SilkSpawnersCommand {
             sendMessage(sender, "INVALID_TARGET");
             return false;
         }
-        newSpawner.setSpawnerBlockType(block, new ArrayList<>());
+        newSpawner.setSpawnerBlockType(block, new HashSet<>());
         sendMessage(sender, "SUCCESS", newSpawner.serializedName());
         return true;
     }

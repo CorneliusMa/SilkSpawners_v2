@@ -10,7 +10,7 @@ var bukkit = "org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT"
 dependencies {
     compileOnly(bukkit)
 
-    implementation("org.bstats:bstats-bukkit:3.0.0")
+    implementation("org.bstats:bstats-bukkit:3.1.0")
 
     implementation(project(":API"))
     implementation(project(":PlatformBukkit"))

@@ -6,20 +6,20 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
+import java.util.Set;
 
 public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
 
-    private final List<Block> editedSpawners;
+    private final Set<Location> editedSpawners;
 
-    public BlockPlaceListener(List<Block> editedSpawners){
+    public BlockPlaceListener(Set<Location> editedSpawners){
         this.editedSpawners = editedSpawners;
     }
 
@@ -48,7 +48,7 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
             e.setCancelled(true);
             return;
         }
-        this.editedSpawners.add(e.getBlock());
+        this.editedSpawners.add(e.getBlock().getLocation());
         event.getSpawner().setSpawnerBlockType(e.getBlock(), this.editedSpawners);
     }
 

@@ -11,13 +11,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.List;
+import java.util.Set;
 
 public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
 
-    private final List<Block> editedSpawners;
+    private final Set<Location> editedSpawners;
 
-    public PlayerInteractListener(List<Block> editedSpawners) {
+    public PlayerInteractListener(Set<Location> editedSpawners) {
         this.editedSpawners = editedSpawners;
     }
 
@@ -30,11 +30,10 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         Spawner spawner = new Spawner(plugin, block);
         if(!spawner.isValid()) return;
 
-        if(editedSpawners.stream().anyMatch(b -> b.getLocation().equals(blockLocation))) {
+        if(!editedSpawners.add(blockLocation)) {
             e.setCancelled(true);
             return;
         }
-        editedSpawners.add(block);
 
         this.plugin.getPlatform().runTaskLater(blockLocation, () -> {
             Spawner newSpawner = new Spawner(plugin, block.getWorld().getBlockAt(blockLocation));
@@ -46,7 +45,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
                 spawner.setSpawnerBlockType(block, this.editedSpawners);
                 if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get()) e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
             } else {
-                editedSpawners.remove(block);
+                editedSpawners.remove(blockLocation);
             }
         }, 1);
     }

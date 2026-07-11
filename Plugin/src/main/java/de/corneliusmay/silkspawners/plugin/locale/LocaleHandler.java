@@ -22,7 +22,7 @@ public class LocaleHandler {
     private final File localePath;
 
     @Getter
-    private ResourceBundle resourceBundle;
+    private volatile ResourceBundle resourceBundle;
 
     public LocaleHandler(SilkSpawners plugin) {
         this.plugin = plugin;
@@ -39,7 +39,7 @@ public class LocaleHandler {
         }
     }
 
-    public void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
+    public synchronized void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
         Path target = Paths.get(plugin.getDataFolder() + "/locale");
         URI resource = getClass().getResource("").toURI();
         FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap());
@@ -63,7 +63,7 @@ public class LocaleHandler {
         fileSystem.close();
     }
 
-    public void loadLocale() throws MalformedURLException {
+    public synchronized void loadLocale() throws MalformedURLException {
         URL[] urls = {localePath.toURI().toURL()};
         ClassLoader loader = new URLClassLoader(urls);
         this.resourceBundle = ResourceBundle.getBundle("messages", getLocale(), loader);
