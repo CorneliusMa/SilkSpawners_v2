@@ -39,9 +39,9 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
         }
 
         double power = number(values, "power", 0, index);
-        if(power <= 0) throw invalid(index, "must define a 'power' greater than 0");
+        if(!(power > 0) || Double.isInfinite(power)) throw invalid(index, "must define a finite 'power' greater than 0");
         double chance = number(values, "chance", 100, index);
-        if(chance < 0) throw invalid(index, "must not have a negative 'chance'");
+        if(!(chance >= 0 && chance <= 100)) throw invalid(index, "must define a 'chance' between 0 and 100");
 
         return new ExplosionTier(chance, (float) power, bool(values, "setFire", false, index), bool(values, "breakBlocks", true, index));
     }

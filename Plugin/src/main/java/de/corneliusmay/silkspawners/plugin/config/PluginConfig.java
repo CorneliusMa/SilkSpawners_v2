@@ -10,7 +10,6 @@ import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTierListConfigValu
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.NavigableMap;
@@ -29,8 +28,8 @@ public enum PluginConfig {
     SPAWNER_ITEM_PREFIX(builder(SPAWNER_ITEM, "prefix").def("$e").formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value))),
     SPAWNER_ITEM_PREFIX_OLD(builder(SPAWNER_ITEM, "prefixOld").def("").formatter(new MessageConfigValue()).legacy(SPAWNER_ITEM.getPath() + "prefix-old")),
     SPAWNER_ITEM_LORE(builder(SPAWNER_ITEM, "lore").def(new String[0]).formatter(new MessageConfigValue()).list()),
-    SPAWNER_EXPLOSION_NORMAL(builder(SPAWNER_EXPLOSION, "normal").def(new ArrayList<>()).formatter(new ExplosionTierListConfigValue()).migrator(3, new ExplosionLegacyPowerMigrator())),
-    SPAWNER_EXPLOSION_SILKTOUCH(builder(SPAWNER_EXPLOSION, "silktouch").def(new ArrayList<>()).formatter(new ExplosionTierListConfigValue()).migrator(3, new ExplosionLegacyPowerMigrator())),
+    SPAWNER_EXPLOSION_NORMAL(builder(SPAWNER_EXPLOSION, "normal").def(List.of()).formatter(new ExplosionTierListConfigValue()).migrator(3, new ExplosionLegacyPowerMigrator())),
+    SPAWNER_EXPLOSION_SILKTOUCH(builder(SPAWNER_EXPLOSION, "silktouch").def(List.of()).formatter(new ExplosionTierListConfigValue()).migrator(3, new ExplosionLegacyPowerMigrator())),
     SPAWNER_MESSAGE_DENY_DESTROY(builder(SPAWNER_MESSAGES, "denyDestroy").def(true).formatter(new BooleanConfigValue())),
     SPAWNER_MESSAGE_DENY_PLACE(builder(SPAWNER_MESSAGES, "denyPlace").def(true).formatter(new BooleanConfigValue())),
     SPAWNER_MESSAGE_DENY_CHANGE(builder(SPAWNER_MESSAGES, "denyChange").def(true).formatter(new BooleanConfigValue())),
@@ -79,6 +78,16 @@ public enum PluginConfig {
     public void init(FileConfiguration config, Integer initialVersion) {
         this.config = config;
 
+        if (legacyKeys != null && legacyKeys.length > 0 && initialVersion != CONFIG_VERSION) {
+            int legacyKeyIndex = legacyKeys.length >= initialVersion ? initialVersion : legacyKeys.length;
+            String legacyKey = legacyKeys[legacyKeyIndex - 1];
+            Object legacyValue = config.get(legacyKey);
+            if (legacyValue != null) {
+                if (config.get(path, null) == null) config.set(path, legacyValue);
+                config.set(legacyKey, null);
+            }
+        }
+
         if (initialVersion < CONFIG_VERSION && !migrators.isEmpty()) {
             Object value = config.get(path, null);
             boolean migrated = false;
@@ -92,17 +101,6 @@ public enum PluginConfig {
                 }
             }
             if (migrated) config.set(path, value);
-        }
-
-        if (legacyKeys != null && legacyKeys.length > 0 && initialVersion != CONFIG_VERSION) {
-            int legacyKeyIndex = legacyKeys.length >= initialVersion ? initialVersion : legacyKeys.length;
-            String legacyKey = legacyKeys[legacyKeyIndex - 1];
-            Object legacyValue = config.get(legacyKey);
-            if (legacyValue != null) {
-                config.addDefault(path, legacyValue);
-                config.set(legacyKey, null);
-                return;
-            }
         }
 
         config.addDefault(path, defaultValue);
