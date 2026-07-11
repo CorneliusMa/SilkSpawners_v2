@@ -5,7 +5,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-var bukkit = "org.bukkit:bukkit:1.15.2-R0.1-SNAPSHOT"
+var bukkit = providers.gradleProperty("bukkit").get()
 
 dependencies {
     compileOnly(bukkit)
@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":PlatformBukkit"))
     implementation(project(":PlatformFolia"))
     implementation(project(":HookShopGuiPlus"))
-    implementation(project(":v1_8_4"))
+    implementation(project(":v1_8"))
     implementation(project(":v1_9_4"))
     implementation(project(":v1_12_0"))
     implementation(project(":v1_13_1"))
