@@ -15,8 +15,12 @@ public class ConfigValue<T> {
         return (T) ConfigCache.value(config);
     }
 
-    @SuppressWarnings("unchecked")
-    T load() {
-        return (T) config.getFormatter().format(config.getConfig().getString(config.getPath()));
+    Object load() {
+        if (config.isList()) {
+            return config.getConfig().getStringList(config.getPath()).stream()
+                    .map(s -> config.getFormatter().format(s))
+                    .toList();
+        }
+        return config.getFormatter().format(config.getConfig().getString(config.getPath()));
     }
 }

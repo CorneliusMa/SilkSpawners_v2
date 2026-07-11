@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueArray;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
@@ -75,7 +74,7 @@ public class Spawner {
         return new ItemBuilder(this.plugin.getBukkitHandler().getSpawnerMaterial())
                 .setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
                 .addToLore(serializedName())
-                .addToLore(new ConfigValueArray<String>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
+                .addToLore(new ConfigValue<List<String>>(PluginConfig.SPAWNER_ITEM_LORE).get()).build();
     }
 
     private EntityType getSpawnerEntity(String lore) {

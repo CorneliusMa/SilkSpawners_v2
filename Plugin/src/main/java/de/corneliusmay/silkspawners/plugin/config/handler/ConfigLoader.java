@@ -7,7 +7,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -64,20 +63,18 @@ public class ConfigLoader {
         plugin.reloadConfig();
 
         Map<PluginConfig, Object> values = new HashMap<>();
-        Map<PluginConfig, List<?>> arrays = new HashMap<>();
 
         boolean valid = true;
         for (PluginConfig value : PluginConfig.values()) {
             try {
                 values.put(value, new ConfigValue<>(value).load());
-                arrays.put(value, new ConfigValueArray<>(value).load());
             } catch (Exception ex) {
                 plugin.getLogger().severe("Invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()));
                 valid = false;
             }
         }
 
-        if (valid) ConfigCache.commit(values, arrays);
+        if (valid) ConfigCache.commit(values);
         else if (initialLoad) {
             plugin.getLogger().severe("Disabling plugin due to invalid configuration value");
             plugin.getPluginLoader().disablePlugin(plugin);
