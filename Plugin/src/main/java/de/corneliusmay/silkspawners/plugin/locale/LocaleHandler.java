@@ -20,14 +20,12 @@ public class LocaleHandler {
     private final SilkSpawners plugin;
 
     private final File localePath;
-    private final Locale locale;
 
     @Getter
     private ResourceBundle resourceBundle;
 
-    public LocaleHandler(SilkSpawners plugin, Locale locale) {
+    public LocaleHandler(SilkSpawners plugin) {
         this.plugin = plugin;
-        this.locale = locale;
         this.localePath = new File(plugin.getDataFolder() + "/locale");
 
         try {
@@ -68,7 +66,11 @@ public class LocaleHandler {
     public void loadLocale() throws MalformedURLException {
         URL[] urls = {localePath.toURI().toURL()};
         ClassLoader loader = new URLClassLoader(urls);
-        this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
+        this.resourceBundle = ResourceBundle.getBundle("messages", getLocale(), loader);
+    }
+
+    private Locale getLocale() {
+        return new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get();
     }
 
     public String getAvailableLocales() {
@@ -84,7 +86,7 @@ public class LocaleHandler {
         try {
             return getPrefix() + "§f " + getMessageClean(key, args);
         } catch (MissingResourceException ex) {
-            return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, locale.toString());
+            return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, getLocale().toString());
         }
     }
 

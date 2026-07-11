@@ -2,6 +2,8 @@ package de.corneliusmay.silkspawners.plugin.version;
 
 import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -10,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,21 +27,43 @@ public class VersionChecker {
 
     private Thread thread;
 
+    private Integer runningInterval;
+
     public VersionChecker(SilkSpawners plugin) {
         this.plugin = plugin;
         client = HttpClient.newHttpClient();
     }
 
-    public void start(int interval) {
+    public void start() {
+        Integer interval = configuredInterval();
+        if (interval != null) start(interval);
+        else plugin.getLog().warn("Update checking is disabled");
+    }
+
+    public void restart() {
+        if (thread != null && thread.isAlive() && Objects.equals(configuredInterval(), runningInterval)) return;
+        stop();
+        start();
+    }
+
+    private Integer configuredInterval() {
+        if (!new ConfigValue<Boolean>(PluginConfig.UPDATE_CHECK_ENABLED).get()) return null;
+        return new ConfigValue<Integer>(PluginConfig.UPDATE_CHECK_INTERVAL).get();
+    }
+
+    private void start(int interval) {
         Preconditions.checkState(thread == null);
+        runningInterval = interval;
         thread = new Thread(() -> run(interval));
         thread.start();
     }
 
     public void stop() {
-    if (this.thread != null) {
-        this.thread.interrupt();
-    }
+        if (this.thread != null) {
+            this.thread.interrupt();
+            this.thread = null;
+        }
+        runningInterval = null;
     }
 
     private void run(int interval) {
