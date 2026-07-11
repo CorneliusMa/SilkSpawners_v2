@@ -4,15 +4,16 @@
     <a href="https://github.com/CorneliusMa/SilkSpawners_v2/releases/latest" target="_blank"><img src="https://img.shields.io/github/v/release/CorneliusMa/SilkSpawners_v2?logo=github" alt="Latest Release"></a>
     <a href="https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/release.yml" target="_blank"><img src="https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/release.yml/badge.svg" alt="Release Status"></a>
     <a href="https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/build.yml" target="_blank"><img src="https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/build.yml/badge.svg" alt="Build Status"></a>
-    <img src="https://img.shields.io/badge/Tested%20versions-%20%3C%3D%201.21.11-green.svg" alt="Tested Versions">
+    <img src="https://img.shields.io/badge/Tested%20versions-1.8%20--%2026.2-green.svg" alt="Tested Versions">
     <a href="https://www.codefactor.io/repository/github/corneliusma/silkspawners_v2/overview/master" target="_blank"><img src="https://www.codefactor.io/repository/github/corneliusma/silkspawners_v2/badge/master" alt="CodeFactor"></a>
     <a href="https://crowdin.com/project/silkspawners" target="_blank"><img src="https://badges.crowdin.net/silkspawners/localized.svg" alt="Crowdin Localization"></a>
     <br>
     This plugin makes spawners minable using SilkTouch tools.
     <br>
     <br>
-    <a href="https://www.spigotmc.org/resources/silkspawners.60063/"><img alt="Visit on Spigot" src=".assests/img/spigot.png"></a>
+    <a href="https://modrinth.com/plugin/silkspawners"><img alt="Visit on Modrinth" src=".assests/img/modrinth.png"></a>
     <a href="https://hangar.papermc.io/SilkSpawners/SilkSpawners"><img alt="Visit on Hangar" src=".assests/img/hangar.png"></a>
+    <a href="https://www.spigotmc.org/resources/silkspawners.60063/"><img alt="Visit on Spigot" src=".assests/img/spigot.png"></a>
 </p>
 
 ## Contributing
