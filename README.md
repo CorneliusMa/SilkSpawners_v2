@@ -51,6 +51,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 > In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
 - **silkspawners.command.locale** - Use this command to reload and update locale files.
+- **silkspawners.command.config** - Use this command to reload the configuration.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
 
