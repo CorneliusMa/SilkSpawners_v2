@@ -37,6 +37,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - `/silkspawners set <Type>`
 - `/silkspawners explosion <enable/disable/setting> <Player>`
 - `/silkspawners locale <setting/reload/update>`
+- `/silkspawners config <reload>`
 - `/silkspawners entities`
 - `/silkspawners version`
 
@@ -72,14 +73,16 @@ spawner:
   destroyable: true  # If set to false, it won't be possible to destroy spawners without SilkTouch or without the permission
   pickaxeRequired: true # If set to false, spawners will always drop regardless of what the player is holding in his hand
   silktouchRequired: true # If set to false, spawners will drop even if the used pickaxe does not have SilkTouch
+  silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners (useful for custom pickaxes with higher enchantment levels)
   item:
     name: $dSpawner # The name of the spawner item dropped
     prefix: $e # The text before the spawner name in the lore
     prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
-    normal: 0 # The explosion intensity when spawners are mined without SilkTouch
-    silktouch: 0 # The explosion intensity when spawners are mined with SilkTouch
+    all: [] # Explosion tiers rolled whenever spawners are mined, with or without SilkTouch (see below)
+    normal: [] # Explosion tiers rolled when spawners are mined without SilkTouch (see below)
+    silktouch: [] # Explosion tiers rolled when spawners are mined with SilkTouch (see below)
   message:
     denyDestroy: true # If set to true, a message will be sent to the player if the spawner cannot be destroyed
     denyPlace: true # If set to true, a message will be sent to the player if the spawner cannot be placed
@@ -89,13 +92,33 @@ spawner:
     disablePlace: false # If set to true, no permission is required to place spawners
     disableChange: false # If set to true, no permission is required to change spawners with eggs
 update:
-  configVersion: 2 # Do not change this value manually! It is automatically managed by the plugin
+  configVersion: 3 # Do not change this value manually! It is automatically managed by the plugin
   check:
     enabled: true # If set to true, the plugin will check for updates
     interval: 24 # The interval in hours at which to check for updates
 ```
 
 *If you want to use a dollar sign in a value, you can escape it by putting a backslash in front of it.*
+
+**Explosion tiers:**
+
+`explosion.normal` and `explosion.silktouch` each take a list of tiers; `explosion.all` tiers apply to both cases on top of the matching list. When a spawner is broken by a player with the `silkspawners.explosion` permission, a single roll picks at most one tier per break: each tier's `chance` is its share (in percent) of that roll, and each tier must define a `power`. If the chances add up to less than 100, the remaining share is no explosion; a tier with `power: 0` is an explicit "no explosion" share. If they add up to more than 100, the chances are scaled down proportionally so they still form one roll. A `silktouch` explosion goes off before the spawner item is dropped, so the drop is never destroyed by it. With the example below, 50% of breaks cause a small explosion, 30% a large one, 10% a massive one and 10% none at all:
+
+```yaml
+spawner:
+  explosion:
+    normal:
+    - chance: 50 # This tier's share of a single roll, in percent (decimals allowed, default 100)
+      power: 2.0 # Required: the explosion strength (TNT is 4.0); 0 means no explosion
+    - chance: 30
+      power: 4.0
+    - chance: 10
+      power: 8.0
+      setFire: true # Optional: the explosion ignites fires (default false)
+      breakBlocks: false # Optional: the explosion damages surrounding blocks (default true)
+```
+
+Numeric values from older configs (e.g. `normal: 3`) are migrated automatically to a single always-exploding tier of that power. Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
 > **To protect your locale files from unwanted overwriting, you must manually update the locale files with the /silkspawners locale command after an update.**

@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.api.SpawnerProvider;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +30,8 @@ public class HookLoader {
 
     private final Set<String> registeredHooks = new HashSet<>();
 
+    private final ComponentLoader<Hook> loader = new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
+
     public HookLoader(SilkSpawners plugin) {
         this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
@@ -43,10 +46,6 @@ public class HookLoader {
         hooks.forEach(this::register);
     }
 
-    private Class<?> loadClass(String hookName) throws ClassNotFoundException {
-        return Class.forName("de.corneliusmay.silkspawners.hooks." + hookName);
-    }
-
     private void register(HookDefinition definition) {
         if (registeredHooks.contains(definition.hookName())) return;
         if (Objects.isNull(pluginManager.getPlugin(definition.pluginName()))) return;
@@ -54,8 +53,7 @@ public class HookLoader {
         if (!new ConfigValue<Boolean>(definition.enabledConfig()).get()) return;
 
         try {
-            Class<?> clazz = loadClass(definition.hookName());
-            Hook hook = (Hook) clazz.getConstructor(JavaPlugin.class, SpawnerProvider.class).newInstance(plugin, spawnerProvider);
+            Hook hook = loader.instantiate(definition.hookName(), plugin, spawnerProvider);
 
             hook.register();
             registeredHooks.add(definition.hookName());

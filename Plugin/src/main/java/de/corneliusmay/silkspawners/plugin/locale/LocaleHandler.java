@@ -3,6 +3,8 @@ package de.corneliusmay.silkspawners.plugin.locale;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
+import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
 import lombok.Getter;
 
 import java.io.File;
@@ -16,6 +18,8 @@ import java.util.*;
 public class LocaleHandler {
 
     private static final String DEFAULT_MESSAGE = "§cNo value found for key {0} using locale {1}.§7\n Use §l§n/silkspawners locale update confirm§7 to update the locale files.\n §eWarning!§7 Updating the locale files will overwrite all changes§7.";
+
+    private static final String MIXED_MESSAGE = "§cThe message for key {0} mixes legacy formatting codes with MiniMessage tags, which is not supported.§7\n Use §l§neither legacy codes or MiniMessage tags§7 for a message, not both.";
 
     private final SilkSpawners plugin;
 
@@ -79,7 +83,7 @@ public class LocaleHandler {
     }
 
     public String getMessageClean(String key, Object... args) {
-        return MessageFormat.format(resourceBundle.getString(key).replace("$", "§"), args);
+        return MessageRenderer.render(resourceBundle.getString(key).replace("$", "§"), args);
     }
 
     public String getMessage(String key, Object... args) {
@@ -87,6 +91,8 @@ public class LocaleHandler {
             return getPrefix() + "§f " + getMessageClean(key, args);
         } catch (MissingResourceException ex) {
             return getPrefix() + "§f " +  MessageFormat.format(DEFAULT_MESSAGE, key, getLocale().toString());
+        } catch (MixedFormattingException ex) {
+            return getPrefix() + "§f " +  MessageFormat.format(MIXED_MESSAGE, key);
         }
     }
 

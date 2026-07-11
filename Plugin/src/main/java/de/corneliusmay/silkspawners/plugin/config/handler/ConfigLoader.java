@@ -74,7 +74,7 @@ public class ConfigLoader {
             try {
                 values.put(value, new ConfigValue<>(value).load());
             } catch (Exception ex) {
-                plugin.getLogger().severe("Invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()));
+                plugin.getLogger().severe("Invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()) + " (" + ex.getMessage() + ")");
                 valid = false;
             }
         }

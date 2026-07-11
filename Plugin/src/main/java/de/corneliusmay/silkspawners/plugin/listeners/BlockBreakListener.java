@@ -3,9 +3,9 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
-import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -52,8 +52,18 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             return;
         }
+
         e.setExpToDrop(0);
-        p.getWorld().dropItemNaturally(e.getBlock().getLocation(), event.getSpawner().getItemStack());
+
+        ItemStack spawnerItem = event.getSpawner().getItemStack();
+        if(new Explosion(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).applies(p)) {
+            plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> {
+                e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
+            }, 2);
+        }
+        else {
+            p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
+        }
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e) {
@@ -61,7 +71,14 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
         }
-        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<Integer>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
+        else {
+            Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_NORMAL);
+            if(!explosion.applies(p)) return;
+            plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> {
+                if(e.isCancelled()) return;
+                explosion.run(e.getBlock().getWorld(), e.getBlock().getLocation());
+            }, 1);
+        }
     }
 
     private boolean itemHasSilktouch(ItemStack[] items) {
@@ -73,7 +90,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
         boolean isPickaxe = items[i].getType().toString().contains("PICKAXE")
                 || !new ConfigValue<Boolean>(PluginConfig.SPAWNER_PICKAXE_REQUIRED).get();
-        boolean hasSilktouch = items[i].containsEnchantment(Enchantment.SILK_TOUCH)
+        boolean hasSilktouch = items[i].getEnchantmentLevel(Enchantment.SILK_TOUCH) >= new ConfigValue<Integer>(PluginConfig.SPAWNER_SILKTOUCH_LEVEL).get()
                 || !new ConfigValue<Boolean>(PluginConfig.SPAWNER_SILKTOUCH_REQUIRED).get();
         if(isPickaxe && hasSilktouch) return true;
 

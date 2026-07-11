@@ -7,7 +7,7 @@ include(
     "PlatformBukkit",
     "PlatformFolia",
     "HookShopGuiPlus",
-    "v1_8_4",
+    "v1_8",
     "v1_9_4",
     "v1_12_0",
     "v1_13_1",

@@ -24,8 +24,8 @@ class MinecraftVersionChecker {
         if(MinecraftVersion.versionIsNewerOrEqualTo(1, 9, 4)) {
             return "v1_9_4";
         }
-        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 8, 4)) {
-            return "v1_8_4";
+        if(MinecraftVersion.versionIsNewerOrEqualTo(1, 8, 0)) {
+            return "v1_8";
         }
         return null;
     }
