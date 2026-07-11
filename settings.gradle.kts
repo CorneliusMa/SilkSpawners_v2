@@ -6,6 +6,7 @@ include(
     "Publication",
     "PlatformBukkit",
     "PlatformFolia",
+    "HookShopGuiPlus",
     "v1_8_4",
     "v1_9_4",
     "v1_12_0",

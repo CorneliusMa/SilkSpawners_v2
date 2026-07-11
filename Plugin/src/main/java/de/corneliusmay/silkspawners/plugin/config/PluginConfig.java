@@ -33,6 +33,7 @@ public enum PluginConfig {
     UPDATE_CONFIG_VERSION(builder(UPDATE, "configVersion").defs(PluginConfig.CONFIG_VERSION).formatter(new IntegerConfigValue())),
     UPDATE_CHECK_ENABLED(builder(UPDATE_CHECK, "enabled").defs(true).formatter(new BooleanConfigValue())),
     UPDATE_CHECK_INTERVAL(builder(UPDATE_CHECK, "interval").defs(24).formatter(new IntegerConfigValue())),
+    HOOK_SHOPGUIPLUS(builder(HOOKS, "shopguiplus").defs(true).formatter(new BooleanConfigValue())),
     ;
 
     public static final int CONFIG_VERSION = 2;

@@ -4,7 +4,9 @@ import de.corneliusmay.silkspawners.api.Bukkit;
 import de.corneliusmay.silkspawners.api.ServerPlatform;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigLoader;
+import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
 import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
@@ -74,6 +76,9 @@ public class SilkSpawners extends JavaPlugin {
         log.info("Registering commands");
         registerCommands();
 
+        log.info("Registering hooks");
+        registerHooks();
+
         log.info("Started SilkSpawners v" + versionChecker.getInstalledVersion());
     }
 
@@ -84,6 +89,12 @@ public class SilkSpawners extends JavaPlugin {
         eventHandler.registerListener(new BlockPlaceListener(editedSpawners));
         eventHandler.registerListener(new BlockBreakListener());
         eventHandler.registerListener(new SpawnerBreakListener());
+    }
+
+    private void registerHooks() {
+        HookLoader hookLoader = new HookLoader(this);
+        hookLoader.addHook("shopguiplus.ShopGUIPlusHook", "ShopGUIPlus", PluginConfig.HOOK_SHOPGUIPLUS);
+        hookLoader.register();
     }
 
     private void registerCommands() {
