@@ -11,6 +11,8 @@ dependencies {
     compileOnly(bukkit)
 
     implementation("org.bstats:bstats-bukkit:3.1.0")
+    implementation("net.kyori:adventure-text-minimessage:4.26.1")
+    implementation("net.kyori:adventure-text-serializer-legacy:4.26.1")
 
     implementation(project(":API"))
     implementation(project(":PlatformBukkit"))
@@ -39,7 +41,8 @@ tasks {
         archiveBaseName.set("SilkSpawners_v2")
         archiveClassifier.set("")
         archiveVersion.set("")
-        relocate("org.bstats", "de.corneliusmay.silkspawners.plugin")
+        relocate("org.bstats", "de.corneliusmay.silkspawners.plugin.lib.org.bstats")
+        relocate("net.kyori", "de.corneliusmay.silkspawners.plugin.lib.net.kyori")
         dependencies {
             exclude(dependency(bukkit))
         }
