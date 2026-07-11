@@ -23,7 +23,7 @@ public class VersionChecker {
     private final HttpClient client;
 
     @Getter
-    private String latestVersion;
+    private volatile String latestVersion;
 
     private Thread thread;
 
@@ -34,13 +34,13 @@ public class VersionChecker {
         client = HttpClient.newHttpClient();
     }
 
-    public void start() {
+    public synchronized void start() {
         Integer interval = configuredInterval();
         if (interval != null) start(interval);
         else plugin.getLog().warn("Update checking is disabled");
     }
 
-    public void restart() {
+    public synchronized void restart() {
         if (thread != null && thread.isAlive() && Objects.equals(configuredInterval(), runningInterval)) return;
         stop();
         start();
@@ -58,7 +58,7 @@ public class VersionChecker {
         thread.start();
     }
 
-    public void stop() {
+    public synchronized void stop() {
         if (this.thread != null) {
             this.thread.interrupt();
             this.thread = null;
@@ -71,9 +71,12 @@ public class VersionChecker {
             while (true) {
                 plugin.getLog().info("Checking for updates");
                 if (!update()) plugin.getLog().error("Error getting latest version");
-                else if (!check())
-                    plugin.getLog().warn("§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v" + getInstalledVersion() + "\nLatest version: v" + latestVersion);
-                else plugin.getLog().info("The plugin is up to date (Current release v" + latestVersion + ")");
+                else {
+                    String currentLatestVersion = this.latestVersion;
+                    if (!check(currentLatestVersion))
+                        plugin.getLog().warn("§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v" + getInstalledVersion() + "\nLatest version: v" + currentLatestVersion);
+                    else plugin.getLog().info("The plugin is up to date (Current release v" + currentLatestVersion + ")");
+                }
                 TimeUnit.HOURS.sleep(interval);
             }
         } catch (InterruptedException ignored) {
@@ -97,9 +100,10 @@ public class VersionChecker {
         }
     }
 
-    public boolean check() {
+    public boolean check(String currentLatestVersion) {
+        if (currentLatestVersion == null) return true;
         Integer[] installedVersion = castVersionString(getInstalledVersion());
-        Integer[] latestVersion = castVersionString(this.latestVersion);
+        Integer[] latestVersion = castVersionString(currentLatestVersion);
         for (int i = 0; i < latestVersion.length; i++) {
             if (i >= installedVersion.length) return true;
             if (latestVersion[i] > installedVersion[i]) return false;
