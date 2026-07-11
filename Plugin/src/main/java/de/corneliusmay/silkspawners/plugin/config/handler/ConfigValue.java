@@ -21,6 +21,6 @@ public class ConfigValue<T> {
                     .map(s -> config.getFormatter().format(s))
                     .toList();
         }
-        return config.getFormatter().format(config.getConfig().getString(config.getPath()));
+        return config.getFormatter().format(config.getConfig().get(config.getPath()));
     }
 }

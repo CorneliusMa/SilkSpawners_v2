@@ -37,6 +37,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - `/silkspawners set <Type>`
 - `/silkspawners explosion <enable/disable/setting> <Player>`
 - `/silkspawners locale <setting/reload/update>`
+- `/silkspawners config <reload>`
 - `/silkspawners entities`
 - `/silkspawners version`
 
@@ -79,8 +80,8 @@ spawner:
     prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
-    normal: 0 # The explosion intensity when spawners are mined without SilkTouch
-    silktouch: 0 # The explosion intensity when spawners are mined with SilkTouch
+    normal: [] # Explosion tiers rolled when spawners are mined without SilkTouch (see below)
+    silktouch: [] # Explosion tiers rolled when spawners are mined with SilkTouch (see below)
   message:
     denyDestroy: true # If set to true, a message will be sent to the player if the spawner cannot be destroyed
     denyPlace: true # If set to true, a message will be sent to the player if the spawner cannot be placed
@@ -90,13 +91,33 @@ spawner:
     disablePlace: false # If set to true, no permission is required to place spawners
     disableChange: false # If set to true, no permission is required to change spawners with eggs
 update:
-  configVersion: 2 # Do not change this value manually! It is automatically managed by the plugin
+  configVersion: 3 # Do not change this value manually! It is automatically managed by the plugin
   check:
     enabled: true # If set to true, the plugin will check for updates
     interval: 24 # The interval in hours at which to check for updates
 ```
 
 *If you want to use a dollar sign in a value, you can escape it by putting a backslash in front of it.*
+
+**Explosion tiers:**
+
+`explosion.normal` and `explosion.silktouch` each take a list of tiers. When a spawner is broken by a player with the `silkspawners.explosion` permission, the tiers are checked strongest first and the first tier whose `chance` roll passes explodes — so at most one explosion fires per break. With the example below, 10% of breaks cause a massive explosion, 36% a large one, 37.8% a small one and 16.2% none at all:
+
+```yaml
+spawner:
+  explosion:
+    normal:
+    - chance: 70 # Probability of this tier in percent (decimals allowed)
+      power: 2.0 # Explosion strength (TNT is 4.0)
+    - chance: 40
+      power: 4.0
+    - chance: 10
+      power: 8.0
+      setFire: true # Optional: the explosion ignites fires (default false)
+      breakBlocks: false # Optional: the explosion damages surrounding blocks (default true)
+```
+
+Numeric values from older configs (e.g. `normal: 3`) are migrated automatically to a single always-exploding tier of that power. Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
 > **To protect your locale files from unwanted overwriting, you must manually update the locale files with the /silkspawners locale command after an update.**

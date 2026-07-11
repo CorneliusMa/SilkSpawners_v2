@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.config;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueFormatter;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
 
 final class PluginConfigBuilder {
 
@@ -10,6 +11,7 @@ final class PluginConfigBuilder {
     Object[] defaultValue = new Object[]{null};
     String[] legacyKeys;
     boolean list;
+    ConfigValueMigrator migrator;
 
     PluginConfigBuilder(ConfigScope scope, String key) {
         this.scope = scope;
@@ -33,6 +35,11 @@ final class PluginConfigBuilder {
 
     PluginConfigBuilder list() {
         this.list = true;
+        return this;
+    }
+
+    PluginConfigBuilder migrator(ConfigValueMigrator migrator) {
+        this.migrator = migrator;
         return this;
     }
 }

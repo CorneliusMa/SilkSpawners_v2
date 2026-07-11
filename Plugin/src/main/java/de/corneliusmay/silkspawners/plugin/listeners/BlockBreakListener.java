@@ -3,9 +3,10 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
+import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTier;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
-import de.corneliusmay.silkspawners.plugin.utils.Explosion;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -13,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
@@ -61,7 +64,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             if(new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get()) p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
         }
-        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<Integer>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
+        else new Explosion(p, e.getBlock().getWorld(), e.getBlock().getLocation(), new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_NORMAL).get());
     }
 
     private boolean itemHasSilktouch(ItemStack[] items) {
