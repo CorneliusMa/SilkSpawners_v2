@@ -28,10 +28,19 @@ jobs:
         env:
           HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
           HANGAR_ID: ${{ secrets.HANGAR_ID }}
-          HANGAR_PLATFORM_VERSIONS: ${{ secrets.HANGAR_PLATFORM_VERSIONS }}
-          HANGAR_PUB_CHANNEL: ${{ github.ref == 'refs/heads/master' && 'Preview' || 'Release' }}
-          HANGAR_SHORTY: ${{ steps.shorty.outputs.shorty }}
-          
+          PUBLISH_VERSIONS: ${{ vars.PUBLISH_VERSIONS }}
+          HANGAR_PUBLISH_CHANNEL: ${{ github.ref == 'refs/heads/master' && 'Preview' || 'Release' }}
+          PUBLISH_SHORTY: ${{ steps.shorty.outputs.shorty }}
+
+      - name: Publish to Modrinth
+        run: ./gradlew :Publication:modrinth --no-daemon --stacktrace
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_ID: ${{ secrets.MODRINTH_ID }}
+          PUBLISH_VERSIONS: ${{ vars.PUBLISH_VERSIONS }}
+          MODRINTH_PUBLISH_CHANNEL: ${{ github.ref == 'refs/heads/master' && 'beta' || 'release' }}
+          PUBLISH_SHORTY: ${{ steps.shorty.outputs.shorty }}
+
       - uses: actions/upload-artifact@v4
         with:
           path: build/libs/SilkSpawners_v2.jar
