@@ -15,6 +15,7 @@ dependencies {
     implementation(project(":API"))
     implementation(project(":PlatformBukkit"))
     implementation(project(":PlatformFolia"))
+    implementation(project(":HookShopGuiPlus"))
     implementation(project(":v1_8_4"))
     implementation(project(":v1_9_4"))
     implementation(project(":v1_12_0"))

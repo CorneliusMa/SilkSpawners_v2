@@ -9,6 +9,7 @@ public enum ConfigScope {
     SPAWNER_PERMISSIONS("permission", SPAWNER),
     UPDATE("update"),
     UPDATE_CHECK("check", UPDATE),
+    HOOKS("hooks"),
     ;
 
     private final String name;
