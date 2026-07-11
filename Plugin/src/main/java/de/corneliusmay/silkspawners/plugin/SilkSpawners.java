@@ -108,7 +108,7 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.register();
     }
 
-    public boolean reloadConfiguration() {
+    public synchronized boolean reloadConfiguration() {
         if(!configLoader.reload()) return false;
         versionChecker.restart();
         return true;
