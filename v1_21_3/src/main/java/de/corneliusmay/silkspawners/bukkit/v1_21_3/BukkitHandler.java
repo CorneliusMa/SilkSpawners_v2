@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.bukkit.v1_21_11;
+package de.corneliusmay.silkspawners.bukkit.v1_21_3;
 
 import de.corneliusmay.silkspawners.api.Bukkit;
 import org.bukkit.Material;
@@ -34,3 +34,4 @@ public class BukkitHandler implements Bukkit {
         return Material.SPAWNER;
     }
 }
+
