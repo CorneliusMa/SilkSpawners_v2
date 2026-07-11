@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.api;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class ServerPlatform {
@@ -11,4 +12,6 @@ public abstract class ServerPlatform {
     }
 
     public abstract void runTaskLater(Location location, Runnable runnable, long delay);
+
+    public abstract void runOnEntity(Entity entity, Runnable runnable, Runnable retired);
 }

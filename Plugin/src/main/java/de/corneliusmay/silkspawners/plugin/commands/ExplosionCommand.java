@@ -6,7 +6,6 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabC
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
 
 public class ExplosionCommand extends SilkSpawnersCommand {
 
@@ -24,18 +23,21 @@ public class ExplosionCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        PermissionAttachment attachment = p.addAttachment(plugin);
         switch (args[0].toLowerCase()) {
-            case "enable", "e" -> {
-                attachment.setPermission("silkspawners.explosion", true);
+            case "enable", "e" -> plugin.getPlatform().runOnEntity(p, () -> {
+                p.addAttachment(plugin).setPermission("silkspawners.explosion", true);
                 sendMessage(sender, "ENABLED", p.getName());
-            }
-            case "disable", "d" -> {
-                attachment.setPermission("silkspawners.explosion", false);
+            }, () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+            case "disable", "d" -> plugin.getPlatform().runOnEntity(p, () -> {
+                p.addAttachment(plugin).setPermission("silkspawners.explosion", false);
                 sendMessage(sender, "DISABLED", p.getName());
+            }, () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+            case "setting", "s" -> plugin.getPlatform().runOnEntity(p,
+                    () -> sendMessage(sender, "SETTING_" + (p.hasPermission("silkspawners.explosion")? "ENABLED" : "DISABLED"), p.getName()),
+                    () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+            default -> {
+                return invalidSyntax(sender);
             }
-            case "setting", "s" -> sendMessage(sender, "SETTING_" + (p.hasPermission("silkspawners.explosion")? "ENABLED" : "DISABLED"), p.getName());
-            default -> invalidSyntax(sender);
         }
         return true;
     }
