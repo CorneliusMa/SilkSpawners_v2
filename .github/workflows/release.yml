@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0
           filter: tree:0
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
 
       - id: tag
         run: echo "latest=$(git describe --tags --abbrev=0 --exclude 'api-*')" >> $GITHUB_OUTPUT
