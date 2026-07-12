@@ -43,7 +43,7 @@ fun modrinthReleaseVersions(): List<String> {
 var gversion = plugin.version as String
 if (System.getenv("HANGAR_PUBLISH_CHANNEL") == "Preview" ||
     System.getenv("MODRINTH_PUBLISH_CHANNEL") == "beta") {
-    gversion = gversion + "+" + System.getenv("PUBLISH_SHORTY")
+    gversion = System.getenv("PUBLISH_BETA_VERSION")
 }
 
 hangarPublish {

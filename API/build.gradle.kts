@@ -1,9 +1,16 @@
 group = "de.corneliusmay.silkspawners"
-version = "1.0.0"
+version = providers.gradleProperty("apiVersion").get()
 
 plugins {
     `java-library`
     `maven-publish`
+}
+
+if (System.getenv("JITPACK") == "true") {
+    val ref = System.getenv("VERSION").orEmpty()
+    check(ref == "api-$version" || ref.endsWith("-SNAPSHOT") || ref.matches(Regex("[0-9a-f]{7,40}"))) {
+        "Requested ref '$ref' is not the API release tag 'api-$version', a commit hash or a snapshot"
+    }
 }
 
 if (System.getenv("JITPACK") == "true") {

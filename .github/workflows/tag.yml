@@ -1,0 +1,52 @@
+name: Tag
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'gradle.properties'
+
+jobs:
+
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      plugin-created: ${{ steps.plugin.outputs.created }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: tree:0
+
+      - id: versions
+        run: |
+          plugin=$(sed -n 's/^[[:space:]]*pluginVersion[[:space:]]*=[[:space:]]*//p' gradle.properties | tr -d '[:space:]')
+          api=$(sed -n 's/^[[:space:]]*apiVersion[[:space:]]*=[[:space:]]*//p' gradle.properties | tr -d '[:space:]')
+          echo "$plugin" | grep -Eq '^[0-9]+(\.[0-9]+)+$' || { echo "::error::invalid pluginVersion '$plugin' in gradle.properties"; exit 1; }
+          echo "$api" | grep -Eq '^[0-9]+(\.[0-9]+)+$' || { echo "::error::invalid apiVersion '$api' in gradle.properties"; exit 1; }
+          echo "plugin=$plugin" >> $GITHUB_OUTPUT
+          echo "api=$api" >> $GITHUB_OUTPUT
+
+      - id: plugin
+        run: |
+          if ! git rev-parse -q --verify "refs/tags/v${{ steps.versions.outputs.plugin }}" > /dev/null; then
+            git tag "v${{ steps.versions.outputs.plugin }}"
+            git push origin "refs/tags/v${{ steps.versions.outputs.plugin }}"
+            echo "created=true" >> $GITHUB_OUTPUT
+          fi
+
+      - run: |
+          if ! git rev-parse -q --verify "refs/tags/api-${{ steps.versions.outputs.api }}" > /dev/null; then
+            git tag "api-${{ steps.versions.outputs.api }}"
+            git push origin "refs/tags/api-${{ steps.versions.outputs.api }}"
+          fi
+
+  release:
+    if: needs.tag.outputs.plugin-created == 'true'
+    needs: tag
+    permissions:
+      contents: write
+    uses: ./.github/workflows/release.yml
+    secrets: inherit

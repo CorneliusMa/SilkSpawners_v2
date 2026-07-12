@@ -24,4 +24,4 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          path: build/libs/SilkSpawners_v2.jar
+          path: build/libs/*.jar
