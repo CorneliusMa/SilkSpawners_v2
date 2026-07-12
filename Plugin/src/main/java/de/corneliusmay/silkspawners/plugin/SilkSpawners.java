@@ -2,6 +2,7 @@ package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.plugin.api.SilkSpawnersService;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
@@ -74,6 +75,9 @@ public class SilkSpawners extends JavaPlugin {
 
         log.info("Registering commands");
         registerCommands();
+
+        log.info("Registering API service");
+        new SilkSpawnersService(this).register();
 
         log.info("Registering hooks");
         registerHooks();

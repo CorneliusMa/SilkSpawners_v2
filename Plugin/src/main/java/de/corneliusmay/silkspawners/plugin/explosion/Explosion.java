@@ -1,7 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.explosion;
 
+import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
+import de.corneliusmay.silkspawners.api.events.SpawnerExplodeEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -22,16 +25,23 @@ public class Explosion {
         return !tiers.isEmpty() && p.hasPermission("silkspawners.explosion");
     }
 
-    public void run(World world, Location location) {
+    public void run(Player player, World world, Location location, SpawnerSnapshot spawner) {
         double total = tiers.stream().mapToDouble(ExplosionTier::chance).sum();
         double roll = ThreadLocalRandom.current().nextDouble(Math.max(total, 100));
         double cumulative = 0;
         for (ExplosionTier tier : tiers) {
             cumulative += tier.chance();
             if (roll >= cumulative) continue;
-            if (tier.power() > 0) world.createExplosion(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5, tier.power(), tier.setFire(), tier.breakBlocks());
+            if (tier.power() > 0) explode(player, world, location, spawner, tier);
             return;
         }
+    }
+
+    private void explode(Player player, World world, Location location, SpawnerSnapshot spawner, ExplosionTier tier) {
+        SpawnerExplodeEvent event = new SpawnerExplodeEvent(player, spawner, location, tier.power(), tier.setFire(), tier.breakBlocks());
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled() || event.getPower() <= 0) return;
+        world.createExplosion(location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5, event.getPower(), event.getFire(), event.getBreakBlocks());
     }
 
     private List<ExplosionTier> combined(List<ExplosionTier> tiers, List<ExplosionTier> sharedTiers) {

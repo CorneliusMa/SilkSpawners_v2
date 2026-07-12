@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
+import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
@@ -12,11 +13,12 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Set;
 
-public class Spawner {
+public class Spawner implements SpawnerSnapshot {
     public static String EMPTY = "empty";
 
     private final SilkSpawners plugin;
@@ -24,7 +26,6 @@ public class Spawner {
     @Getter
     private EntityType entityType;
 
-    @Getter
     private ItemStack itemStack;
 
     public Spawner(SilkSpawners plugin, Block block) {
@@ -39,18 +40,31 @@ public class Spawner {
 
     public Spawner(SilkSpawners plugin, ItemStack itemStack) {
         this.plugin = plugin;
-        this.itemStack = itemStack;
         if(itemStack == null) return;
+        this.itemStack = itemStack.clone();
         if(itemStack.getType() != this.plugin.getBukkitHandler().getSpawnerMaterial()) return;
-        if(itemStack.getItemMeta() == null || itemStack.getItemMeta().getLore() == null) return;
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if(itemMeta == null || itemMeta.getLore() == null || itemMeta.getLore().isEmpty()) return;
 
-        this.entityType = getSpawnerEntity(itemStack.getItemMeta().getLore().get(0));
+        this.entityType = getSpawnerEntity(itemMeta.getLore().get(0));
     }
 
     public Spawner(SilkSpawners plugin, EntityType entityType) {
         this.plugin = plugin;
         this.entityType = entityType;
         this.itemStack = generateItemStack();
+    }
+
+    public Spawner(SilkSpawners plugin, SpawnerSnapshot snapshot) {
+        this(plugin, snapshot.getEntityType());
+    }
+
+    public static Spawner of(SilkSpawners plugin, SpawnerSnapshot snapshot) {
+        return snapshot instanceof Spawner spawner ? spawner : new Spawner(plugin, snapshot);
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack == null ? null : itemStack.clone();
     }
 
     public void setSpawnerBlockType(Block block, Set<Location> editedList) {
@@ -101,7 +115,7 @@ public class Spawner {
     }
 
     public String serializedEntityType() {
-        return entityType == null ? Spawner.EMPTY : entityType.getName().toLowerCase();
+        return isEmpty() ? Spawner.EMPTY : entityType.getName().toLowerCase();
     }
 
     public String serializedName() {
@@ -109,6 +123,10 @@ public class Spawner {
     }
 
     public boolean isValid() {
-        return itemStack != null && (entityType == null || entityType.isSpawnable());
+        return itemStack != null && (isEmpty() || entityType.isSpawnable());
+    }
+
+    public boolean isEmpty() {
+        return entityType == null;
     }
 }

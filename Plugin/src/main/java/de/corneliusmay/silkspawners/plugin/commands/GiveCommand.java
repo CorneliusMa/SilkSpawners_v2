@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
+import de.corneliusmay.silkspawners.api.events.SpawnerGiveEvent;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
@@ -61,11 +62,16 @@ public class GiveCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        ItemStack item = spawner.getItemStack();
-        item.setAmount(amount);
-        int finalAmount = amount;
-        String trailingLetter = amount > 1? "s" : "";
+        int requestedAmount = amount;
         plugin.getPlatform().runOnEntity(p, () -> {
+            SpawnerGiveEvent event = new SpawnerGiveEvent(sender, p, spawner, requestedAmount);
+            Bukkit.getPluginManager().callEvent(event);
+            if(event.isCancelled()) return;
+
+            ItemStack item = spawner.getItemStack();
+            item.setAmount(event.getAmount());
+            int finalAmount = event.getAmount();
+            String trailingLetter = finalAmount > 1? "s" : "";
             p.getInventory().addItem(item);
             if(p != sender) {
                 sendMessage(sender, "SUCCESS", finalAmount, spawner.serializedName(), trailingLetter, p.getName());

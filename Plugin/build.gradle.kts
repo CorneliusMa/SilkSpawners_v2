@@ -14,6 +14,7 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:4.26.1")
     implementation("net.kyori:adventure-text-serializer-legacy:4.26.1")
 
+    implementation(project(":API"))
     implementation(project(":SPI"))
     implementation(project(":PlatformBukkit"))
     implementation(project(":PlatformFolia"))

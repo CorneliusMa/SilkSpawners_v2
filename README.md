@@ -147,7 +147,7 @@ If [ShopGUI+](https://www.spigotmc.org/resources/shopgui-1-8-1-21.6515/) is inst
 
 ## For developers
 
-SilkSpawners fires custom Bukkit events (`SpawnerPlaceEvent`, `SpawnerBreakEvent`) that other plugins can listen to. See [Developer documentation](docs/DEVELOPERS.md) for details.
+SilkSpawners provides a developer API (via JitPack) with a `SilkSpawnersAPI` service and custom Bukkit events. See [Developer documentation](docs/DEVELOPERS.md) for details.
 
 ## Tutorial
 

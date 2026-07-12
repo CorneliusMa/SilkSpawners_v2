@@ -75,7 +75,7 @@ There is no automated test for version handlers, so verify your changes on a rea
 
 Integrations with other plugins live in their own `HookXxx` modules and are loaded through `HookLoader`, which only activates a hook when the target plugin is installed *and* the corresponding config option is enabled.
 
-A hook extends the [`Hook`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/hooks/Hook.java) base class, which provides the `plugin` instance and a [`SpawnerProvider`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/hooks/SpawnerProvider.java) (to build a SilkSpawners spawner item for a given `EntityType`, and to read the `EntityType` back out of a spawner item), and requires a `register()` method.
+A hook extends the [`Hook`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/hooks/Hook.java) base class, which provides the `plugin` instance and a [`SpawnerProvider`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/hooks/SpawnerProvider.java) (to build a SilkSpawners spawner item for a given `EntityType`, and to read the `EntityType` back out of a spawner item), and requires a `register()` method. External plugins integrate through the developer API instead, see the [Developer documentation](docs/DEVELOPERS.md).
 
 To add one:
 
