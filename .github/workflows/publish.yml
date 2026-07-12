@@ -24,7 +24,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Publish to Hangar
         run: ./gradlew :Publication:publishPluginPublicationToHangar --no-daemon --stacktrace
