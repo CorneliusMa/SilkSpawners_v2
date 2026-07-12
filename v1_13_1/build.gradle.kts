@@ -1,7 +1,7 @@
-group = "de.corneliusmay.silkspawners"
+plugins {
+    id("silkspawners.core-module")
+}
 
 dependencies {
-    implementation(project(":API"))
-
     compileOnly("org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT")
 }

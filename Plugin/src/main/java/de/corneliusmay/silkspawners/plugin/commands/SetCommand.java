@@ -1,8 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
+import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -52,8 +54,19 @@ public class SetCommand extends SilkSpawnersCommand {
             sendMessage(sender, "INVALID_TARGET");
             return false;
         }
-        newSpawner.setSpawnerBlockType(block, new HashSet<>());
-        sendMessage(sender, "SUCCESS", newSpawner.serializedName());
+
+        if(spawner.getEntityType() == newSpawner.getEntityType()) {
+            sendMessage(sender, "UNCHANGED", newSpawner.serializedName());
+            return true;
+        }
+
+        SpawnerChangeEvent event = new SpawnerChangeEvent(player, spawner, block.getLocation(), newSpawner, type -> new Spawner(plugin, type));
+        Bukkit.getPluginManager().callEvent(event);
+        if(event.isCancelled()) return false;
+
+        Spawner result = Spawner.of(plugin, event.getNewSpawner());
+        result.setSpawnerBlockType(block, new HashSet<>());
+        sendMessage(sender, "SUCCESS", result.serializedName());
         return true;
     }
 }

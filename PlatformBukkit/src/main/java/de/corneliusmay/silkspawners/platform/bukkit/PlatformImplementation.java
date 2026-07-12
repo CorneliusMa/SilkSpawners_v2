@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.platform.bukkit;
 
-import de.corneliusmay.silkspawners.api.ServerPlatform;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

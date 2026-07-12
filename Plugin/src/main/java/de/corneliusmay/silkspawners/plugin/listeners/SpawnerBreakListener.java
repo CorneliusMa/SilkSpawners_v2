@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
-import de.corneliusmay.silkspawners.plugin.events.SpawnerBreakEvent;
+import de.corneliusmay.silkspawners.api.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
@@ -17,7 +17,7 @@ public class SpawnerBreakListener extends SilkSpawnersListener<SpawnerBreakEvent
         if(!explosion.applies(e.getPlayer())) return;
         plugin.getPlatform().runTaskLater(e.getLocation(), () -> {
             if(e.isCancelled()) return;
-            explosion.run(e.getLocation().getWorld(), e.getLocation());
+            explosion.run(e.getPlayer(), e.getLocation().getWorld(), e.getLocation(), e.getSpawner());
         }, 1);
     }
 }

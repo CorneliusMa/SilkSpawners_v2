@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.api;
+package de.corneliusmay.silkspawners.spi.version;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

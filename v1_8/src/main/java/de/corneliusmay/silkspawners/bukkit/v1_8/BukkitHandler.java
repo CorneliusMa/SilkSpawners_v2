@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.v1_8;
 
-import de.corneliusmay.silkspawners.api.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

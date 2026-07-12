@@ -1,7 +1,7 @@
-group = "de.corneliusmay.silkspawners"
+plugins {
+    id("silkspawners.core-module")
+}
 
 dependencies {
-    implementation(project(":API"))
-
     compileOnly("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT")
 }

@@ -1,7 +1,7 @@
-group = "de.corneliusmay.silkspawners"
+plugins {
+    id("silkspawners.core-module")
+}
 
 dependencies {
-    implementation(project(":API"))
-
-    compileOnly(providers.gradleProperty("bukkit").get())
+    compileOnly(libs.bukkit)
 }

@@ -149,6 +149,6 @@ Yes. If ShopGUI+ is installed, spawners bought and sold in its shops are automat
 <details>
 <summary><b>Can my plugin react to spawner places and breaks?</b></summary>
 
-Yes, SilkSpawners fires `SpawnerPlaceEvent` and `SpawnerBreakEvent`. See the [Developer documentation](DEVELOPERS.md).
+Yes, SilkSpawners provides a developer API with a service interface and events for spawner places, breaks, drops, changes, explosions and gives. See the [Developer documentation](DEVELOPERS.md).
 
 </details>

@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.platform;
 
-import de.corneliusmay.silkspawners.api.ServerPlatform;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import lombok.Getter;
