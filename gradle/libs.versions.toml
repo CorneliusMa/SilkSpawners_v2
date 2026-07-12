@@ -7,7 +7,7 @@ adventure-minimessage = { module = "net.kyori:adventure-text-minimessage", versi
 adventure-serializer-legacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "adventure" }
 bstats-bukkit = { module = "org.bstats:bstats-bukkit", version = "3.2.1" }
 lombok = { module = "org.projectlombok:lombok", version = "1.18.46" }
-jetbrains-annotations = { module = "org.jetbrains:annotations", version = "24.1.0" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.0" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.5.1" }
