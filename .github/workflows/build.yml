@@ -26,7 +26,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
         with:
-          dependency-graph: ${{ github.event_name == 'push' && 'generate-and-submit' || 'disabled' }}
+          dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && 'generate-and-submit' || 'disabled' }}
 
       - run: ./gradlew assemble --no-daemon --stacktrace
 
