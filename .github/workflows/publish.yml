@@ -19,7 +19,7 @@ jobs:
       - id: beta
         run: echo "version=$(git describe --tags --long --exclude 'api-*' | sed -E 's/^v//; s/-([0-9]+)-g([0-9a-f]+)$/-beta.\1+\2/')" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5.2.0
         with:
           java-version: '17'
           distribution: 'temurin'
