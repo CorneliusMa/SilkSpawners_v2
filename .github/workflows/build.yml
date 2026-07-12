@@ -3,6 +3,12 @@ name: Build
 on:
   workflow_call:
   workflow_dispatch:
+  pull_request:
+  push:
+    branches: [ master ]
+
+permissions:
+  contents: write
 
 jobs:
 
@@ -19,11 +25,13 @@ jobs:
           distribution: 'temurin'
 
       - uses: gradle/actions/setup-gradle@v4
+        with:
+          dependency-graph: ${{ github.event_name == 'push' && 'generate-and-submit' || 'disabled' }}
 
-      - run: ./gradlew :Plugin:assemble :ApiExample:compileJava --no-daemon --stacktrace
+      - run: ./gradlew assemble --no-daemon --stacktrace
 
       - uses: actions/upload-artifact@v4
         with:
           path: |
-            build/libs/*.jar
-            !build/libs/ApiExample*.jar
+            build/libs/SilkSpawners_v2.jar
+            build/libs/SilkSpawners_v2-api-*.jar
