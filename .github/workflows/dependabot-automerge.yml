@@ -19,7 +19,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - if: steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'
+      - if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
         run: |
           gh pr edit "$PR_URL" --add-label "automerge"
           gh pr merge --auto --squash "$PR_URL"
