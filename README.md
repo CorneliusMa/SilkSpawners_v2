@@ -147,7 +147,7 @@ If [ShopGUI+](https://www.spigotmc.org/resources/shopgui-1-8-1-21.6515/) is inst
 
 ## For developers
 
-SilkSpawners provides a developer API (via JitPack) with a `SilkSpawnersAPI` service and custom Bukkit events. See [Developer documentation](docs/DEVELOPERS.md) for details.
+SilkSpawners provides a developer API (via JitPack) with a `SilkSpawnersAPI` service and custom Bukkit events. See the [Developer documentation](docs/DEVELOPERS.md) and the [Javadoc](https://javadoc.jitpack.io/com/github/CorneliusMa/SilkSpawners_v2/api-0.1.0/javadoc/) for details.
 
 ## Tutorial
 

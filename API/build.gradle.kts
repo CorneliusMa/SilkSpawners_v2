@@ -40,7 +40,18 @@ dependencies {
 }
 
 tasks.withType<Javadoc> {
-    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+    with(options as StandardJavadocDocletOptions) {
+        docTitle("SilkSpawners API $version")
+        windowTitle("SilkSpawners API $version")
+        overview("src/main/javadoc/overview.html")
+        links(
+            "https://docs.oracle.com/en/java/javase/17/docs/api/",
+            "https://hub.spigotmc.org/javadocs/spigot/",
+            "https://javadoc.io/doc/org.jetbrains/annotations/${libs.jetbrains.annotations.get().version}/"
+        )
+        bottom("""<a href="https://github.com/CorneliusMa/SilkSpawners_v2">SilkSpawners</a> is licensed under the <a href="https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/LICENSE">MIT License</a>.""")
+        addStringOption("Xdoclint:none", "-quiet")
+    }
 }
 
 publishing {
