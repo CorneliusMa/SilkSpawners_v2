@@ -1,0 +1,6 @@
+name: ApiExample
+version: 1.0
+main: com.example.spawners.ExamplePlugin
+api-version: 1.13
+
+depend: [SilkSpawners_v2]

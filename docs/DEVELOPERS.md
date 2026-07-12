@@ -124,6 +124,8 @@ public class MyListener implements Listener {
 
 Register the listener with Bukkit as usual: `getServer().getPluginManager().registerEvents(new MyListener(), this);`
 
+A runnable example plugin lives in the [`ApiExample`](../ApiExample) module - build it with `./gradlew :ApiExample:jar` and drop it into a test server next to SilkSpawners.
+
 ## Shop integrations
 
 There is no SilkSpawners-side registration for shop integrations: `getSpawnerItem` and `getEntityType` are the integration surface. Wire them into your shop plugin from your own `onEnable` (with `depend: [SilkSpawners_v2]`), the same way the bundled ShopGUI+ integration does it internally.

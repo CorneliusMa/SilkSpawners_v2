@@ -2,6 +2,7 @@ rootProject.name = "silkspawners"
 
 include(
     "API",
+    "ApiExample",
     "SPI",
     "Plugin",
     "Publication",
