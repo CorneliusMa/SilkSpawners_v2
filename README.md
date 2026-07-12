@@ -1,5 +1,5 @@
 <p align="center" style="background-color: white; color: black; border-radius: 10px; padding-top: 10px; padding-bottom: 5px">
-    <a href="https://github.com/CorneliusMa/SilkSpawners_v2"><img alt="SilkSpawners - A lightweight plugin to make spawners mineable" src=".assests/img/title.png"></a>
+    <a href="https://github.com/CorneliusMa/SilkSpawners_v2"><img alt="SilkSpawners - A lightweight plugin to make spawners mineable" src=".assets/title.png"></a>
     <br>
     <a href="https://github.com/CorneliusMa/SilkSpawners_v2/releases/latest" target="_blank"><img src="https://img.shields.io/github/v/release/CorneliusMa/SilkSpawners_v2?logo=github" alt="Latest Release"></a>
     <a href="https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/release.yml" target="_blank"><img src="https://github.com/CorneliusMa/SilkSpawners_v2/actions/workflows/release.yml/badge.svg" alt="Release Status"></a>
@@ -13,9 +13,9 @@
     <sub>Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.</sub>
     <br>
     <br>
-    <a href="https://modrinth.com/plugin/silkspawners"><img alt="Visit on Modrinth" src=".assests/img/modrinth.png"></a>
-    <a href="https://hangar.papermc.io/SilkSpawners/SilkSpawners"><img alt="Visit on Hangar" src=".assests/img/hangar.png"></a>
-    <a href="https://www.spigotmc.org/resources/silkspawners.60063/"><img alt="Visit on Spigot" src=".assests/img/spigot.png"></a>
+    <a href="https://modrinth.com/plugin/silkspawners"><img alt="Visit on Modrinth" src=".assets/modrinth/modrinth.png"></a>
+    <a href="https://hangar.papermc.io/SilkSpawners/SilkSpawners"><img alt="Visit on Hangar" src=".assets/hangar/hangar.png"></a>
+    <a href="https://www.spigotmc.org/resources/silkspawners.60063/"><img alt="Visit on Spigot" src=".assets/spigot/spigot.png"></a>
 </p>
 
 ## Contributing
@@ -110,7 +110,7 @@ All messages (in the configuration and in locale files) can be formatted with ei
 
 **Explosion tiers:**
 
-`explosion.normal` and `explosion.silktouch` each take a list of tiers, and `explosion.all` tiers apply on top of both. On each break (by a player with `silkspawners.explosion`), one roll picks at most one tier: each tier's chance is its percentage share and must have a power. Shares under 100% leave the remainder as no explosion (`power: 0` is an explicit no-explosion share); shares over 100% are scaled down proportionally. A silktouch explosion fires before the item drops, so it never destroys the drop. The example below gives 50% small, 30% large, 10% massive and 10% none:
+`explosion.normal` and `explosion.silktouch` each take a list of tiers, and `explosion.all` tiers apply on top of both. On each break (by a player with `silkspawners.explosion`), one roll picks at most one tier: each tier's `chance` is its percentage share and must have a `power`. Shares under 100% leave the remainder as no explosion (`power: 0` is an explicit no-explosion share); shares over 100% are scaled down proportionally. A `silktouch` explosion fires before the item drops, so it never destroys the drop. The example below gives 50% a small explosion, 30% a large one and 10% a massive one that ignites fires:
 
 ```yaml
 spawner:
@@ -123,10 +123,10 @@ spawner:
     - chance: 10
       power: 8.0
       setFire: true # Optional: the explosion ignites fires (default false)
-      breakBlocks: false # Optional: the explosion damages surrounding blocks (default true)
+      breakBlocks: true # Optional: the explosion damages surrounding blocks (default true)
 ```
 
-Numeric values from older configs (e.g. `normal: 3`) are migrated automatically to a single always-exploding tier of that power. Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
+Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
 > **To protect your locale files from unwanted overwriting, you must manually update the locale files with the /silkspawners locale command after an update.**
@@ -136,6 +136,10 @@ Locale files must be named accordingly to the messages_myfile.properties naming 
 
 *If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.*
 
+## FAQ
+
+Common questions and problems are answered in the [FAQ](docs/FAQ.md).
+
 ## Integrations
 
 ### ShopGUI+
@@ -144,6 +148,12 @@ If [ShopGUI+](https://www.spigotmc.org/resources/shopgui-1-8-1-21.6515/) is inst
 ## For developers
 
 SilkSpawners fires custom Bukkit events (`SpawnerPlaceEvent`, `SpawnerBreakEvent`) that other plugins can listen to. See [Developer documentation](docs/DEVELOPERS.md) for details.
+
+## Tutorial
+
+[![SilkSpawners Tutorial](https://img.youtube.com/vi/LbK3AEXt_5o/0.jpg)](https://www.youtube.com/watch?v=LbK3AEXt_5o)
+
+Thanks to [KasaiSora](https://www.youtube.com/@KasaiSora) for creating this great tutorial!
 
 ## Statistics
 ![Statistics](https://bstats.org/signatures/bukkit/Silk%20Spawners.svg)
