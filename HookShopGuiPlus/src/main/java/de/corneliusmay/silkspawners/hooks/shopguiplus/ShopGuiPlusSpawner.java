@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.hooks.shopguiplus;
 
-import de.corneliusmay.silkspawners.api.SpawnerProvider;
+import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import net.brcdev.shopgui.spawner.external.provider.ExternalSpawnerProvider;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;

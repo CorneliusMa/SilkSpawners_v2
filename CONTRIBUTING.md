@@ -56,7 +56,7 @@ For more just have a look at our commit history.
 
 ## Adding support for a new Minecraft version
 
-Version-specific code is isolated in per-version modules (`v1_8_4`, `v1_9_4`, …). Each module contains a single `BukkitHandler` that implements the [`Bukkit`](API/src/main/java/de/corneliusmay/silkspawners/api/Bukkit.java) API interface, and the correct handler is picked at runtime by `MinecraftVersionChecker`.
+Version-specific code is isolated in per-version modules (`v1_8_4`, `v1_9_4`, …). Each module contains a single `BukkitHandler` that implements the [`Bukkit`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/version/Bukkit.java) API interface, and the correct handler is picked at runtime by `MinecraftVersionChecker`.
 
 **You only need a new module when the Bukkit API changes in a way that breaks the existing handler** - not for every Minecraft release. As long as the current handler keeps compiling and working against a newer server, nothing has to be done.
 
@@ -75,11 +75,11 @@ There is no automated test for version handlers, so verify your changes on a rea
 
 Integrations with other plugins live in their own `HookXxx` modules and are loaded through `HookLoader`, which only activates a hook when the target plugin is installed *and* the corresponding config option is enabled.
 
-A hook extends the [`Hook`](API/src/main/java/de/corneliusmay/silkspawners/api/Hook.java) base class, which provides the `plugin` instance and a [`SpawnerProvider`](API/src/main/java/de/corneliusmay/silkspawners/api/SpawnerProvider.java) (to build a SilkSpawners spawner item for a given `EntityType`, and to read the `EntityType` back out of a spawner item), and requires a `register()` method.
+A hook extends the [`Hook`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/hooks/Hook.java) base class, which provides the `plugin` instance and a [`SpawnerProvider`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/hooks/SpawnerProvider.java) (to build a SilkSpawners spawner item for a given `EntityType`, and to read the `EntityType` back out of a spawner item), and requires a `register()` method.
 
 To add one:
 
-1. Create a `HookXxx` module. Its `build.gradle.kts` should depend on `:API` and `compileOnly` the target plugin's API (add the required repository if needed).
+1. Create a `HookXxx` module. Its `build.gradle.kts` should depend on `:SPI` and `compileOnly` the target plugin's API (add the required repository if needed).
 2. Implement a class extending `Hook` in package `de.corneliusmay.silkspawners.hooks.<subpackage>`, doing the integration work inside `register()`. If your hook listens to Bukkit events, register it as a `Listener` there yourself - the loader only calls `register()`.
 3. Register the module in [`settings.gradle.kts`](settings.gradle.kts) and add `implementation(project(":HookXxx"))` in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
 4. Add a toggle for it in `PluginConfig` under the existing `HOOKS` scope, giving it a boolean default (e.g. `HOOK_XXX(builder(HOOKS, "xxx").defs(true).formatter(new BooleanConfigValue()))`).

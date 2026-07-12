@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.api;
+package de.corneliusmay.silkspawners.spi.hooks;
 
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;

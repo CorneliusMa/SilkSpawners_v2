@@ -5,7 +5,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":API"))
+    implementation(project(":SPI"))
 
     compileOnly("org.bukkit:bukkit:1.13-R0.1-SNAPSHOT")
     compileOnly("com.github.brcdev-minecraft:shopgui-api:3.2.0") {

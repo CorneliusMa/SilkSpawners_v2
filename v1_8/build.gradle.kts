@@ -1,7 +1,7 @@
 group = "de.corneliusmay.silkspawners"
 
 dependencies {
-    implementation(project(":API"))
+    implementation(project(":SPI"))
 
     compileOnly(providers.gradleProperty("bukkit").get())
 }

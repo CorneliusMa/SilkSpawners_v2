@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.v1_20_5;
 
-import de.corneliusmay.silkspawners.api.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;

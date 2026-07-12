@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.hooks;
 
-import de.corneliusmay.silkspawners.api.Hook;
-import de.corneliusmay.silkspawners.api.SpawnerProvider;
+import de.corneliusmay.silkspawners.spi.hooks.Hook;
+import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;

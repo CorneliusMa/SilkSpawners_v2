@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import de.corneliusmay.silkspawners.api.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.Bukkit;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import lombok.Getter;

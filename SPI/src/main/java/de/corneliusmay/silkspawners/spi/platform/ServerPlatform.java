@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.api;
+package de.corneliusmay.silkspawners.spi.platform;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

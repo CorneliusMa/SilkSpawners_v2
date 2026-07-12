@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.hooks.shopguiplus;
 
-import de.corneliusmay.silkspawners.api.Hook;
-import de.corneliusmay.silkspawners.api.SpawnerProvider;
+import de.corneliusmay.silkspawners.spi.hooks.Hook;
+import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.brcdev.shopgui.event.ShopGUIPlusPostEnableEvent;
 import org.bukkit.Bukkit;
