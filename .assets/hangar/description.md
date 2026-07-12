@@ -95,7 +95,8 @@ spawner:
       power: 4.0
     - chance: 10
       power: 8.0
-      setFire: true
+      setFire: true # Optional: the explosion ignites fires (default false)
+      breakBlocks: true # Optional: the explosion damages surrounding blocks (default true)
 ```
 
 All tier options are described in the [README](https://github.com/CorneliusMa/SilkSpawners_v2#configuration). Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
@@ -177,6 +178,10 @@ COMMAND_SILKSPAWNERS_CONFIG_RELOAD_SUCCESSFUL = $7The config was reloaded $asucc
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_ERROR = $7An $cerror$7 occurred reloading the configuration. Please check the server logs.
 ```
 </details>
+
+## FAQ
+
+Common questions and problems are answered in the [FAQ](https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md).
 
 ## Integrations
 

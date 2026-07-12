@@ -136,6 +136,10 @@ Locale files must be named accordingly to the messages_myfile.properties naming 
 
 *If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.*
 
+## FAQ
+
+Common questions and problems are answered in the [FAQ](docs/FAQ.md).
+
 ## Integrations
 
 ### ShopGUI+
