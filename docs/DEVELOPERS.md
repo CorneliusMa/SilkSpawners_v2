@@ -2,7 +2,7 @@
 
 For plugin developers who want to integrate with SilkSpawners.
 
-SilkSpawners exposes a single artifact, published via [JitPack](https://jitpack.io). It contains the `SilkSpawnersAPI` service, spawner snapshots and all custom events. Use the API release tag (e.g. `api-0.1.0`) as the version. The [Javadoc](https://javadoc.jitpack.io/com/github/CorneliusMa/SilkSpawners_v2/api-0.1.0/javadoc/) is hosted on JitPack as well.
+SilkSpawners exposes a single artifact, published via [JitPack](https://jitpack.io). It contains the `SilkSpawnersAPI` service, spawner snapshots and all custom events. Use the API release tag (e.g. `api-0.1.1`) as the version. The [Javadoc](https://javadoc.jitpack.io/com/github/CorneliusMa/SilkSpawners_v2/api-0.1.1/javadoc/) is hosted on JitPack as well.
 
 Gradle:
 
@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.github.CorneliusMa:SilkSpawners_v2:api-0.1.0")
+    compileOnly("com.github.CorneliusMa:SilkSpawners_v2:api-0.1.1")
 }
 ```
 
@@ -30,7 +30,7 @@ Maven:
     <dependency>
         <groupId>com.github.CorneliusMa</groupId>
         <artifactId>SilkSpawners_v2</artifactId>
-        <version>api-0.1.0</version>
+        <version>api-0.1.1</version>
         <scope>provided</scope>
     </dependency>
 </dependencies>
