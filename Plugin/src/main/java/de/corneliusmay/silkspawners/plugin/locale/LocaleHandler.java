@@ -96,7 +96,7 @@ public class LocaleHandler {
         }
     }
 
-    public static String getPrefix() {
+    private String getPrefix() {
         return new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get();
     }
 }
