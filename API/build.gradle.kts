@@ -1,17 +1,10 @@
-group = "de.corneliusmay.silkspawners"
-version = providers.gradleProperty("apiVersion").get()
-
 plugins {
+    id("silkspawners.java-conventions")
     `java-library`
     `maven-publish`
 }
 
-if (System.getenv("JITPACK") == "true") {
-    val ref = System.getenv("VERSION").orEmpty()
-    check(ref == "api-$version" || ref.endsWith("-SNAPSHOT") || ref.matches(Regex("[0-9a-f]{7,40}"))) {
-        "Requested ref '$ref' is not the API release tag 'api-$version', a commit hash or a snapshot"
-    }
-}
+version = providers.gradleProperty("apiVersion").get()
 
 if (System.getenv("JITPACK") == "true") {
     val ref = System.getenv("VERSION").orEmpty()
@@ -42,8 +35,8 @@ configurations.configureEach {
 }
 
 dependencies {
-    compileOnly(providers.gradleProperty("bukkit").get())
-    compileOnly("org.jetbrains:annotations:24.1.0")
+    compileOnly(libs.bukkit)
+    compileOnly(libs.jetbrains.annotations)
 }
 
 tasks.withType<Javadoc> {

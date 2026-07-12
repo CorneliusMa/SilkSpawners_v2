@@ -1,3 +1,7 @@
+plugins {
+    id("silkspawners.java-conventions")
+}
+
 group = "com.example.spawners"
 
 tasks.jar {
@@ -5,7 +9,7 @@ tasks.jar {
 }
 
 dependencies {
-    compileOnly(providers.gradleProperty("bukkit").get())
+    compileOnly(libs.bukkit)
 
-    implementation(project(":API"))
+    implementation(projects.api)
 }

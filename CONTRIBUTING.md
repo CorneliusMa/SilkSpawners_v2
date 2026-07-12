@@ -65,9 +65,8 @@ When a new module *is* required:
 1. Copy an existing module (e.g. `v1_21_3`) to `vX_Y_Z`. The module name marks the lowest server version its handler applies to.
 2. In its `build.gradle.kts`, bump the `compileOnly` `spigot-api` dependency to the version you are targeting.
 3. Update the `BukkitHandler` (package `de.corneliusmay.silkspawners.bukkit.vX_Y_Z`) so it implements every method of the `Bukkit` interface against the new API.
-4. Register the module in [`settings.gradle.kts`](settings.gradle.kts).
-5. Add it as an `implementation(project(":vX_Y_Z"))` dependency in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
-6. Add a branch to [`MinecraftVersionChecker.getBukkitVersion()`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java) returning `"vX_Y_Z"`. Keep the checks ordered from newest to oldest, since the first matching `versionIsNewerOrEqualTo(...)` wins.
+4. Register the module in [`settings.gradle.kts`](settings.gradle.kts). That is the only build change needed: the Plugin automatically compiles every registered module into the jar (and excludes it from jar minimization), except the non-core modules listed in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
+5. Add a branch to [`MinecraftVersionChecker.getBukkitVersion()`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java) returning `"vX_Y_Z"`. Keep the checks ordered from newest to oldest, since the first matching `versionIsNewerOrEqualTo(...)` wins.
 
 There is no automated test for version handlers, so verify your changes on a real server running the target version.
 
@@ -79,9 +78,9 @@ A hook extends the [`Hook`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/h
 
 To add one:
 
-1. Create a `HookXxx` module. Its `build.gradle.kts` should depend on `:SPI` and `compileOnly` the target plugin's API (add the required repository if needed).
+1. Create a `HookXxx` module. Its `build.gradle.kts` should apply the `silkspawners.core-module` convention plugin (which provides the `:SPI` dependency) and `compileOnly` the target plugin's API. If the API needs an extra repository, add it to the `dependencyResolutionManagement` block in [`settings.gradle.kts`](settings.gradle.kts) - repositories are declared centrally there, not per module.
 2. Implement a class extending `Hook` in package `de.corneliusmay.silkspawners.hooks.<subpackage>`, doing the integration work inside `register()`. If your hook listens to Bukkit events, register it as a `Listener` there yourself - the loader only calls `register()`.
-3. Register the module in [`settings.gradle.kts`](settings.gradle.kts) and add `implementation(project(":HookXxx"))` in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
+3. Register the module in [`settings.gradle.kts`](settings.gradle.kts); the Plugin picks up every registered module automatically, so no dependency declaration is needed.
 4. Add a toggle for it in `PluginConfig` under the existing `HOOKS` scope, giving it a boolean default (e.g. `HOOK_XXX(builder(HOOKS, "xxx").defs(true).formatter(new BooleanConfigValue()))`).
 5. Wire it up in `SilkSpawners.registerHooks()`:
    ```java

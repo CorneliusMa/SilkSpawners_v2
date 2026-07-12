@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.bukkit)
+    "implementation"(project(":SPI"))
 }

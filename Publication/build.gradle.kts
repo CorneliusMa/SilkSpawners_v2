@@ -1,18 +1,23 @@
 import io.papermc.hangarpublishplugin.model.Platforms
-import java.net.URL
+import java.net.URI
 import groovy.json.JsonSlurper
 
 plugins {
-    id("io.papermc.hangar-publish-plugin") version "0.1.4"
-    id("com.modrinth.minotaur") version "2.8.7"
+    base
+    alias(libs.plugins.hangar.publish)
+    alias(libs.plugins.minotaur)
 }
 
-evaluationDependsOn(":Plugin")
+val pluginJar = configurations.create("pluginJar") {
+    isCanBeConsumed = false
+    isCanBeResolved = true
+}
 
-// Waiting for https://docs.gradle.org/current/userguide/declaring_dependencies.html#sec:type-safe-project-accessors
-var plugin = project(":Plugin")
-// com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar ext org.gradle.api.tasks.bundling.Jar
-var shadowJar = plugin.tasks.named<Jar>("shadowJar")
+dependencies {
+    pluginJar(project(path = ":Plugin", configuration = "shadowJarArtifact"))
+}
+
+val pluginJarFile = provider { pluginJar.singleFile }
 
 // Minecraft ranges
 fun mcKey(v: String): List<Int> = v.split(".").map { it.toIntOrNull() ?: 0 }
@@ -29,7 +34,7 @@ fun mcCompare(a: String, b: String): Int {
 @Suppress("UNCHECKED_CAST")
 fun modrinthReleaseVersions(): List<String> {
     val (minMc, maxMc) = System.getenv("PUBLISH_VERSIONS").split("-", limit = 2)
-    val conn = URL("https://api.modrinth.com/v2/tag/game_version").openConnection()
+    val conn = URI("https://api.modrinth.com/v2/tag/game_version").toURL().openConnection()
     conn.setRequestProperty("User-Agent", "SilkSpawners_v2-publish (github/silkspawners)")
     val body = conn.inputStream.bufferedReader().use { it.readText() }
     val tags = JsonSlurper().parseText(body) as List<Map<String, Any?>>
@@ -40,10 +45,11 @@ fun modrinthReleaseVersions(): List<String> {
         .sortedWith { a, b -> mcCompare(a, b) }
 }
 
-var gversion = plugin.version as String
-if (System.getenv("HANGAR_PUBLISH_CHANNEL") == "Preview" ||
+val gversion = if (System.getenv("HANGAR_PUBLISH_CHANNEL") == "Preview" ||
     System.getenv("MODRINTH_PUBLISH_CHANNEL") == "beta") {
-    gversion = System.getenv("PUBLISH_BETA_VERSION")
+    System.getenv("PUBLISH_BETA_VERSION")
+} else {
+    providers.gradleProperty("pluginVersion").get()
 }
 
 hangarPublish {
@@ -55,7 +61,7 @@ hangarPublish {
         version.set(gversion)
         platforms {
             register(Platforms.PAPER) {
-                jar.set(shadowJar.flatMap { it.archiveFile })
+                jar.fileProvider(pluginJarFile)
                 platformVersions.set(listOf(System.getenv("PUBLISH_VERSIONS")))
             }
         }
@@ -68,11 +74,11 @@ modrinth {
     versionNumber.set(gversion)
     versionType.set(System.getenv("MODRINTH_PUBLISH_CHANNEL"))
     changelog.set(System.getenv("MODRINTH_CHANGELOG"))
-    uploadFile.set(shadowJar.flatMap { it.archiveFile })
+    uploadFile.set(pluginJarFile)
     gameVersions.set(providers.provider { modrinthReleaseVersions() })
     loaders.set(listOf("paper", "spigot", "bukkit", "folia", "purpur"))
     detectLoaders.set(false)
 }
 
-tasks.matching { it.name.startsWith("publish") }.all { dependsOn(shadowJar) }
-tasks.named("modrinth") { dependsOn(shadowJar) }
+tasks.matching { it.name.startsWith("publish") }.configureEach { dependsOn(pluginJar) }
+tasks.named("modrinth") { dependsOn(pluginJar) }
