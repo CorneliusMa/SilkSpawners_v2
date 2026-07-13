@@ -2,29 +2,29 @@ package de.corneliusmay.silkspawners.plugin.version;
 
 class MinecraftVersionChecker {
 
-    static String getBukkitVersion() {
+    static String getBukkitVersion(MinecraftVersion version) {
         // As of Minecraft version 1.20.5, Paper ships with a Mojang-mapped runtime instead of reobfuscating the server
         // to Spigot mappings. This means that the package name of the server implementation is no longer a reliable
         // way to determine the server version. Instead, we can use the Bukkit version string.
         //
         // The following code also means that we don't have to update the plugin for every new Minecraft version
         // unless the Bukkit API changes in a way that explicitly breaks it.
-        if (MinecraftVersion.versionIsNewerOrEqualTo(1, 21, 3)) {
+        if (version.isNewerOrEqualTo(1, 21, 3)) {
             return "v1_21_3";
         }
-        if (MinecraftVersion.versionIsNewerOrEqualTo(1, 20, 5)) {
+        if (version.isNewerOrEqualTo(1, 20, 5)) {
             return "v1_20_5";
         }
-        if (MinecraftVersion.versionIsNewerOrEqualTo(1, 13, 1)) {
+        if (version.isNewerOrEqualTo(1, 13, 1)) {
             return "v1_13_1";
         }
-        if (MinecraftVersion.versionIsNewerOrEqualTo(1, 12, 0)) {
+        if (version.isNewerOrEqualTo(1, 12, 0)) {
             return "v1_12_0";
         }
-        if (MinecraftVersion.versionIsNewerOrEqualTo(1, 9, 4)) {
+        if (version.isNewerOrEqualTo(1, 9, 4)) {
             return "v1_9_4";
         }
-        if (MinecraftVersion.versionIsNewerOrEqualTo(1, 8, 0)) {
+        if (version.isNewerOrEqualTo(1, 8, 0)) {
             return "v1_8";
         }
         return null;

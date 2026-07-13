@@ -1,8 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.hooks;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
-import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.spi.hooks.Hook;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
@@ -17,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class HookLoader {
 
-    private record HookDefinition(String hookName, String pluginName, PluginConfig enabledConfig) {}
+    private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}
 
     private final SilkSpawners plugin;
 
@@ -38,7 +37,7 @@ public class HookLoader {
         this.spawnerProvider = new SilkSpawnersProvider(plugin);
     }
 
-    public void addHook(String hookName, String pluginName, PluginConfig enabledConfig) {
+    public void addHook(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {
         hooks.add(new HookDefinition(hookName, pluginName, enabledConfig));
     }
 
@@ -50,7 +49,7 @@ public class HookLoader {
         if (registeredHooks.contains(definition.hookName())) return;
         if (Objects.isNull(pluginManager.getPlugin(definition.pluginName()))) return;
 
-        if (!new ConfigValue<Boolean>(definition.enabledConfig()).get()) return;
+        if (!definition.enabledConfig().get()) return;
 
         try {
             Hook hook = loader.instantiate(definition.hookName(), plugin, spawnerProvider);

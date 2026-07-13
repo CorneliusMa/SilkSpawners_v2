@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-final class PluginConfigBuilder {
+final class ConfigKeyBuilder {
 
     final ConfigScope scope;
     final String key;
@@ -17,35 +17,36 @@ final class PluginConfigBuilder {
     boolean list;
     final NavigableMap<Integer, List<ConfigValueMigrator>> migrators = new TreeMap<>();
 
-    PluginConfigBuilder(ConfigScope scope, String key) {
+    ConfigKeyBuilder(ConfigScope scope, String key) {
         this.scope = scope;
         this.key = key;
     }
 
-    PluginConfigBuilder formatter(ConfigValueFormatter<?> formatter) {
-        this.formatter = formatter;
-        return this;
-    }
-
-    PluginConfigBuilder def(Object value) {
+    ConfigKeyBuilder def(Object value) {
         this.defaultValue = value;
         return this;
     }
 
-    PluginConfigBuilder legacy(String... legacyKeys) {
+    ConfigKeyBuilder legacy(String... legacyKeys) {
         this.legacyKeys = legacyKeys;
         return this;
     }
 
-    PluginConfigBuilder list() {
-        this.list = true;
-        return this;
-    }
-
-    PluginConfigBuilder migrator(Integer configVersion, ConfigValueMigrator migrator) {
+    ConfigKeyBuilder migrator(Integer configVersion, ConfigValueMigrator migrator) {
         this.migrators
                 .computeIfAbsent(configVersion, version -> new ArrayList<>())
                 .add(migrator);
         return this;
+    }
+
+    <T> ConfigKey<T> formatter(ConfigValueFormatter<T> formatter) {
+        this.formatter = formatter;
+        return new ConfigKey<>(this);
+    }
+
+    <T> ConfigKey<List<T>> listFormatter(ConfigValueFormatter<T> formatter) {
+        this.formatter = formatter;
+        this.list = true;
+        return new ConfigKey<>(this);
     }
 }

@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import java.util.Set;
@@ -58,7 +57,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
 
         if (!canChangeSpawner(e.getPlayer(), newSpawner)) {
             spawner.setSpawnerBlockType(block, this.editedSpawners);
-            if (new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE).get())
+            if (PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE.get())
                 e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
             return;
         }
@@ -83,6 +82,6 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
     private boolean canChangeSpawner(Player player, Spawner newSpawner) {
         return player.hasPermission("silkspawners.change." + newSpawner.serializedEntityType())
                 || player.hasPermission("silkspawners.change.*")
-                || new ConfigValue<Boolean>(PluginConfig.SPAWNER_PERMISSION_DISABLE_CHANGE).get();
+                || PluginConfig.SPAWNER_PERMISSION_DISABLE_CHANGE.get();
     }
 }

@@ -3,11 +3,9 @@ package de.corneliusmay.silkspawners.plugin.commands;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
-import java.util.Locale;
 import java.util.MissingResourceException;
 import org.bukkit.command.CommandSender;
 
@@ -57,6 +55,6 @@ public class LocaleCommand extends SilkSpawnersCommand {
     }
 
     private String configuredLocale() {
-        return new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get().toString();
+        return PluginConfig.MESSAGE_LOCALE.get().toString();
     }
 }

@@ -1,55 +1,49 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 
 class MinecraftVersion {
 
-    @Getter
-    private static String version;
+    private static final Pattern VERSION_PATTERN = Pattern.compile("^\\d+(\\.\\d+)+");
 
     @Getter
-    private static int majorVersion, minorVersion, patchVersion;
+    private final String version;
 
-    static {
-        try {
-            final Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)+")
-                    .matcher(Bukkit.getServer().getBukkitVersion());
-            if (!matcher.find()) throw new IllegalArgumentException("Unrecognized Minecraft version string");
-            version = matcher.group();
-            final String[] splitVersion = version.split("\\.");
+    private final int majorVersion;
 
-            majorVersion = Integer.parseInt(splitVersion[0]);
-            minorVersion = Integer.parseInt(splitVersion[1]);
-            if (splitVersion.length > 2) {
-                patchVersion = Integer.parseInt(splitVersion[2]);
-            }
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "[SilkSpawners] Failed to parse server version!", e);
+    private final int minorVersion;
+
+    private final int patchVersion;
+
+    private MinecraftVersion(String version) {
+        this.version = version;
+        String[] splitVersion = version.split("\\.");
+        this.majorVersion = Integer.parseInt(splitVersion[0]);
+        this.minorVersion = Integer.parseInt(splitVersion[1]);
+        this.patchVersion = splitVersion.length > 2 ? Integer.parseInt(splitVersion[2]) : 0;
+    }
+
+    static MinecraftVersion parse(String bukkitVersion) {
+        Matcher matcher = VERSION_PATTERN.matcher(bukkitVersion);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("Unrecognized Minecraft version string: " + bukkitVersion);
         }
+        return new MinecraftVersion(matcher.group());
     }
 
     /**
-     * Checks if the current server version is newer or equal to the one provided.
+     * Checks if this version is newer or equal to the one provided.
      *
      * @param major the target major version
      * @param minor the target minor version. 0 for all
      * @param patch the target patch version. 0 for all
-     * @return true if the server version is newer or equal to the one provided
+     * @return true if this version is newer or equal to the one provided
      */
-    static boolean versionIsNewerOrEqualTo(int major, int minor, int patch) {
-        if (getMajorVersion() > major) {
-            return true;
-        } else if (getMajorVersion() == major) {
-            if (getMinorVersion() > minor) {
-                return true;
-            } else if (getMinorVersion() == minor) {
-                return getPatchVersion() >= patch;
-            }
-        }
-        return false;
+    boolean isNewerOrEqualTo(int major, int minor, int patch) {
+        if (majorVersion != major) return majorVersion > major;
+        if (minorVersion != minor) return minorVersion > minor;
+        return patchVersion >= patch;
     }
 }

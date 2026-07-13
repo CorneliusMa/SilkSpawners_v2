@@ -3,8 +3,8 @@ package de.corneliusmay.silkspawners.plugin;
 import de.corneliusmay.silkspawners.plugin.api.SilkSpawnersService;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
+import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
@@ -43,7 +43,7 @@ public class SilkSpawners extends JavaPlugin {
     @Override
     public void onEnable() {
         configLoader = new ConfigLoader(this);
-        if (!configLoader.isLoaded()) return;
+        if (!configLoader.load()) return;
 
         log = new Logger();
 
@@ -64,7 +64,7 @@ public class SilkSpawners extends JavaPlugin {
 
         log.info("Loading locale file");
         locale = new LocaleHandler(this);
-        if (locale.getResourceBundle() == null) return;
+        if (!locale.load()) return;
 
         log.info("Starting bStats integration");
         new Metrics(this, 15215);

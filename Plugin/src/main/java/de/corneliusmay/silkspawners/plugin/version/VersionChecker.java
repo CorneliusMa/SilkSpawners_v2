@@ -3,7 +3,6 @@ package de.corneliusmay.silkspawners.plugin.version;
 import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -49,8 +48,8 @@ public class VersionChecker {
     }
 
     private Integer configuredInterval() {
-        if (!new ConfigValue<Boolean>(PluginConfig.UPDATE_CHECK_ENABLED).get()) return null;
-        return new ConfigValue<Integer>(PluginConfig.UPDATE_CHECK_INTERVAL).get();
+        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) return null;
+        return PluginConfig.UPDATE_CHECK_INTERVAL.get();
     }
 
     private void start(int interval) {

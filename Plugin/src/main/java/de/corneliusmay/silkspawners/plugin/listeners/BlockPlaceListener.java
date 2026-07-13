@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerPlaceEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import java.util.Set;
@@ -35,9 +34,9 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
 
         if (!p.hasPermission("silkspawners.place." + spawner.serializedEntityType())
                 && !p.hasPermission("silkspawners.place.*")
-                && !new ConfigValue<Boolean>(PluginConfig.SPAWNER_PERMISSION_DISABLE_PLACE).get()) {
+                && !PluginConfig.SPAWNER_PERMISSION_DISABLE_PLACE.get()) {
             e.setCancelled(true);
-            if (new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_PLACE).get())
+            if (PluginConfig.SPAWNER_MESSAGE_DENY_PLACE.get())
                 p.sendMessage(plugin.getLocale().getMessage("SPAWNER_PLACE_DENIED"));
             return;
         }
