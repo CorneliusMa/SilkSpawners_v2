@@ -28,7 +28,7 @@ jobs:
         with:
           dependency-graph: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && 'generate-and-submit' || 'disabled' }}
 
-      - run: ./gradlew assemble --no-daemon --stacktrace
+      - run: ./gradlew build --no-daemon --stacktrace
 
       - uses: actions/upload-artifact@v7
         with:
