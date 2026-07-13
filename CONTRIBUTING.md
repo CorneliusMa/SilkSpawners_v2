@@ -13,6 +13,26 @@ We will often add small changes to your pull request directly before merging it.
 
 **Make sure to use personal forks (do not use an organization).**
 
+## Code style
+
+Java code is formatted with [Palantir Java Format](https://github.com/palantir/palantir-java-format) enforced through [Spotless](https://github.com/diffplug/spotless).
+The build fails on unformatted code, so format your changes with
+
+```shell
+./gradlew spotlessApply
+```
+
+before committing - or enable the git hooks below to have this happen automatically.
+
+## Git hooks
+
+The repository ships optional git hooks in `.githooks/` that format staged Java files with Spotless before each commit and validate commit messages against the Conventional Commits format.
+Enable them once per clone with:
+
+```shell
+git config core.hooksPath .githooks
+```
+
 ## Commits
 
 We like to follow the [Conventional Commits](https://www.conventionalcommits.org) specification. This allows us to automatically generate neat changelogs, for example.
