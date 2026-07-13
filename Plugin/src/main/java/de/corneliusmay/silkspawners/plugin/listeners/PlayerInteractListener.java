@@ -4,6 +4,7 @@ import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import java.util.Optional;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,10 +29,11 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = e.getClickedBlock();
 
-        Location blockLocation = block.getLocation();
-        Spawner spawner = new Spawner(plugin, block);
-        if (!spawner.isValid()) return;
+        Spawner.fromBlock(plugin, block).ifPresent(spawner -> handleSpawnerInteract(e, block, spawner));
+    }
 
+    private void handleSpawnerInteract(PlayerInteractEvent e, Block block, Spawner spawner) {
+        Location blockLocation = block.getLocation();
         if (!editedSpawners.add(blockLocation)) {
             e.setCancelled(true);
             return;
@@ -43,12 +45,14 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
     }
 
     private void handleSpawnerChange(PlayerInteractEvent e, Block block, Location blockLocation, Spawner spawner) {
-        Spawner newSpawner = new Spawner(plugin, block.getWorld().getBlockAt(blockLocation));
-
-        if (!newSpawner.isValid()) {
+        Optional<Spawner> changedSpawner =
+                Spawner.fromBlock(plugin, block.getWorld().getBlockAt(blockLocation));
+        if (changedSpawner.isEmpty()) {
             editedSpawners.remove(blockLocation);
             return;
         }
+
+        Spawner newSpawner = changedSpawner.get();
 
         if (spawner.getEntityType() == newSpawner.getEntityType()) {
             editedSpawners.remove(blockLocation);

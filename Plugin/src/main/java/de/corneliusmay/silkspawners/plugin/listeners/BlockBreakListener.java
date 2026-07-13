@@ -21,11 +21,10 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
     protected void onCall(BlockBreakEvent e) {
         if (e.isCancelled()) return;
 
-        Spawner spawner = new Spawner(plugin, e.getBlock());
-        if (!spawner.isValid()) {
-            return;
-        }
+        Spawner.fromBlock(plugin, e.getBlock()).ifPresent(spawner -> handleSpawnerBreak(e, spawner));
+    }
 
+    private void handleSpawnerBreak(BlockBreakEvent e, Spawner spawner) {
         Player p = e.getPlayer();
         if (!new SilkDropCheck(plugin).canSilkDrop(p, spawner)) {
             destroySpawner(p, e, spawner);

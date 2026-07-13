@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import java.util.HashSet;
+import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -49,11 +50,13 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         Block block = plugin.getBukkitHandler().getTargetBlock(player);
-        Spawner spawner = new Spawner(plugin, block);
-        if (!spawner.isValid()) {
+        Optional<Spawner> targetSpawner = Spawner.fromBlock(plugin, block);
+        if (targetSpawner.isEmpty()) {
             sendMessage(sender, "INVALID_TARGET");
             return false;
         }
+
+        Spawner spawner = targetSpawner.get();
 
         if (spawner.getEntityType() == newSpawner.getEntityType()) {
             sendMessage(sender, "UNCHANGED", newSpawner.serializedName());

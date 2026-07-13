@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -58,6 +59,11 @@ public class Spawner implements SpawnerSnapshot {
 
     public static Spawner of(SilkSpawners plugin, SpawnerSnapshot snapshot) {
         return snapshot instanceof Spawner spawner ? spawner : new Spawner(plugin, snapshot);
+    }
+
+    public static Optional<Spawner> fromBlock(SilkSpawners plugin, Block block) {
+        Spawner spawner = new Spawner(plugin, block);
+        return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
     }
 
     public ItemStack getItemStack() {

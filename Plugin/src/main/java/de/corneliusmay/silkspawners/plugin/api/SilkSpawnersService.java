@@ -45,7 +45,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public SpawnerSnapshot getSpawner(Block block) {
-        return isSpawnerBlock(block) ? new Spawner(plugin, block) : null;
+        return Spawner.fromBlock(plugin, block).orElse(null);
     }
 
     @Override
