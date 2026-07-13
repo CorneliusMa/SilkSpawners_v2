@@ -34,7 +34,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public EntityType getEntityType(ItemStack itemStack) {
-        return new Spawner(plugin, itemStack).getEntityType();
+        return Spawner.fromItem(plugin, itemStack).map(Spawner::getEntityType).orElse(null);
     }
 
     @Override

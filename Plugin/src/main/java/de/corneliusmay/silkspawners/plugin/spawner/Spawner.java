@@ -66,6 +66,15 @@ public class Spawner implements SpawnerSnapshot {
         return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
     }
 
+    public static Optional<Spawner> fromItem(SilkSpawners plugin, ItemStack itemStack) {
+        if (itemStack == null
+                || itemStack.getType() != plugin.getBukkitHandler().getSpawnerMaterial()) {
+            return Optional.empty();
+        }
+        Spawner spawner = new Spawner(plugin, itemStack);
+        return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
+    }
+
     public ItemStack getItemStack() {
         return itemStack == null ? null : itemStack.clone();
     }

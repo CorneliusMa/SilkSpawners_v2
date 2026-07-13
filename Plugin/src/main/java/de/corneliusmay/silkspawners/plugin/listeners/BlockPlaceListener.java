@@ -26,11 +26,12 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
     protected void onCall(BlockPlaceEvent e) {
         if (e.isCancelled()) return;
 
-        Player p = e.getPlayer();
+        ItemStack[] itemsInHand = plugin.getBukkitHandler().getItemsInHand(e.getPlayer());
+        Spawner.fromItem(plugin, itemIsSpawner(itemsInHand)).ifPresent(spawner -> handleSpawnerPlace(e, spawner));
+    }
 
-        ItemStack[] itemsInHand = plugin.getBukkitHandler().getItemsInHand(p);
-        Spawner spawner = new Spawner(plugin, itemIsSpawner(itemsInHand));
-        if (!spawner.isValid()) return;
+    private void handleSpawnerPlace(BlockPlaceEvent e, Spawner spawner) {
+        Player p = e.getPlayer();
 
         if (!p.hasPermission("silkspawners.place." + spawner.serializedEntityType())
                 && !p.hasPermission("silkspawners.place.*")

@@ -21,6 +21,6 @@ class SilkSpawnersProvider implements SpawnerProvider {
 
     @Override
     public EntityType getSpawnerEntityType(ItemStack itemStack) {
-        return new Spawner(plugin, itemStack).getEntityType();
+        return Spawner.fromItem(plugin, itemStack).map(Spawner::getEntityType).orElse(null);
     }
 }
