@@ -37,7 +37,7 @@ public class SetCommand extends SilkSpawnersCommand {
             }
         }
 
-        Optional<Spawner> requestedSpawner = Spawner.ofType(plugin, entityType);
+        Optional<Spawner> requestedSpawner = Spawner.ofType(entityType);
         if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
@@ -52,7 +52,7 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         Block block = plugin.getBukkitHandler().getTargetBlock(player);
-        Optional<Spawner> targetSpawner = Spawner.fromBlock(plugin, block);
+        Optional<Spawner> targetSpawner = Spawner.fromBlock(block);
         if (targetSpawner.isEmpty()) {
             sendMessage(sender, "INVALID_TARGET");
             return false;
@@ -65,12 +65,12 @@ public class SetCommand extends SilkSpawnersCommand {
             return true;
         }
 
-        SpawnerChangeEvent event = new SpawnerChangeEvent(
-                player, spawner, block.getLocation(), newSpawner, type -> Spawner.snapshot(plugin, type));
+        SpawnerChangeEvent event =
+                new SpawnerChangeEvent(player, spawner, block.getLocation(), newSpawner, Spawner::snapshot);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
-        Spawner result = Spawner.of(plugin, event.getNewSpawner());
+        Spawner result = Spawner.of(event.getNewSpawner());
         result.setSpawnerBlockType(block, new HashSet<>());
         sendMessage(sender, "SUCCESS", result.serializedName());
         return true;

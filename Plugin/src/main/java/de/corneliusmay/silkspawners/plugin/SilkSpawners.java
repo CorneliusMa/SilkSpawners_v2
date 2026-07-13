@@ -13,6 +13,7 @@ import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHandler;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
@@ -61,6 +62,8 @@ public class SilkSpawners extends JavaPlugin {
         CrossVersionHandler versionHandler = new CrossVersionHandler(this);
         if (!versionHandler.load()) return;
         bukkitHandler = versionHandler.getBukkitHandler();
+
+        new SpawnerLoader(this).load();
 
         log.info("Loading locale file");
         locale = new LocaleHandler(this);

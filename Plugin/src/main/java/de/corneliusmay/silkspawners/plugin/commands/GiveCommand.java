@@ -39,7 +39,7 @@ public class GiveCommand extends SilkSpawnersCommand {
             }
         }
 
-        Optional<Spawner> requestedSpawner = Spawner.ofType(plugin, entityType);
+        Optional<Spawner> requestedSpawner = Spawner.ofType(entityType);
         if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
             return false;

@@ -36,11 +36,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     }
 
     public SilkSpawnersCommandHandler(SilkSpawners plugin, String command, SilkSpawnersCommand defaultCommand) {
-        this.plugin = plugin;
-        this.mainCommand = command;
-        this.commands = new ArrayList<>();
-        this.tabCompleter = new SilkSpawnersTabCompleter(this);
-        this.helpCommand = addHelpCommand();
+        this(plugin, command);
         this.defaultCommand = addDefaultCommand(defaultCommand);
     }
 

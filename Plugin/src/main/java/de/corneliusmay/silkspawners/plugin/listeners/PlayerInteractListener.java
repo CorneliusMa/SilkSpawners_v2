@@ -29,7 +29,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = e.getClickedBlock();
 
-        Spawner.fromBlock(plugin, block).ifPresent(spawner -> handleSpawnerInteract(e, block, spawner));
+        Spawner.fromBlock(block).ifPresent(spawner -> handleSpawnerInteract(e, block, spawner));
     }
 
     private void handleSpawnerInteract(PlayerInteractEvent e, Block block, Spawner spawner) {
@@ -45,8 +45,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
     }
 
     private void handleSpawnerChange(PlayerInteractEvent e, Block block, Location blockLocation, Spawner spawner) {
-        Optional<Spawner> changedSpawner =
-                Spawner.fromBlock(plugin, block.getWorld().getBlockAt(blockLocation));
+        Optional<Spawner> changedSpawner = Spawner.fromBlock(block.getWorld().getBlockAt(blockLocation));
         if (changedSpawner.isEmpty()) {
             editedSpawners.remove(blockLocation);
             return;
@@ -66,8 +65,8 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
             return;
         }
 
-        SpawnerChangeEvent event = new SpawnerChangeEvent(
-                e.getPlayer(), spawner, blockLocation, newSpawner, type -> Spawner.snapshot(plugin, type));
+        SpawnerChangeEvent event =
+                new SpawnerChangeEvent(e.getPlayer(), spawner, blockLocation, newSpawner, Spawner::snapshot);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
@@ -76,7 +75,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         }
 
         if (event.getNewSpawner() != newSpawner) {
-            Spawner.of(plugin, event.getNewSpawner()).setSpawnerBlockType(block, this.editedSpawners);
+            Spawner.of(event.getNewSpawner()).setSpawnerBlockType(block, this.editedSpawners);
             return;
         }
 

@@ -29,12 +29,12 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public ItemStack getSpawnerItem(EntityType entityType) {
-        return Spawner.ofType(plugin, entityType).map(Spawner::getItemStack).orElse(null);
+        return Spawner.ofType(entityType).map(Spawner::getItemStack).orElse(null);
     }
 
     @Override
     public EntityType getEntityType(ItemStack itemStack) {
-        return Spawner.fromItem(plugin, itemStack).map(Spawner::getEntityType).orElse(null);
+        return Spawner.fromItem(itemStack).map(Spawner::getEntityType).orElse(null);
     }
 
     @Override
@@ -45,14 +45,14 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public SpawnerSnapshot getSpawner(Block block) {
-        return Spawner.fromBlock(plugin, block).orElse(null);
+        return Spawner.fromBlock(block).orElse(null);
     }
 
     @Override
     public boolean setSpawnerType(Block block, EntityType entityType) {
         if (!isSpawnerBlock(block)) return false;
 
-        Optional<Spawner> spawner = Spawner.ofType(plugin, entityType);
+        Optional<Spawner> spawner = Spawner.ofType(entityType);
         if (spawner.isEmpty()) return false;
 
         spawner.get().setSpawnerBlockType(block, new HashSet<>());
@@ -70,7 +70,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public boolean canSilkDrop(Player player, EntityType entityType) {
-        return Spawner.ofType(plugin, entityType)
+        return Spawner.ofType(entityType)
                 .map(spawner -> new SilkDropCheck(plugin).canSilkDrop(player, spawner))
                 .orElse(false);
     }

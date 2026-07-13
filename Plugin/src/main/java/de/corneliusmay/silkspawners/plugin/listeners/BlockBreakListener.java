@@ -21,7 +21,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
     protected void onCall(BlockBreakEvent e) {
         if (e.isCancelled()) return;
 
-        Spawner.fromBlock(plugin, e.getBlock()).ifPresent(spawner -> handleSpawnerBreak(e, spawner));
+        Spawner.fromBlock(e.getBlock()).ifPresent(spawner -> handleSpawnerBreak(e, spawner));
     }
 
     private void handleSpawnerBreak(BlockBreakEvent e, Spawner spawner) {
@@ -33,12 +33,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
 
         int dropChance = PluginConfig.SPAWNER_DROP_CHANCE.get();
         SpawnerDropEvent dropEvent = new SpawnerDropEvent(
-                p,
-                spawner,
-                e.getBlock().getLocation(),
-                spawner.getItemStack(),
-                dropChance,
-                type -> Spawner.snapshot(plugin, type));
+                p, spawner, e.getBlock().getLocation(), spawner.getItemStack(), dropChance, Spawner::snapshot);
         Bukkit.getPluginManager().callEvent(dropEvent);
 
         if (dropEvent.isCancelled()) return;
@@ -48,8 +43,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
 
-        SpawnerBreakEvent event =
-                new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), type -> Spawner.snapshot(plugin, type));
+        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), Spawner::snapshot);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
