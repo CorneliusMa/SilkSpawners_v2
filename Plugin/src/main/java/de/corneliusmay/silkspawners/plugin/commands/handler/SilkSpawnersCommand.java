@@ -30,7 +30,7 @@ public abstract class SilkSpawnersCommand {
     }
 
     public final boolean hasPermission(CommandSender sender) {
-        if(!requiresPermission) return true;
+        if (!requiresPermission) return true;
         return sender.hasPermission(getPermissionString());
     }
 
@@ -39,7 +39,11 @@ public abstract class SilkSpawnersCommand {
     }
 
     private String getMessage(String key, Object... args) {
-        return plugin.getLocale().getMessage("COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_" + key, args);
+        return plugin.getLocale()
+                .getMessage(
+                        "COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_"
+                                + key,
+                        args);
     }
 
     protected final void sendMessage(CommandSender sender, String key, Object... args) {
@@ -61,5 +65,4 @@ public abstract class SilkSpawnersCommand {
     }
 
     protected abstract boolean execute(CommandSender sender, String[] args);
-
 }

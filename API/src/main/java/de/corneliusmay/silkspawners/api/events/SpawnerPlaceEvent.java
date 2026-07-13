@@ -1,14 +1,13 @@
 package de.corneliusmay.silkspawners.api.events;
 
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
+import java.util.function.Function;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 /**
  * Called when a player places a spawner.
@@ -19,7 +18,11 @@ public class SpawnerPlaceEvent extends SpawnerEvent {
     private static final HandlerList HANDLERS = new HandlerList();
 
     @ApiStatus.Internal
-    public SpawnerPlaceEvent(Player player, SpawnerSnapshot spawner, Location location, Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+    public SpawnerPlaceEvent(
+            Player player,
+            SpawnerSnapshot spawner,
+            Location location,
+            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
         super(player, spawner, location, snapshotFactory);
     }
 

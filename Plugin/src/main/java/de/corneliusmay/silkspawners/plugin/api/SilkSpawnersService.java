@@ -6,14 +6,13 @@ import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import java.util.HashSet;
+import java.util.Set;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.ServicePriority;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class SilkSpawnersService implements SilkSpawnersAPI {
 
@@ -40,7 +39,8 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public boolean isSpawnerItem(ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() == plugin.getBukkitHandler().getSpawnerMaterial();
+        return itemStack != null
+                && itemStack.getType() == plugin.getBukkitHandler().getSpawnerMaterial();
     }
 
     @Override
@@ -50,10 +50,10 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public boolean setSpawnerType(Block block, EntityType entityType) {
-        if(!isSpawnerBlock(block)) return false;
+        if (!isSpawnerBlock(block)) return false;
 
         Spawner spawner = new Spawner(plugin, entityType);
-        if(!spawner.isValid()) return false;
+        if (!spawner.isValid()) return false;
         spawner.setSpawnerBlockType(block, new HashSet<>());
         return true;
     }
@@ -70,7 +70,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
     @Override
     public boolean canSilkDrop(Player player, EntityType entityType) {
         Spawner spawner = new Spawner(plugin, entityType);
-        if(!spawner.isValid()) return false;
+        if (!spawner.isValid()) return false;
         return new SilkDropCheck(plugin).canSilkDrop(player, spawner);
     }
 }

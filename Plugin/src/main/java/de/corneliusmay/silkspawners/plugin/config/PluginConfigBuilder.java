@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.config;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueFormatter;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
@@ -44,7 +43,9 @@ final class PluginConfigBuilder {
     }
 
     PluginConfigBuilder migrator(Integer configVersion, ConfigValueMigrator migrator) {
-        this.migrators.computeIfAbsent(configVersion, version -> new ArrayList<>()).add(migrator);
+        this.migrators
+                .computeIfAbsent(configVersion, version -> new ArrayList<>())
+                .add(migrator);
         return this;
     }
 }

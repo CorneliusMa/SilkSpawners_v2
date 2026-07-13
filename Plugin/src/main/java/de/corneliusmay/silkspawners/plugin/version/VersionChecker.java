@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
-import lombok.Getter;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -16,6 +14,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Getter;
 
 public class VersionChecker {
 
@@ -74,8 +73,13 @@ public class VersionChecker {
                 else {
                     String currentLatestVersion = this.latestVersion;
                     if (!check(currentLatestVersion))
-                        plugin.getLog().warn("§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v" + getInstalledVersion() + "\nLatest version: v" + currentLatestVersion);
-                    else plugin.getLog().info("The plugin is up to date (Current release v" + currentLatestVersion + ")");
+                        plugin.getLog()
+                                .warn(
+                                        "§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v"
+                                                + getInstalledVersion() + "\nLatest version: v" + currentLatestVersion);
+                    else
+                        plugin.getLog()
+                                .info("The plugin is up to date (Current release v" + currentLatestVersion + ")");
                 }
                 TimeUnit.HOURS.sleep(interval);
             }
@@ -86,8 +90,12 @@ public class VersionChecker {
     private boolean update() throws InterruptedException {
         try {
             Pattern pattern = Pattern.compile("\"tag_name\":\"v([0-9\\.]+)\"");
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest")).GET().build();
-            String latestVersionData = client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest"))
+                    .GET()
+                    .build();
+            String latestVersionData =
+                    client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             Matcher matcher = pattern.matcher(latestVersionData);
             if (matcher.find()) {
                 latestVersion = matcher.group(1);

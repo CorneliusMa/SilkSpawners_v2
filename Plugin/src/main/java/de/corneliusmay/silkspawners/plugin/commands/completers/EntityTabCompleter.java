@@ -4,12 +4,11 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.TabCompletion;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 
 public class EntityTabCompleter implements TabCompletion {
 
@@ -18,9 +17,13 @@ public class EntityTabCompleter implements TabCompletion {
         List<EntityType> entityTypes = new ArrayList<>();
         entityTypes.add(null); // empty
         entityTypes.addAll(SpawnableEntities.TYPES);
-        return entityTypes.stream().map(entityType -> entityType == null ? Spawner.EMPTY : entityType.getName()).filter(Objects::nonNull).filter((entity) -> {
-            if(sender.hasPermission(command.getPermissionString() + "." + entity)) return true;
-            else return sender.hasPermission(command.getPermissionString() + ".*");
-        }).toList();
+        return entityTypes.stream()
+                .map(entityType -> entityType == null ? Spawner.EMPTY : entityType.getName())
+                .filter(Objects::nonNull)
+                .filter((entity) -> {
+                    if (sender.hasPermission(command.getPermissionString() + "." + entity)) return true;
+                    else return sender.hasPermission(command.getPermissionString() + ".*");
+                })
+                .toList();
     }
 }

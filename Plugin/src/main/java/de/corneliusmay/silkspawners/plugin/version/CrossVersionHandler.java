@@ -1,11 +1,11 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker.getBukkitVersion;
+
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
+import de.corneliusmay.silkspawners.spi.version.Bukkit;
 import lombok.Getter;
-
-import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker.getBukkitVersion;
 
 public class CrossVersionHandler {
 
@@ -30,7 +30,8 @@ public class CrossVersionHandler {
     public boolean load() {
         String bukkitVersion = getBukkitVersion();
         if (bukkitVersion == null) {
-            return disablePlugin("The detected Server Version (" + MinecraftVersion.getVersion() + ") is too old for the currently installed version of SilkSpawners");
+            return disablePlugin("The detected Server Version (" + MinecraftVersion.getVersion()
+                    + ") is too old for the currently installed version of SilkSpawners");
         }
 
         this.bukkitHandler = loader.instantiate(bukkitVersion + ".BukkitHandler");

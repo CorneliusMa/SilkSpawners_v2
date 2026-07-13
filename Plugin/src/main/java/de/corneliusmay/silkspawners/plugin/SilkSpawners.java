@@ -1,7 +1,5 @@
 package de.corneliusmay.silkspawners.plugin;
 
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
-import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.plugin.api.SilkSpawnersService;
 import de.corneliusmay.silkspawners.plugin.commands.*;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
@@ -16,15 +14,16 @@ import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHa
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
-import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
+import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class SilkSpawners extends JavaPlugin {
@@ -44,7 +43,7 @@ public class SilkSpawners extends JavaPlugin {
     @Override
     public void onEnable() {
         configLoader = new ConfigLoader(this);
-        if(!configLoader.isLoaded()) return;
+        if (!configLoader.isLoaded()) return;
 
         log = new Logger();
 
@@ -60,12 +59,12 @@ public class SilkSpawners extends JavaPlugin {
 
         log.info("Loading Cross-Version support");
         CrossVersionHandler versionHandler = new CrossVersionHandler(this);
-        if(!versionHandler.load()) return;
+        if (!versionHandler.load()) return;
         bukkitHandler = versionHandler.getBukkitHandler();
 
         log.info("Loading locale file");
         locale = new LocaleHandler(this);
-        if(locale.getResourceBundle() == null) return;
+        if (locale.getResourceBundle() == null) return;
 
         log.info("Starting bStats integration");
         new Metrics(this, 15215);
@@ -113,14 +112,14 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     public synchronized boolean reloadConfiguration() {
-        if(!configLoader.reload()) return false;
+        if (!configLoader.reload()) return false;
         versionChecker.restart();
         return true;
     }
 
     @Override
     public void onDisable() {
-        if(versionChecker == null) return;
+        if (versionChecker == null) return;
         log.info("Stopping version checker");
         versionChecker.stop();
     }

@@ -8,5 +8,4 @@ public interface SpawnerProvider {
     ItemStack getSpawnerItem(EntityType entityType);
 
     EntityType getSpawnerEntityType(ItemStack itemStack);
-
 }

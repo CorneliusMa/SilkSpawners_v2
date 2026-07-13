@@ -1,9 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerGiveEvent;
-import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -19,10 +19,10 @@ public class GiveCommand extends SilkSpawnersCommand {
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        if(args.length < 2 || args.length > 3) return invalidSyntax(sender);
+        if (args.length < 2 || args.length > 3) return invalidSyntax(sender);
 
         Player p = Bukkit.getPlayer(args[0]);
-        if(p == null) {
+        if (p == null) {
             sendMessage(sender, "PLAYER_NOT_FOUND", args[0]);
             return false;
         }
@@ -32,54 +32,72 @@ public class GiveCommand extends SilkSpawnersCommand {
             entityType = null;
         } else {
             entityType = EntityType.fromName(args[1]);
-            if(entityType == null) {
+            if (entityType == null) {
                 sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
                 return false;
             }
         }
 
         Spawner spawner = new Spawner(plugin, entityType);
-        if(!spawner.isValid()) {
+        if (!spawner.isValid()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
             return false;
         }
 
-        if(!sender.hasPermission(getPermissionString() + "." + spawner.serializedEntityType()) && !sender.hasPermission(getPermissionString() + ".*")) {
+        if (!sender.hasPermission(getPermissionString() + "." + spawner.serializedEntityType())
+                && !sender.hasPermission(getPermissionString() + ".*")) {
             sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.serializedName());
             return false;
         }
 
         int amount = 1;
-        if(args.length == 3) amount = parseAmount(args[2]);
+        if (args.length == 3) amount = parseAmount(args[2]);
 
-        if(amount == -1) {
+        if (amount == -1) {
             sendMessage(sender, "INVALID_AMOUNT", args[2]);
             return false;
         }
 
-        if(amount < 1) {
+        if (amount < 1) {
             sendMessage(sender, "TOO_SMALL_AMOUNT");
             return false;
         }
 
         int requestedAmount = amount;
-        plugin.getPlatform().runOnEntity(p, () -> {
-            SpawnerGiveEvent event = new SpawnerGiveEvent(sender, p, spawner, requestedAmount);
-            Bukkit.getPluginManager().callEvent(event);
-            if(event.isCancelled()) return;
+        plugin.getPlatform()
+                .runOnEntity(
+                        p,
+                        () -> {
+                            SpawnerGiveEvent event = new SpawnerGiveEvent(sender, p, spawner, requestedAmount);
+                            Bukkit.getPluginManager().callEvent(event);
+                            if (event.isCancelled()) return;
 
-            ItemStack item = spawner.getItemStack();
-            item.setAmount(event.getAmount());
-            int finalAmount = event.getAmount();
-            String trailingLetter = finalAmount > 1? "s" : "";
-            p.getInventory().addItem(item);
-            if(p != sender) {
-                sendMessage(sender, "SUCCESS", finalAmount, spawner.serializedName(), trailingLetter, p.getName());
-                sendMessage(p, "SUCCESS_TARGET", finalAmount, spawner.serializedName(), trailingLetter, sender.getName());
-            } else {
-                sendMessage(sender, "SUCCESS_SELF", finalAmount, spawner.serializedName(), trailingLetter);
-            }
-        }, () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+                            ItemStack item = spawner.getItemStack();
+                            item.setAmount(event.getAmount());
+                            int finalAmount = event.getAmount();
+                            String trailingLetter = finalAmount > 1 ? "s" : "";
+                            p.getInventory().addItem(item);
+                            if (p != sender) {
+                                sendMessage(
+                                        sender,
+                                        "SUCCESS",
+                                        finalAmount,
+                                        spawner.serializedName(),
+                                        trailingLetter,
+                                        p.getName());
+                                sendMessage(
+                                        p,
+                                        "SUCCESS_TARGET",
+                                        finalAmount,
+                                        spawner.serializedName(),
+                                        trailingLetter,
+                                        sender.getName());
+                            } else {
+                                sendMessage(
+                                        sender, "SUCCESS_SELF", finalAmount, spawner.serializedName(), trailingLetter);
+                            }
+                        },
+                        () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
         return true;
     }
 

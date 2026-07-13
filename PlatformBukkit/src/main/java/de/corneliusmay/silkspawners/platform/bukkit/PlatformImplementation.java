@@ -19,9 +19,10 @@ public class PlatformImplementation extends ServerPlatform {
     @Override
     public void runOnEntity(Entity entity, Runnable runnable, Runnable retired) {
         if (Bukkit.isPrimaryThread()) runnable.run();
-        else Bukkit.getScheduler().runTask(this.plugin, () -> {
-            if (entity.isValid()) runnable.run();
-            else retired.run();
-        });
+        else
+            Bukkit.getScheduler().runTask(this.plugin, () -> {
+                if (entity.isValid()) runnable.run();
+                else retired.run();
+            });
     }
 }

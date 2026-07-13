@@ -1,17 +1,16 @@
 package de.corneliusmay.silkspawners.plugin.config.handler;
 
-import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.Plugin;
+import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
 
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-
-import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
+import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 public class ConfigLoader {
 
@@ -29,7 +28,10 @@ public class ConfigLoader {
     private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] No config file was found. The config will be generated with the default configuration");
+            Bukkit.getLogger()
+                    .log(
+                            Level.INFO,
+                            "[SilkSpawners] No config file was found. The config will be generated with the default configuration");
             return CONFIG_VERSION;
         }
 
@@ -37,7 +39,11 @@ public class ConfigLoader {
         if (currentVersion == 0) currentVersion = 1;
         if (CONFIG_VERSION > currentVersion) {
             config.set("update.configVersion", CONFIG_VERSION);
-            Bukkit.getLogger().log(Level.WARNING, "[SilkSpawners] Configuration file in version " + currentVersion + " is automatically converted to the latest version " + CONFIG_VERSION);
+            Bukkit.getLogger()
+                    .log(
+                            Level.WARNING,
+                            "[SilkSpawners] Configuration file in version " + currentVersion
+                                    + " is automatically converted to the latest version " + CONFIG_VERSION);
         } else {
             Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Configuration is up to date");
         }
@@ -74,7 +80,9 @@ public class ConfigLoader {
             try {
                 values.put(value, new ConfigValue<>(value).load());
             } catch (Exception ex) {
-                plugin.getLogger().severe("Invalid configuration value: " + value.getPath() + ": " + config.getString(value.getPath()) + " (" + ex.getMessage() + ")");
+                plugin.getLogger()
+                        .severe("Invalid configuration value: " + value.getPath() + ": "
+                                + config.getString(value.getPath()) + " (" + ex.getMessage() + ")");
                 valid = false;
             }
         }

@@ -17,7 +17,8 @@ class HelpCommand extends SilkSpawnersCommand {
             case 0 -> sendMessage(sender, "MESSAGE", commandHandler.getAvailableCommandsString(sender));
             case 1 -> {
                 SilkSpawnersCommand command = commandHandler.getCommand(args[0]);
-                if(command != null) sendMessage(sender, "MESSAGE_" + command.getCommand().toUpperCase());
+                if (command != null)
+                    sendMessage(sender, "MESSAGE_" + command.getCommand().toUpperCase());
                 else sendMessage(sender, "COMMAND_NOT_FOUND", args[0]);
             }
             default -> invalidSyntax(sender);

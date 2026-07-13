@@ -1,7 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.explosion;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
