@@ -124,7 +124,7 @@ public class VersionChecker {
     }
 
     private String updateAvailableMessage(String currentLatestVersion) {
-        return "§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v"
+        return "§eUpdate available! Download at https://modrinth.com/plugin/silkspawners §f\nInstalled version: v"
                 + getInstalledVersion()
                 + "\nLatest version: v"
                 + currentLatestVersion;
