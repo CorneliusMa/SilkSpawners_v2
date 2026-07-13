@@ -1,8 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
-import org.bukkit.command.CommandSender;
-
 import java.util.List;
+import org.bukkit.command.CommandSender;
 
 public class StaticTabCompletion implements TabCompletion {
 

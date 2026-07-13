@@ -2,9 +2,8 @@ package de.corneliusmay.silkspawners.plugin.utils;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
-import org.bukkit.Bukkit;
-
 import java.util.Arrays;
+import org.bukkit.Bukkit;
 
 public class Logger {
 
@@ -18,12 +17,10 @@ public class Logger {
 
     public void warn(String msg) {
         Bukkit.getConsoleSender().sendMessage(getPrefix() + " §8[§eWARN§8]§7: " + msg);
-
     }
 
     public void error(String msg) {
         Bukkit.getConsoleSender().sendMessage(getPrefix() + " §8[§cERROR§8]§7: " + msg);
-
     }
 
     public void error(String msg, Throwable ex) {

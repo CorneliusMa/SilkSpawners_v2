@@ -1,14 +1,13 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.util.StringUtil;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
 
 class SilkSpawnersTabCompleter implements TabCompleter {
 
@@ -24,10 +23,16 @@ class SilkSpawnersTabCompleter implements TabCompleter {
         List<String> completions = new ArrayList<>();
         SilkSpawnersCommand command = commandHandler.getCommand(args[0]);
 
-        if(args.length < 2) {
-            StringUtil.copyPartialMatches(args[args.length - 1], commandHandler.getCommands(commandSender), completions);
-        } else if(command != null && command.getCompletions().length >= args.length - 1 && command.hasPermission(commandSender)) {
-            StringUtil.copyPartialMatches(args[args.length - 1], command.getCompletions()[args.length - 2].update(command, commandSender), completions);
+        if (args.length < 2) {
+            StringUtil.copyPartialMatches(
+                    args[args.length - 1], commandHandler.getCommands(commandSender), completions);
+        } else if (command != null
+                && command.getCompletions().length >= args.length - 1
+                && command.hasPermission(commandSender)) {
+            StringUtil.copyPartialMatches(
+                    args[args.length - 1],
+                    command.getCompletions()[args.length - 2].update(command, commandSender),
+                    completions);
         }
 
         Collections.sort(completions);

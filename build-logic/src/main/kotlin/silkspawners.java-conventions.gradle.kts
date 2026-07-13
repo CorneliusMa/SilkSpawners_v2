@@ -1,5 +1,6 @@
 plugins {
     java
+    id("com.diffplug.spotless")
 }
 
 val libs = the<VersionCatalogsExtension>().named("libs")
@@ -18,4 +19,10 @@ tasks.withType<AbstractArchiveTask>().configureEach {
 dependencies {
     compileOnly(libs.findLibrary("lombok").get())
     annotationProcessor(libs.findLibrary("lombok").get())
+}
+
+spotless {
+    java {
+        palantirJavaFormat("2.90.0")
+    }
 }

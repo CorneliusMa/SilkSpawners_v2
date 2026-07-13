@@ -1,7 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.config.handler;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-
 import java.util.Map;
 
 final class ConfigCache {

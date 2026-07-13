@@ -2,11 +2,10 @@ package de.corneliusmay.silkspawners.plugin.commands.completers;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.TabCompletion;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
-
-import java.util.List;
 
 public class OnlinePlayersTabCompleter implements TabCompletion {
 

@@ -1,27 +1,26 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
-import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
+import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import java.util.HashSet;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
-
 public class SetCommand extends SilkSpawnersCommand {
 
-    public SetCommand(){
+    public SetCommand() {
         super("set", true, new EntityTabCompleter());
     }
 
     @Override
     protected boolean execute(CommandSender sender, String[] args) {
-        if(args.length != 1) return invalidSyntax(sender);
-        if(!(sender instanceof Player player)) {
+        if (args.length != 1) return invalidSyntax(sender);
+        if (!(sender instanceof Player player)) {
             sendMessage(sender, "PLAYERS_ONLY");
             return false;
         }
@@ -31,38 +30,40 @@ public class SetCommand extends SilkSpawnersCommand {
             entityType = null;
         } else {
             entityType = EntityType.fromName(args[0]);
-            if(entityType == null) {
+            if (entityType == null) {
                 sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
                 return false;
             }
         }
 
         Spawner newSpawner = new Spawner(plugin, entityType);
-        if(!newSpawner.isValid()) {
+        if (!newSpawner.isValid()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
         }
 
-        if(!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType()) && !sender.hasPermission(getPermissionString() + ".*")) {
+        if (!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType())
+                && !sender.hasPermission(getPermissionString() + ".*")) {
             sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", newSpawner.serializedName());
             return false;
         }
 
         Block block = plugin.getBukkitHandler().getTargetBlock(player);
         Spawner spawner = new Spawner(plugin, block);
-        if(!spawner.isValid()) {
+        if (!spawner.isValid()) {
             sendMessage(sender, "INVALID_TARGET");
             return false;
         }
 
-        if(spawner.getEntityType() == newSpawner.getEntityType()) {
+        if (spawner.getEntityType() == newSpawner.getEntityType()) {
             sendMessage(sender, "UNCHANGED", newSpawner.serializedName());
             return true;
         }
 
-        SpawnerChangeEvent event = new SpawnerChangeEvent(player, spawner, block.getLocation(), newSpawner, type -> new Spawner(plugin, type));
+        SpawnerChangeEvent event = new SpawnerChangeEvent(
+                player, spawner, block.getLocation(), newSpawner, type -> new Spawner(plugin, type));
         Bukkit.getPluginManager().callEvent(event);
-        if(event.isCancelled()) return false;
+        if (event.isCancelled()) return false;
 
         Spawner result = Spawner.of(plugin, event.getNewSpawner());
         result.setSpawnerBlockType(block, new HashSet<>());

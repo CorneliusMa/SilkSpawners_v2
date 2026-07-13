@@ -1,15 +1,14 @@
 package de.corneliusmay.silkspawners.api.events;
 
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
+import java.util.Objects;
+import java.util.function.Function;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
-
-import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * Called when breaking a spawner may drop it, before the drop chance is applied.
@@ -27,7 +26,13 @@ public class SpawnerDropEvent extends SpawnerEvent {
     private boolean customDrop;
 
     @ApiStatus.Internal
-    public SpawnerDropEvent(Player player, SpawnerSnapshot spawner, Location location, ItemStack drop, double dropChance, Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+    public SpawnerDropEvent(
+            Player player,
+            SpawnerSnapshot spawner,
+            Location location,
+            ItemStack drop,
+            double dropChance,
+            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
         super(player, spawner, location, snapshotFactory);
         this.drop = drop;
         this.dropChance = dropChance;
@@ -64,7 +69,8 @@ public class SpawnerDropEvent extends SpawnerEvent {
      * @throws IllegalArgumentException if the drop chance is not between 0 and 100
      */
     public void setDropChance(double dropChance) {
-        if (!(dropChance >= 0 && dropChance <= 100)) throw new IllegalArgumentException("dropChance must be between 0 and 100");
+        if (!(dropChance >= 0 && dropChance <= 100))
+            throw new IllegalArgumentException("dropChance must be between 0 and 100");
         this.dropChance = dropChance;
     }
 

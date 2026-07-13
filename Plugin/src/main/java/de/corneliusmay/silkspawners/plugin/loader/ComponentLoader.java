@@ -21,7 +21,8 @@ public class ComponentLoader<T> {
     public T instantiate(String relativeName, Object... args) {
         String className = packagePrefix + relativeName;
         try {
-            Constructor<? extends T> constructor = Class.forName(className).asSubclass(type).getConstructor(constructorSignature);
+            Constructor<? extends T> constructor =
+                    Class.forName(className).asSubclass(type).getConstructor(constructorSignature);
             return constructor.newInstance(args);
         } catch (ReflectiveOperationException | ClassCastException | IllegalArgumentException e) {
             throw new ComponentLoadException(className, e);

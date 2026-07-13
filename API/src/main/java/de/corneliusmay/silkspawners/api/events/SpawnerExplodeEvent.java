@@ -21,7 +21,8 @@ public class SpawnerExplodeEvent extends SpawnerEvent {
     private boolean breakBlocks;
 
     @ApiStatus.Internal
-    public SpawnerExplodeEvent(Player player, SpawnerSnapshot spawner, Location location, float power, boolean fire, boolean breakBlocks) {
+    public SpawnerExplodeEvent(
+            Player player, SpawnerSnapshot spawner, Location location, float power, boolean fire, boolean breakBlocks) {
         super(player, spawner, location, null);
         this.power = power;
         this.fire = fire;

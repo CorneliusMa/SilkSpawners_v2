@@ -18,7 +18,7 @@ public class PlatformImplementation extends ServerPlatform {
 
     @Override
     public void runOnEntity(Entity entity, Runnable runnable, Runnable retired) {
-        if(Bukkit.isOwnedByCurrentRegion(entity)) runnable.run();
-        else if(entity.getScheduler().run(this.plugin, task -> runnable.run(), retired) == null) retired.run();
+        if (Bukkit.isOwnedByCurrentRegion(entity)) runnable.run();
+        else if (entity.getScheduler().run(this.plugin, task -> runnable.run(), retired) == null) retired.run();
     }
 }

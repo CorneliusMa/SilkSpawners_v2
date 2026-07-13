@@ -1,0 +1,26 @@
+#!/bin/sh
+# Enforces the Conventional Commits format described in CONTRIBUTING.md.
+# Activate with: git config core.hooksPath .githooks
+
+first_line=$(head -n 1 "$1")
+
+# Git-generated messages are exempt
+case "$first_line" in
+    Merge\ *|Revert\ *|fixup!*|squash!*) exit 0 ;;
+esac
+
+if printf '%s' "$first_line" | grep -Eq '^(build|ci|docs|feat|fix|perf|refactor|style|test|revert|chore)(\([^)]+\))?!?: .+'; then
+    exit 0
+fi
+
+cat >&2 <<EOF
+commit-msg: message does not follow Conventional Commits (see CONTRIBUTING.md)
+
+  <type>[optional scope][!]: <description>
+
+  types: build ci docs feat fix perf refactor style test revert chore
+  example: fix(modules): load crash due to thread unsafety
+
+  got: $first_line
+EOF
+exit 1

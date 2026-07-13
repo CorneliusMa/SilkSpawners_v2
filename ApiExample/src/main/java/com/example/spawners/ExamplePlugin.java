@@ -9,7 +9,8 @@ public class ExamplePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         SilkSpawnersAPI api = SilkSpawnersApiProvider.get();
-        getLogger().info("SilkSpawners supports " + api.getSupportedEntityTypes().size() + " entity types");
+        getLogger()
+                .info("SilkSpawners supports " + api.getSupportedEntityTypes().size() + " entity types");
         getServer().getPluginManager().registerEvents(new ExampleListener(), this);
     }
 }

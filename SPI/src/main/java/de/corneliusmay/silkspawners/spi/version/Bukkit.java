@@ -12,5 +12,4 @@ public interface Bukkit {
     ItemStack[] getItemsInHand(Player player);
 
     Material getSpawnerMaterial();
-
 }

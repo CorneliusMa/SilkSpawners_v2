@@ -1,12 +1,11 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
-import org.bukkit.entity.EntityType;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.bukkit.entity.EntityType;
 
 public final class SpawnableEntities {
 

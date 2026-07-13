@@ -6,6 +6,6 @@ import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 public class MessageConfigValue implements ConfigValueFormatter<String> {
     @Override
     public String format(String value) {
-        return MessageRenderer.render(value.replaceAll("(?<!\\\\)\\$" , "§").replace("\\$", "$"));
+        return MessageRenderer.render(value.replaceAll("(?<!\\\\)\\$", "§").replace("\\$", "$"));
     }
 }

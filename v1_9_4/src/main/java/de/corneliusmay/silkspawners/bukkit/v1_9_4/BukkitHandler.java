@@ -1,12 +1,11 @@
 package de.corneliusmay.silkspawners.bukkit.v1_9_4;
 
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Set;
 
 public class BukkitHandler implements Bukkit {
 
@@ -17,7 +16,9 @@ public class BukkitHandler implements Bukkit {
 
     @Override
     public ItemStack[] getItemsInHand(Player player) {
-        return new ItemStack[]{ player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() };
+        return new ItemStack[] {
+            player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()
+        };
     }
 
     @Override

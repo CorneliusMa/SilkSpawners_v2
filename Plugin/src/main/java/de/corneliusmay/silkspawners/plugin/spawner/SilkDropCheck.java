@@ -3,11 +3,10 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
+import java.util.Arrays;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Arrays;
 
 public class SilkDropCheck {
 
@@ -41,7 +40,8 @@ public class SilkDropCheck {
     }
 
     private boolean hasRequiredSilkTouchLevel(ItemStack item) {
-        return item.getEnchantmentLevel(Enchantment.SILK_TOUCH) >= new ConfigValue<Integer>(PluginConfig.SPAWNER_SILKTOUCH_LEVEL).get()
+        return item.getEnchantmentLevel(Enchantment.SILK_TOUCH)
+                        >= new ConfigValue<Integer>(PluginConfig.SPAWNER_SILKTOUCH_LEVEL).get()
                 || !new ConfigValue<Boolean>(PluginConfig.SPAWNER_SILKTOUCH_REQUIRED).get();
     }
 }

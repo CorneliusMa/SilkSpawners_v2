@@ -15,7 +15,9 @@ public class BukkitHandler implements Bukkit {
 
     @Override
     public ItemStack[] getItemsInHand(Player player) {
-        return new ItemStack[]{ player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand() };
+        return new ItemStack[] {
+            player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()
+        };
     }
 
     @Override

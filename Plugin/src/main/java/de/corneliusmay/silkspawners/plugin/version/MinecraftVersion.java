@@ -1,11 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import lombok.Getter;
-import org.bukkit.Bukkit;
-
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Getter;
+import org.bukkit.Bukkit;
 
 class MinecraftVersion {
 
@@ -17,7 +16,8 @@ class MinecraftVersion {
 
     static {
         try {
-            final Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)+").matcher(Bukkit.getServer().getBukkitVersion());
+            final Matcher matcher = Pattern.compile("^\\d+(\\.\\d+)+")
+                    .matcher(Bukkit.getServer().getBukkitVersion());
             if (!matcher.find()) throw new IllegalArgumentException("Unrecognized Minecraft version string");
             version = matcher.group();
             final String[] splitVersion = version.split("\\.");

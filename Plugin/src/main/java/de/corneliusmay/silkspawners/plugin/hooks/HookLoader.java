@@ -1,20 +1,19 @@
 package de.corneliusmay.silkspawners.plugin.hooks;
 
-import de.corneliusmay.silkspawners.spi.hooks.Hook;
-import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import de.corneliusmay.silkspawners.spi.hooks.Hook;
+import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class HookLoader {
 
@@ -30,7 +29,8 @@ public class HookLoader {
 
     private final Set<String> registeredHooks = new HashSet<>();
 
-    private final ComponentLoader<Hook> loader = new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
+    private final ComponentLoader<Hook> loader =
+            new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
 
     public HookLoader(SilkSpawners plugin) {
         this.plugin = plugin;

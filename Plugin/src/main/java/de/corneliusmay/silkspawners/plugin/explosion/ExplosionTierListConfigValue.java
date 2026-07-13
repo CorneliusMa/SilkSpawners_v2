@@ -1,7 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.explosion;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueFormatter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,14 +16,14 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
 
     @Override
     public List<ExplosionTier> format(Object value) {
-        if(value == null) return List.of();
-        if(!(value instanceof List<?> tiers)) return format(String.valueOf(value));
+        if (value == null) return List.of();
+        if (!(value instanceof List<?> tiers)) return format(String.valueOf(value));
         return tierList(tiers);
     }
 
     private List<ExplosionTier> tierList(List<?> entries) {
         List<ExplosionTier> tiers = new ArrayList<>();
-        for(int i = 0; i < entries.size(); i++) {
+        for (int i = 0; i < entries.size(); i++) {
             tiers.add(tier(entries.get(i), i));
         }
         tiers.sort(ExplosionTier.STRONGEST_FIRST);
@@ -32,33 +31,36 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
     }
 
     private ExplosionTier tier(Object entry, int index) {
-        if(!(entry instanceof Map<?, ?> values)) throw invalid(index, "must be a mapping with the keys " + KEYS);
-        for(Object key : values.keySet()) {
-            if(!KEYS.contains(String.valueOf(key))) throw invalid(index, "contains the unknown key '" + key + "' (allowed: " + KEYS + ")");
+        if (!(entry instanceof Map<?, ?> values)) throw invalid(index, "must be a mapping with the keys " + KEYS);
+        for (Object key : values.keySet()) {
+            if (!KEYS.contains(String.valueOf(key)))
+                throw invalid(index, "contains the unknown key '" + key + "' (allowed: " + KEYS + ")");
         }
 
         double power = requiredNumber(values, "power", index);
-        if(power < 0 || !Float.isFinite((float) power)) throw invalid(index, "must define a finite 'power' of 0 or greater (0 means no explosion)");
+        if (power < 0 || !Float.isFinite((float) power))
+            throw invalid(index, "must define a finite 'power' of 0 or greater (0 means no explosion)");
         double chance = number(values, "chance", 100, index);
-        if(!(chance >= 0 && chance <= 100)) throw invalid(index, "must define a 'chance' between 0 and 100");
+        if (!(chance >= 0 && chance <= 100)) throw invalid(index, "must define a 'chance' between 0 and 100");
 
-        return new ExplosionTier(chance, (float) power, bool(values, "setFire", false, index), bool(values, "breakBlocks", true, index));
+        return new ExplosionTier(
+                chance, (float) power, bool(values, "setFire", false, index), bool(values, "breakBlocks", true, index));
     }
 
     private double requiredNumber(Map<?, ?> values, String key, int index) {
         Object value = values.get(key);
-        if(value == null) throw invalid(index, "is missing the required key '" + key + "'");
+        if (value == null) throw invalid(index, "is missing the required key '" + key + "'");
         return number(value, key, index);
     }
 
     private double number(Map<?, ?> values, String key, double defaultValue, int index) {
         Object value = values.get(key);
-        if(value == null) return defaultValue;
+        if (value == null) return defaultValue;
         return number(value, key, index);
     }
 
     private double number(Object value, String key, int index) {
-        if(value instanceof Number number) return number.doubleValue();
+        if (value instanceof Number number) return number.doubleValue();
         try {
             return Double.parseDouble(String.valueOf(value));
         } catch (NumberFormatException ex) {
@@ -68,10 +70,10 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
 
     private boolean bool(Map<?, ?> values, String key, boolean defaultValue, int index) {
         Object value = values.get(key);
-        if(value == null) return defaultValue;
-        if(value instanceof Boolean bool) return bool;
+        if (value == null) return defaultValue;
+        if (value instanceof Boolean bool) return bool;
         String text = String.valueOf(value);
-        if("true".equalsIgnoreCase(text) || "false".equalsIgnoreCase(text)) return Boolean.parseBoolean(text);
+        if ("true".equalsIgnoreCase(text) || "false".equalsIgnoreCase(text)) return Boolean.parseBoolean(text);
         throw invalid(index, "has a non-boolean '" + key + "' value: " + value);
     }
 

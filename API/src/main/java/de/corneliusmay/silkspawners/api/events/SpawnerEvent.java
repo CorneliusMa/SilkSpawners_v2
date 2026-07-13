@@ -1,14 +1,13 @@
 package de.corneliusmay.silkspawners.api.events;
 
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
+import java.util.function.Function;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.ApiStatus;
-
-import java.util.function.Function;
 
 /**
  * Base of all SilkSpawners events. Events are fired synchronously on the main server thread,
@@ -30,7 +29,11 @@ public abstract class SpawnerEvent extends Event implements Cancellable {
     private boolean cancelled;
 
     @ApiStatus.Internal
-    protected SpawnerEvent(Player player, SpawnerSnapshot spawner, Location location, Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+    protected SpawnerEvent(
+            Player player,
+            SpawnerSnapshot spawner,
+            Location location,
+            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
         this.player = player;
         this.spawner = spawner;
         this.location = location;
@@ -87,7 +90,8 @@ public abstract class SpawnerEvent extends Event implements Cancellable {
     }
 
     protected SpawnerSnapshot createSnapshot(EntityType entityType) {
-        if (entityType != null && !entityType.isSpawnable()) throw new IllegalArgumentException("Entity type " + entityType + " is not spawnable");
+        if (entityType != null && !entityType.isSpawnable())
+            throw new IllegalArgumentException("Entity type " + entityType + " is not spawnable");
         return snapshotFactory.apply(entityType);
     }
 }

@@ -1,14 +1,13 @@
 package de.corneliusmay.silkspawners.api.events;
 
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
+import java.util.function.Function;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 /**
  * Called when a spawner's entity type is changed with a spawn egg or {@code /silkspawners set}.
@@ -21,7 +20,12 @@ public class SpawnerChangeEvent extends SpawnerEvent {
     private SpawnerSnapshot newSpawner;
 
     @ApiStatus.Internal
-    public SpawnerChangeEvent(Player player, SpawnerSnapshot spawner, Location location, SpawnerSnapshot newSpawner, Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+    public SpawnerChangeEvent(
+            Player player,
+            SpawnerSnapshot spawner,
+            Location location,
+            SpawnerSnapshot newSpawner,
+            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
         super(player, spawner, location, snapshotFactory);
         this.newSpawner = newSpawner;
     }
