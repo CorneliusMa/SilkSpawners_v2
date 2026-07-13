@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -38,11 +39,13 @@ public class GiveCommand extends SilkSpawnersCommand {
             }
         }
 
-        Spawner spawner = new Spawner(plugin, entityType);
-        if (!spawner.isValid()) {
+        Optional<Spawner> requestedSpawner = Spawner.ofType(entityType);
+        if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
             return false;
         }
+
+        Spawner spawner = requestedSpawner.get();
 
         if (!sender.hasPermission(getPermissionString() + "." + spawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {

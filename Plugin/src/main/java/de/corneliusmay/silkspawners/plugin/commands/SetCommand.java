@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import java.util.HashSet;
+import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -36,11 +37,13 @@ public class SetCommand extends SilkSpawnersCommand {
             }
         }
 
-        Spawner newSpawner = new Spawner(plugin, entityType);
-        if (!newSpawner.isValid()) {
+        Optional<Spawner> requestedSpawner = Spawner.ofType(entityType);
+        if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
         }
+
+        Spawner newSpawner = requestedSpawner.get();
 
         if (!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {
@@ -49,23 +52,25 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         Block block = plugin.getBukkitHandler().getTargetBlock(player);
-        Spawner spawner = new Spawner(plugin, block);
-        if (!spawner.isValid()) {
+        Optional<Spawner> targetSpawner = Spawner.fromBlock(block);
+        if (targetSpawner.isEmpty()) {
             sendMessage(sender, "INVALID_TARGET");
             return false;
         }
+
+        Spawner spawner = targetSpawner.get();
 
         if (spawner.getEntityType() == newSpawner.getEntityType()) {
             sendMessage(sender, "UNCHANGED", newSpawner.serializedName());
             return true;
         }
 
-        SpawnerChangeEvent event = new SpawnerChangeEvent(
-                player, spawner, block.getLocation(), newSpawner, type -> new Spawner(plugin, type));
+        SpawnerChangeEvent event =
+                new SpawnerChangeEvent(player, spawner, block.getLocation(), newSpawner, Spawner::snapshot);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
-        Spawner result = Spawner.of(plugin, event.getNewSpawner());
+        Spawner result = Spawner.of(event.getNewSpawner());
         result.setSpawnerBlockType(block, new HashSet<>());
         sendMessage(sender, "SUCCESS", result.serializedName());
         return true;

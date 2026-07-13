@@ -1,10 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
+import java.util.Optional;
 import java.util.Set;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -18,46 +18,64 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Spawner implements SpawnerSnapshot {
     public static final String EMPTY = "empty";
 
-    private final SilkSpawners plugin;
-
     @Getter
     private EntityType entityType;
 
     private ItemStack itemStack;
 
-    public Spawner(SilkSpawners plugin, Block block) {
-        this.plugin = plugin;
+    private Spawner(SpawnerContext context, Block block) {
         if (block == null) return;
-        if (block.getType() != this.plugin.getBukkitHandler().getSpawnerMaterial()) return;
+        if (block.getType() != context.getBukkitHandler().getSpawnerMaterial()) return;
 
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
         this.entityType = creatureSpawner.getSpawnedType();
-        this.itemStack = generateItemStack();
+        this.itemStack = generateItemStack(context);
     }
 
-    public Spawner(SilkSpawners plugin, ItemStack itemStack) {
-        this.plugin = plugin;
+    private Spawner(SpawnerContext context, ItemStack itemStack) {
         if (itemStack == null) return;
         this.itemStack = itemStack.clone();
-        if (itemStack.getType() != this.plugin.getBukkitHandler().getSpawnerMaterial()) return;
+        if (itemStack.getType() != context.getBukkitHandler().getSpawnerMaterial()) return;
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null || itemMeta.getLore() == null || itemMeta.getLore().isEmpty()) return;
 
         this.entityType = getSpawnerEntity(itemMeta.getLore().get(0));
     }
 
-    public Spawner(SilkSpawners plugin, EntityType entityType) {
-        this.plugin = plugin;
+    private Spawner(SpawnerContext context, EntityType entityType) {
         this.entityType = entityType;
-        this.itemStack = generateItemStack();
+        this.itemStack = generateItemStack(context);
     }
 
-    public Spawner(SilkSpawners plugin, SpawnerSnapshot snapshot) {
-        this(plugin, snapshot.getEntityType());
+    public static Optional<Spawner> fromBlock(Block block) {
+        return validated(new Spawner(SpawnerContext.get(), block));
     }
 
-    public static Spawner of(SilkSpawners plugin, SpawnerSnapshot snapshot) {
-        return snapshot instanceof Spawner spawner ? spawner : new Spawner(plugin, snapshot);
+    public static Optional<Spawner> fromItem(ItemStack itemStack) {
+        SpawnerContext context = SpawnerContext.get();
+        if (itemStack == null
+                || itemStack.getType() != context.getBukkitHandler().getSpawnerMaterial()) {
+            return Optional.empty();
+        }
+        return validated(new Spawner(context, itemStack));
+    }
+
+    public static Optional<Spawner> ofType(EntityType entityType) {
+        return validated(new Spawner(SpawnerContext.get(), entityType));
+    }
+
+    public static Spawner snapshot(EntityType entityType) {
+        // Events reject non-spawnable entity types before requesting a snapshot
+        return ofType(entityType)
+                .orElseThrow(() -> new IllegalArgumentException("Entity type " + entityType + " is not spawnable"));
+    }
+
+    public static Spawner of(SpawnerSnapshot snapshot) {
+        return snapshot instanceof Spawner spawner ? spawner : snapshot(snapshot.getEntityType());
+    }
+
+    private static Optional<Spawner> validated(Spawner spawner) {
+        return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
     }
 
     public ItemStack getItemStack() {
@@ -65,31 +83,22 @@ public class Spawner implements SpawnerSnapshot {
     }
 
     public void setSpawnerBlockType(Block block, Set<Location> editedList) {
-        setSpawnerBlockType(block, () -> editedList.remove(block.getLocation()));
-    }
-
-    private void setSpawnerBlockType(Block block, Runnable removeFromEditedList) {
-        if (!isValid()) {
-            removeFromEditedList.run();
-            return;
-        }
-        this.plugin
+        SpawnerContext.get()
                 .getPlatform()
                 .runTaskLater(
                         block.getLocation(),
                         () -> {
                             BlockState blockState = block.getState();
-                            if (!(blockState instanceof CreatureSpawner)) return;
-                            CreatureSpawner creatureSpawner = (CreatureSpawner) blockState;
+                            if (!(blockState instanceof CreatureSpawner creatureSpawner)) return;
                             creatureSpawner.setSpawnedType(this.entityType);
                             blockState.update();
-                            removeFromEditedList.run();
+                            editedList.remove(block.getLocation());
                         },
                         1);
     }
 
-    private ItemStack generateItemStack() {
-        return new ItemBuilder(this.plugin.getBukkitHandler().getSpawnerMaterial())
+    private ItemStack generateItemStack(SpawnerContext context) {
+        return new ItemBuilder(context.getBukkitHandler().getSpawnerMaterial())
                 .setDisplayName(PluginConfig.SPAWNER_ITEM_NAME.get())
                 .addToLore(serializedName())
                 .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
@@ -125,7 +134,7 @@ public class Spawner implements SpawnerSnapshot {
         return getPrefix() + StringUtils.capitalizeFully(serializedEntityType().replace("_", " "));
     }
 
-    public boolean isValid() {
+    private boolean isValid() {
         return itemStack != null && (isEmpty() || entityType.isSpawnable());
     }
 

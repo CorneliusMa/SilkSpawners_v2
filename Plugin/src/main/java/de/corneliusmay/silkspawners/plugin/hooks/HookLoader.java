@@ -34,7 +34,7 @@ public class HookLoader {
     public HookLoader(SilkSpawners plugin) {
         this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
-        this.spawnerProvider = new SilkSpawnersProvider(plugin);
+        this.spawnerProvider = new SilkSpawnersProvider();
     }
 
     public void addHook(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {

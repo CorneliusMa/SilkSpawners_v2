@@ -7,6 +7,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -28,13 +29,12 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public ItemStack getSpawnerItem(EntityType entityType) {
-        Spawner spawner = new Spawner(plugin, entityType);
-        return spawner.isValid() ? spawner.getItemStack() : null;
+        return Spawner.ofType(entityType).map(Spawner::getItemStack).orElse(null);
     }
 
     @Override
     public EntityType getEntityType(ItemStack itemStack) {
-        return new Spawner(plugin, itemStack).getEntityType();
+        return Spawner.fromItem(itemStack).map(Spawner::getEntityType).orElse(null);
     }
 
     @Override
@@ -45,16 +45,17 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public SpawnerSnapshot getSpawner(Block block) {
-        return isSpawnerBlock(block) ? new Spawner(plugin, block) : null;
+        return Spawner.fromBlock(block).orElse(null);
     }
 
     @Override
     public boolean setSpawnerType(Block block, EntityType entityType) {
         if (!isSpawnerBlock(block)) return false;
 
-        Spawner spawner = new Spawner(plugin, entityType);
-        if (!spawner.isValid()) return false;
-        spawner.setSpawnerBlockType(block, new HashSet<>());
+        Optional<Spawner> spawner = Spawner.ofType(entityType);
+        if (spawner.isEmpty()) return false;
+
+        spawner.get().setSpawnerBlockType(block, new HashSet<>());
         return true;
     }
 
@@ -69,8 +70,8 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public boolean canSilkDrop(Player player, EntityType entityType) {
-        Spawner spawner = new Spawner(plugin, entityType);
-        if (!spawner.isValid()) return false;
-        return new SilkDropCheck(plugin).canSilkDrop(player, spawner);
+        return Spawner.ofType(entityType)
+                .map(spawner -> new SilkDropCheck(plugin).canSilkDrop(player, spawner))
+                .orElse(false);
     }
 }
