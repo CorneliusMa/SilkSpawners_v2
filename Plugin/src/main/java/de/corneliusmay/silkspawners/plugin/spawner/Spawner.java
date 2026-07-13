@@ -3,10 +3,8 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
-import java.util.List;
 import java.util.Set;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -92,20 +90,20 @@ public class Spawner implements SpawnerSnapshot {
 
     private ItemStack generateItemStack() {
         return new ItemBuilder(this.plugin.getBukkitHandler().getSpawnerMaterial())
-                .setDisplayName(new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_NAME).get())
+                .setDisplayName(PluginConfig.SPAWNER_ITEM_NAME.get())
                 .addToLore(serializedName())
-                .addToLore(new ConfigValue<List<String>>(PluginConfig.SPAWNER_ITEM_LORE).get())
+                .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
                 .build();
     }
 
     private String getPrefix() {
-        return new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX).get();
+        return PluginConfig.SPAWNER_ITEM_PREFIX.get();
     }
 
     private EntityType getSpawnerEntity(String lore) {
         String name;
         String prefix = getPrefix();
-        String oldPrefix = new ConfigValue<String>(PluginConfig.SPAWNER_ITEM_PREFIX_OLD).get();
+        String oldPrefix = PluginConfig.SPAWNER_ITEM_PREFIX_OLD.get();
         if (lore.startsWith(prefix)) {
             name = lore.replaceFirst(prefix, "").replace(" ", "_").toLowerCase();
         } else if (!oldPrefix.equals("") && lore.startsWith(oldPrefix)) {

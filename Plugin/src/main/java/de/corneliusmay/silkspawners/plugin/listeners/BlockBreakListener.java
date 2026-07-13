@@ -3,7 +3,6 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.api.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.api.events.SpawnerDropEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
 import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
@@ -33,7 +32,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
 
-        int dropChance = new ConfigValue<Integer>(PluginConfig.SPAWNER_DROP_CHANCE).get();
+        int dropChance = PluginConfig.SPAWNER_DROP_CHANCE.get();
         SpawnerDropEvent dropEvent = new SpawnerDropEvent(
                 p,
                 spawner,
@@ -72,9 +71,9 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e, Spawner spawner) {
-        if (!new ConfigValue<Boolean>(PluginConfig.SPAWNER_DESTROYABLE).get()) {
+        if (!PluginConfig.SPAWNER_DESTROYABLE.get()) {
             e.setCancelled(true);
-            if (new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get())
+            if (PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY.get())
                 p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
             return;
         }

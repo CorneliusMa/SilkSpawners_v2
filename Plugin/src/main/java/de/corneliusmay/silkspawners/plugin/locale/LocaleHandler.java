@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.locale;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
 import java.io.File;
@@ -76,7 +75,7 @@ public class LocaleHandler {
     }
 
     private Locale getLocale() {
-        return new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get();
+        return PluginConfig.MESSAGE_LOCALE.get();
     }
 
     public String getAvailableLocales() {
@@ -106,6 +105,6 @@ public class LocaleHandler {
     }
 
     private String getPrefix() {
-        return new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get();
+        return PluginConfig.MESSAGE_PREFIX.get();
     }
 }

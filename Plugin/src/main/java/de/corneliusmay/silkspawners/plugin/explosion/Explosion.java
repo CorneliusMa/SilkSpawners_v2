@@ -2,8 +2,8 @@ package de.corneliusmay.silkspawners.plugin.explosion;
 
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.api.events.SpawnerExplodeEvent;
+import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,10 +16,8 @@ public class Explosion {
 
     private final List<ExplosionTier> tiers;
 
-    public Explosion(PluginConfig tierList) {
-        this.tiers = combined(
-                new ConfigValue<List<ExplosionTier>>(tierList).get(),
-                new ConfigValue<List<ExplosionTier>>(PluginConfig.SPAWNER_EXPLOSION_ALL).get());
+    public Explosion(ConfigKey<List<ExplosionTier>> tierList) {
+        this.tiers = combined(tierList.get(), PluginConfig.SPAWNER_EXPLOSION_ALL.get());
     }
 
     public boolean applies(Player p) {

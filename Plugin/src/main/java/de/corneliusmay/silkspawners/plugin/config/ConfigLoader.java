@@ -1,10 +1,11 @@
-package de.corneliusmay.silkspawners.plugin.config.handler;
+package de.corneliusmay.silkspawners.plugin.config;
 
 import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
 
-import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import lombok.Getter;
@@ -61,31 +62,77 @@ public class ConfigLoader {
         FileConfiguration config = plugin.getConfig();
 
         int configVersion = getConfigVersion(config);
-        for (PluginConfig value : PluginConfig.values()) {
-            value.init(config, configVersion);
+        for (ConfigKey<?> key : PluginConfig.values()) {
+            init(key, config, configVersion);
         }
         config.options().copyDefaults(true);
         plugin.saveConfig();
         plugin.reloadConfig();
 
-        Map<PluginConfig, Object> values = new HashMap<>();
+        Map<ConfigKey<?>, Object> values = new HashMap<>();
 
         boolean valid = true;
-        for (PluginConfig value : PluginConfig.values()) {
+        for (ConfigKey<?> key : PluginConfig.values()) {
             try {
-                values.put(value, new ConfigValue<>(value).load());
+                values.put(key, load(key, config));
             } catch (Exception ex) {
-                plugin.getLogger().severe(invalidValueMessage(value, config, ex));
+                plugin.getLogger().severe(invalidValueMessage(key, config, ex));
                 valid = false;
             }
         }
 
-        if (valid) ConfigCache.commit(values);
+        if (valid) ConfigRegistry.commit(values);
         else if (initialLoad) {
             plugin.getLogger().severe("Disabling plugin due to invalid configuration value");
             plugin.getPluginLoader().disablePlugin(plugin);
         }
         return valid;
+    }
+
+    private void init(ConfigKey<?> key, FileConfiguration config, int initialVersion) {
+        migrateLegacyKey(key, config, initialVersion);
+        migrateValue(key, config, initialVersion);
+        config.addDefault(key.getPath(), key.getDefaultValue());
+    }
+
+    private void migrateLegacyKey(ConfigKey<?> key, FileConfiguration config, int initialVersion) {
+        String[] legacyKeys = key.getLegacyKeys();
+        if (legacyKeys == null || legacyKeys.length == 0 || initialVersion == CONFIG_VERSION) return;
+
+        int legacyKeyIndex = legacyKeys.length >= initialVersion ? initialVersion : legacyKeys.length;
+        String legacyKey = legacyKeys[legacyKeyIndex - 1];
+        Object legacyValue = config.get(legacyKey);
+        if (legacyValue != null) {
+            if (config.get(key.getPath(), null) == null) config.set(key.getPath(), legacyValue);
+            config.set(legacyKey, null);
+        }
+    }
+
+    private void migrateValue(ConfigKey<?> key, FileConfiguration config, int initialVersion) {
+        if (initialVersion >= CONFIG_VERSION || key.getMigrators().isEmpty()) return;
+
+        Object value = config.get(key.getPath(), null);
+        boolean migrated = false;
+        for (List<ConfigValueMigrator> versionMigrators :
+                key.getMigrators().tailMap(initialVersion, false).values()) {
+            for (ConfigValueMigrator migrator : versionMigrators) {
+                Object result = migrator.migrate(value);
+                if (result != null) {
+                    value = result;
+                    migrated = true;
+                }
+            }
+        }
+        if (migrated) config.set(key.getPath(), value);
+    }
+
+    private Object load(ConfigKey<?> key, FileConfiguration config) {
+        if (key.isList()) {
+            return config.getStringList(key.getPath()).stream()
+                    .map(s -> key.getFormatter().format(s))
+                    .toList();
+        }
+        return key.getFormatter().format(config.get(key.getPath()));
     }
 
     private void log(Level level, String message) {
@@ -99,11 +146,11 @@ public class ConfigLoader {
                 + CONFIG_VERSION;
     }
 
-    private String invalidValueMessage(PluginConfig value, FileConfiguration config, Exception ex) {
+    private String invalidValueMessage(ConfigKey<?> key, FileConfiguration config, Exception ex) {
         return "Invalid configuration value: "
-                + value.getPath()
+                + key.getPath()
                 + ": "
-                + config.getString(value.getPath())
+                + config.getString(key.getPath())
                 + " ("
                 + ex.getMessage()
                 + ")";

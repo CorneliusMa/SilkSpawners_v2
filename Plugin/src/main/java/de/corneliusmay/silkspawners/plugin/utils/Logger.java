@@ -1,14 +1,13 @@
 package de.corneliusmay.silkspawners.plugin.utils;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValue;
 import java.util.Arrays;
 import org.bukkit.Bukkit;
 
 public class Logger {
 
     private String getPrefix() {
-        return new ConfigValue<String>(PluginConfig.MESSAGE_PREFIX).get();
+        return PluginConfig.MESSAGE_PREFIX.get();
     }
 
     public void info(String msg) {
