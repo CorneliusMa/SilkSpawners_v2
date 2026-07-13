@@ -18,6 +18,9 @@ import lombok.Getter;
 
 public class VersionChecker {
 
+    private static final URI LATEST_RELEASE_URI =
+            URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest");
+
     private final SilkSpawners plugin;
     private final HttpClient client;
 
@@ -73,13 +76,8 @@ public class VersionChecker {
                 else {
                     String currentLatestVersion = this.latestVersion;
                     if (!check(currentLatestVersion))
-                        plugin.getLog()
-                                .warn(
-                                        "§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v"
-                                                + getInstalledVersion() + "\nLatest version: v" + currentLatestVersion);
-                    else
-                        plugin.getLog()
-                                .info("The plugin is up to date (Current release v" + currentLatestVersion + ")");
+                        plugin.getLog().warn(updateAvailableMessage(currentLatestVersion));
+                    else plugin.getLog().info(upToDateMessage(currentLatestVersion));
                 }
                 TimeUnit.HOURS.sleep(interval);
             }
@@ -90,10 +88,8 @@ public class VersionChecker {
     private boolean update() throws InterruptedException {
         try {
             Pattern pattern = Pattern.compile("\"tag_name\":\"v([0-9\\.]+)\"");
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest"))
-                    .GET()
-                    .build();
+            HttpRequest request =
+                    HttpRequest.newBuilder().uri(LATEST_RELEASE_URI).GET().build();
             String latestVersionData =
                     client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             Matcher matcher = pattern.matcher(latestVersionData);
@@ -125,5 +121,16 @@ public class VersionChecker {
 
     private Integer[] castVersionString(String version) {
         return Arrays.stream(version.split("\\.")).map((Integer::parseInt)).toArray(Integer[]::new);
+    }
+
+    private String updateAvailableMessage(String currentLatestVersion) {
+        return "§eUpdate available! Download at https://www.spigotmc.org/resources/silkspawners.60063/ §f\nInstalled version: v"
+                + getInstalledVersion()
+                + "\nLatest version: v"
+                + currentLatestVersion;
+    }
+
+    private String upToDateMessage(String currentLatestVersion) {
+        return "The plugin is up to date (Current release v" + currentLatestVersion + ")";
     }
 }

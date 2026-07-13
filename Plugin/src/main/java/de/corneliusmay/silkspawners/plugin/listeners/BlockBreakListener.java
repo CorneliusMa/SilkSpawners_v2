@@ -65,15 +65,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
                 ? event.getSpawner().getItemStack()
                 : dropEvent.getDrop();
         if (new Explosion(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).applies(p)) {
-            plugin.getPlatform()
-                    .runTaskLater(
-                            e.getBlock().getLocation(),
-                            () -> {
-                                e.getBlock()
-                                        .getWorld()
-                                        .dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
-                            },
-                            2);
+            plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> dropItem(e, spawnerItem), 2);
         } else {
             p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
         }
@@ -84,18 +76,20 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             e.setCancelled(true);
             if (new ConfigValue<Boolean>(PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY).get())
                 p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
-        } else {
-            Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_NORMAL);
-            if (!explosion.applies(p)) return;
-            plugin.getPlatform()
-                    .runTaskLater(
-                            e.getBlock().getLocation(),
-                            () -> {
-                                if (e.isCancelled()) return;
-                                explosion.run(
-                                        p, e.getBlock().getWorld(), e.getBlock().getLocation(), spawner);
-                            },
-                            1);
+            return;
         }
+
+        Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_NORMAL);
+        if (!explosion.applies(p)) return;
+        plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> runExplosion(explosion, p, e, spawner), 1);
+    }
+
+    private void dropItem(BlockBreakEvent e, ItemStack spawnerItem) {
+        e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
+    }
+
+    private void runExplosion(Explosion explosion, Player p, BlockBreakEvent e, Spawner spawner) {
+        if (e.isCancelled()) return;
+        explosion.run(p, e.getBlock().getWorld(), e.getBlock().getLocation(), spawner);
     }
 }

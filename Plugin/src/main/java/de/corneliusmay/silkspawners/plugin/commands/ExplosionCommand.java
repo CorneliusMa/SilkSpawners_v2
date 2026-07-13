@@ -28,38 +28,39 @@ public class ExplosionCommand extends SilkSpawnersCommand {
         }
 
         switch (args[0].toLowerCase()) {
-            case "enable", "e" ->
-                plugin.getPlatform()
-                        .runOnEntity(
-                                p,
-                                () -> {
-                                    p.addAttachment(plugin).setPermission("silkspawners.explosion", true);
-                                    sendMessage(sender, "ENABLED", p.getName());
-                                },
-                                () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
-            case "disable", "d" ->
-                plugin.getPlatform()
-                        .runOnEntity(
-                                p,
-                                () -> {
-                                    p.addAttachment(plugin).setPermission("silkspawners.explosion", false);
-                                    sendMessage(sender, "DISABLED", p.getName());
-                                },
-                                () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
-            case "setting", "s" ->
-                plugin.getPlatform()
-                        .runOnEntity(
-                                p,
-                                () -> sendMessage(
-                                        sender,
-                                        "SETTING_"
-                                                + (p.hasPermission("silkspawners.explosion") ? "ENABLED" : "DISABLED"),
-                                        p.getName()),
-                                () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+            case "enable", "e" -> setExplosionPermission(sender, p, true);
+            case "disable", "d" -> setExplosionPermission(sender, p, false);
+            case "setting", "s" -> sendExplosionSetting(sender, p);
             default -> {
                 return invalidSyntax(sender);
             }
         }
         return true;
+    }
+
+    private void setExplosionPermission(CommandSender sender, Player p, boolean enabled) {
+        plugin.getPlatform()
+                .runOnEntity(
+                        p,
+                        () -> {
+                            p.addAttachment(plugin).setPermission("silkspawners.explosion", enabled);
+                            sendMessage(sender, settingName(enabled), p.getName());
+                        },
+                        () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+    }
+
+    private void sendExplosionSetting(CommandSender sender, Player p) {
+        plugin.getPlatform()
+                .runOnEntity(
+                        p,
+                        () -> {
+                            boolean enabled = p.hasPermission("silkspawners.explosion");
+                            sendMessage(sender, "SETTING_" + settingName(enabled), p.getName());
+                        },
+                        () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+    }
+
+    private String settingName(boolean enabled) {
+        return enabled ? "ENABLED" : "DISABLED";
     }
 }

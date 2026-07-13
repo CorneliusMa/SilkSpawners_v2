@@ -28,10 +28,9 @@ public class ConfigLoader {
     private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            Bukkit.getLogger()
-                    .log(
-                            Level.INFO,
-                            "[SilkSpawners] No config file was found. The config will be generated with the default configuration");
+            log(
+                    Level.INFO,
+                    "No config file was found. The config will be generated with the default" + " configuration");
             return CONFIG_VERSION;
         }
 
@@ -39,25 +38,21 @@ public class ConfigLoader {
         if (currentVersion == 0) currentVersion = 1;
         if (CONFIG_VERSION > currentVersion) {
             config.set("update.configVersion", CONFIG_VERSION);
-            Bukkit.getLogger()
-                    .log(
-                            Level.WARNING,
-                            "[SilkSpawners] Configuration file in version " + currentVersion
-                                    + " is automatically converted to the latest version " + CONFIG_VERSION);
+            log(Level.WARNING, conversionMessage(currentVersion));
         } else {
-            Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Configuration is up to date");
+            log(Level.INFO, "Configuration is up to date");
         }
 
         return currentVersion;
     }
 
     private void load() {
-        Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Loading configuration...");
+        log(Level.INFO, "Loading configuration...");
         loaded = apply(true);
     }
 
     public boolean reload() {
-        Bukkit.getLogger().log(Level.INFO, "[SilkSpawners] Reloading configuration...");
+        log(Level.INFO, "Reloading configuration...");
         plugin.reloadConfig();
         return apply(false);
     }
@@ -80,9 +75,7 @@ public class ConfigLoader {
             try {
                 values.put(value, new ConfigValue<>(value).load());
             } catch (Exception ex) {
-                plugin.getLogger()
-                        .severe("Invalid configuration value: " + value.getPath() + ": "
-                                + config.getString(value.getPath()) + " (" + ex.getMessage() + ")");
+                plugin.getLogger().severe(invalidValueMessage(value, config, ex));
                 valid = false;
             }
         }
@@ -93,5 +86,26 @@ public class ConfigLoader {
             plugin.getPluginLoader().disablePlugin(plugin);
         }
         return valid;
+    }
+
+    private void log(Level level, String message) {
+        Bukkit.getLogger().log(level, "[SilkSpawners] " + message);
+    }
+
+    private String conversionMessage(int currentVersion) {
+        return "Configuration file in version "
+                + currentVersion
+                + " is automatically converted to the latest version "
+                + CONFIG_VERSION;
+    }
+
+    private String invalidValueMessage(PluginConfig value, FileConfiguration config, Exception ex) {
+        return "Invalid configuration value: "
+                + value.getPath()
+                + ": "
+                + config.getString(value.getPath())
+                + " ("
+                + ex.getMessage()
+                + ")";
     }
 }

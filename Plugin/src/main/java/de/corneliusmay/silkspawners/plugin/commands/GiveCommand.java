@@ -67,36 +67,7 @@ public class GiveCommand extends SilkSpawnersCommand {
         plugin.getPlatform()
                 .runOnEntity(
                         p,
-                        () -> {
-                            SpawnerGiveEvent event = new SpawnerGiveEvent(sender, p, spawner, requestedAmount);
-                            Bukkit.getPluginManager().callEvent(event);
-                            if (event.isCancelled()) return;
-
-                            ItemStack item = spawner.getItemStack();
-                            item.setAmount(event.getAmount());
-                            int finalAmount = event.getAmount();
-                            String trailingLetter = finalAmount > 1 ? "s" : "";
-                            p.getInventory().addItem(item);
-                            if (p != sender) {
-                                sendMessage(
-                                        sender,
-                                        "SUCCESS",
-                                        finalAmount,
-                                        spawner.serializedName(),
-                                        trailingLetter,
-                                        p.getName());
-                                sendMessage(
-                                        p,
-                                        "SUCCESS_TARGET",
-                                        finalAmount,
-                                        spawner.serializedName(),
-                                        trailingLetter,
-                                        sender.getName());
-                            } else {
-                                sendMessage(
-                                        sender, "SUCCESS_SELF", finalAmount, spawner.serializedName(), trailingLetter);
-                            }
-                        },
+                        () -> giveSpawner(sender, p, spawner, requestedAmount),
                         () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
         return true;
     }
@@ -106,6 +77,24 @@ public class GiveCommand extends SilkSpawnersCommand {
             return Integer.parseInt(amount);
         } catch (NumberFormatException ex) {
             return -1;
+        }
+    }
+
+    private void giveSpawner(CommandSender sender, Player p, Spawner spawner, int requestedAmount) {
+        SpawnerGiveEvent event = new SpawnerGiveEvent(sender, p, spawner, requestedAmount);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
+
+        ItemStack item = spawner.getItemStack();
+        item.setAmount(event.getAmount());
+        int amount = event.getAmount();
+        String trailingLetter = amount > 1 ? "s" : "";
+        p.getInventory().addItem(item);
+        if (p != sender) {
+            sendMessage(sender, "SUCCESS", amount, spawner.serializedName(), trailingLetter, p.getName());
+            sendMessage(p, "SUCCESS_TARGET", amount, spawner.serializedName(), trailingLetter, sender.getName());
+        } else {
+            sendMessage(sender, "SUCCESS_SELF", amount, spawner.serializedName(), trailingLetter);
         }
     }
 }

@@ -31,14 +31,11 @@ public class LocaleCommand extends SilkSpawnersCommand {
                             sendMessage(sender, "RELOAD_ERROR");
                         }
                     }
-                    case "setting" ->
+                    case "setting" -> {
+                        String locale = configuredLocale();
                         sendMessage(
-                                sender,
-                                "SETTING",
-                                new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE)
-                                        .get()
-                                        .toString(),
-                                plugin.getLocale().getAvailableLocales());
+                                sender, "SETTING", locale, plugin.getLocale().getAvailableLocales());
+                    }
                     case "update" -> sendMessage(sender, "UPDATE_WARNING");
                     default -> invalidSyntax(sender);
                 }
@@ -57,5 +54,9 @@ public class LocaleCommand extends SilkSpawnersCommand {
             default -> invalidSyntax(sender);
         }
         return true;
+    }
+
+    private String configuredLocale() {
+        return new ConfigValue<Locale>(PluginConfig.MESSAGE_LOCALE).get().toString();
     }
 }
