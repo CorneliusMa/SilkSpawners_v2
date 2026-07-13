@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
@@ -17,13 +15,8 @@ public class ConfigLoader {
 
     private final Plugin plugin;
 
-    @Getter
-    private boolean loaded;
-
     public ConfigLoader(Plugin plugin) {
         this.plugin = plugin;
-        this.loaded = false;
-        this.load();
     }
 
     private int getConfigVersion(FileConfiguration config) {
@@ -47,9 +40,9 @@ public class ConfigLoader {
         return currentVersion;
     }
 
-    private void load() {
+    public boolean load() {
         log(Level.INFO, "Loading configuration...");
-        loaded = apply(true);
+        return apply(true);
     }
 
     public boolean reload() {
@@ -84,7 +77,7 @@ public class ConfigLoader {
         if (valid) ConfigRegistry.commit(values);
         else if (initialLoad) {
             plugin.getLogger().severe("Disabling plugin due to invalid configuration value");
-            plugin.getPluginLoader().disablePlugin(plugin);
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
         }
         return valid;
     }
@@ -136,7 +129,7 @@ public class ConfigLoader {
     }
 
     private void log(Level level, String message) {
-        Bukkit.getLogger().log(level, "[SilkSpawners] " + message);
+        plugin.getLogger().log(level, message);
     }
 
     private String conversionMessage(int currentVersion) {

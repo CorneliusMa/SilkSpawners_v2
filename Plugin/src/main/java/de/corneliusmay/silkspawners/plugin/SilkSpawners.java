@@ -43,7 +43,7 @@ public class SilkSpawners extends JavaPlugin {
     @Override
     public void onEnable() {
         configLoader = new ConfigLoader(this);
-        if (!configLoader.isLoaded()) return;
+        if (!configLoader.load()) return;
 
         log = new Logger();
 
@@ -64,7 +64,7 @@ public class SilkSpawners extends JavaPlugin {
 
         log.info("Loading locale file");
         locale = new LocaleHandler(this);
-        if (locale.getResourceBundle() == null) return;
+        if (!locale.load()) return;
 
         log.info("Starting bStats integration");
         new Metrics(this, 15215);

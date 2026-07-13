@@ -23,7 +23,7 @@ public class CrossVersionHandler {
     private boolean disablePlugin(String message) {
         plugin.getLog().error(message);
         plugin.getLog().warn("Disabling plugin due to version incompatibility");
-        plugin.getPluginLoader().disablePlugin(plugin);
+        plugin.getServer().getPluginManager().disablePlugin(plugin);
         return false;
     }
 

@@ -31,15 +31,19 @@ public class LocaleHandler {
     public LocaleHandler(SilkSpawners plugin) {
         this.plugin = plugin;
         this.localePath = new File(plugin.getDataFolder() + "/locale");
+    }
 
+    public boolean load() {
         try {
             copyDefaultLocales(false);
             loadLocale();
+            return true;
         } catch (MissingResourceException | URISyntaxException | IOException ex) {
             plugin.getLog().error("Error loading locale file", ex);
             plugin.getLog().warn("Disabling plugin due to missing locale file");
             plugin.getLog().info("Available locales: " + getAvailableLocales());
-            plugin.getPluginLoader().disablePlugin(plugin);
+            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            return false;
         }
     }
 
