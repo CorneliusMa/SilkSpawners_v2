@@ -28,14 +28,21 @@ public class CrossVersionHandler {
     }
 
     public boolean load() {
-        String bukkitVersion = getBukkitVersion();
+        MinecraftVersion version;
+        try {
+            version = MinecraftVersion.parse(org.bukkit.Bukkit.getBukkitVersion());
+        } catch (IllegalArgumentException ex) {
+            return disablePlugin("Could not detect the server version (" + org.bukkit.Bukkit.getBukkitVersion() + ")");
+        }
+
+        String bukkitVersion = getBukkitVersion(version);
         if (bukkitVersion == null) {
-            return disablePlugin("The detected Server Version (" + MinecraftVersion.getVersion()
+            return disablePlugin("The detected Server Version (" + version.getVersion()
                     + ") is too old for the currently installed version of SilkSpawners");
         }
 
         this.bukkitHandler = loader.instantiate(bukkitVersion + ".BukkitHandler");
-        plugin.getLog().info("Loaded support for version " + MinecraftVersion.getVersion());
+        plugin.getLog().info("Loaded support for version " + version.getVersion());
         return true;
     }
 }
