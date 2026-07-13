@@ -43,7 +43,7 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
         }
 
         SpawnerPlaceEvent event =
-                new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation(), type -> new Spawner(plugin, type));
+                new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation(), type -> Spawner.snapshot(plugin, type));
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {

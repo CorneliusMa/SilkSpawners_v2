@@ -37,11 +37,13 @@ public class SetCommand extends SilkSpawnersCommand {
             }
         }
 
-        Spawner newSpawner = new Spawner(plugin, entityType);
-        if (!newSpawner.isValid()) {
+        Optional<Spawner> requestedSpawner = Spawner.ofType(plugin, entityType);
+        if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
         }
+
+        Spawner newSpawner = requestedSpawner.get();
 
         if (!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {
@@ -64,7 +66,7 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         SpawnerChangeEvent event = new SpawnerChangeEvent(
-                player, spawner, block.getLocation(), newSpawner, type -> new Spawner(plugin, type));
+                player, spawner, block.getLocation(), newSpawner, type -> Spawner.snapshot(plugin, type));
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 

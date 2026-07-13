@@ -58,7 +58,18 @@ public class Spawner implements SpawnerSnapshot {
     }
 
     public static Spawner of(SilkSpawners plugin, SpawnerSnapshot snapshot) {
-        return snapshot instanceof Spawner spawner ? spawner : new Spawner(plugin, snapshot);
+        return snapshot instanceof Spawner spawner ? spawner : snapshot(plugin, snapshot.getEntityType());
+    }
+
+    public static Spawner snapshot(SilkSpawners plugin, EntityType entityType) {
+        // Events reject non-spawnable entity types before requesting a snapshot
+        return ofType(plugin, entityType)
+                .orElseThrow(() -> new IllegalArgumentException("Entity type " + entityType + " is not spawnable"));
+    }
+
+    public static Optional<Spawner> ofType(SilkSpawners plugin, EntityType entityType) {
+        Spawner spawner = new Spawner(plugin, entityType);
+        return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
     }
 
     public static Optional<Spawner> fromBlock(SilkSpawners plugin, Block block) {

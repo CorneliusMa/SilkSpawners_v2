@@ -67,7 +67,7 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         }
 
         SpawnerChangeEvent event = new SpawnerChangeEvent(
-                e.getPlayer(), spawner, blockLocation, newSpawner, type -> new Spawner(plugin, type));
+                e.getPlayer(), spawner, blockLocation, newSpawner, type -> Spawner.snapshot(plugin, type));
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
