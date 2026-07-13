@@ -47,25 +47,26 @@ public class LocaleHandler {
     public synchronized void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
         Path target = Paths.get(plugin.getDataFolder() + "/locale");
         URI resource = getClass().getResource("").toURI();
-        FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap());
-        final Path jarPath = fileSystem.getPath("/locales");
+        try (FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap())) {
+            final Path jarPath = fileSystem.getPath("/locales");
 
-        Files.walkFileTree(jarPath, new SimpleFileVisitor<>() {
-            @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                Files.createDirectories(target.resolve(jarPath.relativize(dir).toString()));
-                return FileVisitResult.CONTINUE;
-            }
+            Files.walkFileTree(jarPath, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    Files.createDirectories(
+                            target.resolve(jarPath.relativize(dir).toString()));
+                    return FileVisitResult.CONTINUE;
+                }
 
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Path targetFile = target.resolve(jarPath.relativize(file).toString());
-                if (overwrite) Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
-                else if (Files.notExists(targetFile)) Files.copy(file, targetFile);
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        fileSystem.close();
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Path targetFile = target.resolve(jarPath.relativize(file).toString());
+                    if (overwrite) Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                    else if (Files.notExists(targetFile)) Files.copy(file, targetFile);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
     }
 
     public synchronized void loadLocale() throws MalformedURLException {
