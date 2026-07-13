@@ -1,0 +1,16 @@
+#!/bin/sh
+# Formats staged Java files with Spotless and re-stages them.
+# Activate with: git config core.hooksPath .githooks
+
+staged_java=$(git diff --cached --name-only --diff-filter=ACMR -- '*.java')
+[ -n "$staged_java" ] || exit 0
+
+echo "pre-commit: formatting staged Java files with Spotless..."
+./gradlew spotlessApply --quiet || {
+    echo "pre-commit: spotlessApply failed, aborting commit" >&2
+    exit 1
+}
+
+printf '%s\n' "$staged_java" | while IFS= read -r file; do
+    git add -- "$file"
+done
