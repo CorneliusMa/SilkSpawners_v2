@@ -21,7 +21,6 @@ public class VersionChecker {
             URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest");
 
     private final SilkSpawners plugin;
-    private final HttpClient client;
 
     @Getter
     private volatile String latestVersion;
@@ -30,9 +29,10 @@ public class VersionChecker {
 
     private Integer runningInterval;
 
+    private HttpClient client;
+
     public VersionChecker(SilkSpawners plugin) {
         this.plugin = plugin;
-        client = HttpClient.newHttpClient();
     }
 
     public synchronized void start() {
@@ -89,6 +89,7 @@ public class VersionChecker {
             Pattern pattern = Pattern.compile("\"tag_name\":\"v([0-9\\.]+)\"");
             HttpRequest request =
                     HttpRequest.newBuilder().uri(LATEST_RELEASE_URI).GET().build();
+            if (client == null) client = HttpClient.newHttpClient();
             String latestVersionData =
                     client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             Matcher matcher = pattern.matcher(latestVersionData);
