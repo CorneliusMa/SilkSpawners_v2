@@ -109,8 +109,9 @@ public class VersionChecker {
         Integer[] installedVersion = castVersionString(getInstalledVersion());
         Integer[] latestVersion = castVersionString(currentLatestVersion);
         for (int i = 0; i < latestVersion.length; i++) {
-            if (i >= installedVersion.length) return true;
-            if (latestVersion[i] > installedVersion[i]) return false;
+            int installed = i < installedVersion.length ? installedVersion[i] : 0;
+            if (latestVersion[i] > installed) return false;
+            if (latestVersion[i] < installed) return true;
         }
         return true;
     }
