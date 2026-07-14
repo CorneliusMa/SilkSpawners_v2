@@ -23,9 +23,7 @@ public class ConfigLoader implements Loader {
     private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            log(
-                    Level.INFO,
-                    "No config file was found. The config will be generated with the default" + " configuration");
+            log(Level.INFO, "No config file was found. The config will be generated with the default configuration");
             return CONFIG_VERSION;
         }
 
