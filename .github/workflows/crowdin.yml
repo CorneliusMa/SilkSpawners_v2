@@ -5,12 +5,24 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
+permissions: {}
+
 jobs:
   translate:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v3.2.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.CROWDIN_APP_ID }}
+          private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v6.0.3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+
       - uses: crowdin/github-action@v2
+        id: crowdin
         with:
           translation: "Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
           source: "Plugin/src/main/resources/locales/messages_en.properties"
@@ -18,13 +30,26 @@ jobs:
           upload_translations: false
           download_sources: false
           download_translations: true
-          create_pull_request: false
+          create_pull_request: true
           commit_message: "chore(locales): new crowdin translations"
-          localization_branch_name: master
+          pull_request_title: "chore(locales): new crowdin translations"
+          pull_request_body: "Automated translation sync from Crowdin"
+          pull_request_base_branch_name: master
+          pull_request_labels: "crowdin"
+          localization_branch_name: l10n_crowdin_translations
           push_translations: true
           export_only_approved: true
           skip_untranslated_files: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Enable auto-merge
+        if: steps.crowdin.outputs.pull_request_url != ''
+        run: |
+          gh pr edit "$PR_URL" --add-label "automerge"
+          gh pr merge --auto --squash "$PR_URL"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_URL: ${{ steps.crowdin.outputs.pull_request_url }}
