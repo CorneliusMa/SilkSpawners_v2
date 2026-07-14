@@ -11,6 +11,7 @@ import de.corneliusmay.silkspawners.plugin.listeners.BlockPlaceListener;
 import de.corneliusmay.silkspawners.plugin.listeners.PlayerInteractListener;
 import de.corneliusmay.silkspawners.plugin.listeners.SpawnerBreakListener;
 import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersEventHandler;
+import de.corneliusmay.silkspawners.plugin.loader.PluginLoader;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerLoader;
@@ -26,68 +27,61 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 
-@Getter
 public class SilkSpawners extends JavaPlugin {
 
+    @Getter
     private Logger log;
 
-    private ServerPlatform platform;
-
-    private Bukkit bukkitHandler;
-
-    private LocaleHandler locale;
-
+    @Getter
     private VersionChecker versionChecker;
 
-    private ConfigLoader configLoader;
+    private PluginLoader loader;
 
     @Override
     public void onEnable() {
-        configLoader = new ConfigLoader(this);
-        if (!configLoader.load()) return;
-
         log = new Logger();
+        loader = new PluginLoader(this);
 
+        ConfigLoader config = new ConfigLoader(this);
+        PlatformLoader platformLoader = new PlatformLoader(this);
+        CrossVersionHandler versionHandler = new CrossVersionHandler(this);
+        if (!loader.load(
+                config,
+                platformLoader,
+                versionHandler,
+                new SpawnerLoader(versionHandler, platformLoader),
+                new LocaleHandler(this))) return;
+
+        registerListeners();
+        registerCommands();
+        registerApiService();
+        registerHooks();
+        startOptional(this::startVersionChecker);
+        startOptional(this::startMetrics);
+
+        log.info("Enabled SilkSpawners v" + versionChecker.getInstalledVersion());
+    }
+
+    private void startOptional(Runnable step) {
+        try {
+            step.run();
+        } catch (RuntimeException ex) {
+            log.error("An optional startup step threw and was skipped", ex);
+        }
+    }
+
+    private void startVersionChecker() {
         versionChecker = new VersionChecker(this);
         versionChecker.start();
+    }
 
-        log.info("Starting SilkSpawners v" + versionChecker.getInstalledVersion());
-
-        log.info("Loading server platform");
-        PlatformLoader platformLoader = new PlatformLoader(this);
-        platformLoader.load();
-        platform = platformLoader.getServerPlatform();
-
-        log.info("Loading Cross-Version support");
-        CrossVersionHandler versionHandler = new CrossVersionHandler(this);
-        if (!versionHandler.load()) return;
-        bukkitHandler = versionHandler.getBukkitHandler();
-
-        new SpawnerLoader(this).load();
-
-        log.info("Loading locale file");
-        locale = new LocaleHandler(this);
-        if (!locale.load()) return;
-
+    private void startMetrics() {
         log.info("Starting bStats integration");
         new Metrics(this, 15215);
-
-        log.info("Registering listeners");
-        registerListeners();
-
-        log.info("Registering commands");
-        registerCommands();
-
-        log.info("Registering API service");
-        new SilkSpawnersService(this).register();
-
-        log.info("Registering hooks");
-        registerHooks();
-
-        log.info("Started SilkSpawners v" + versionChecker.getInstalledVersion());
     }
 
     private void registerListeners() {
+        log.info("Registering listeners");
         Set<Location> editedSpawners = ConcurrentHashMap.newKeySet();
         SilkSpawnersEventHandler eventHandler = new SilkSpawnersEventHandler(this);
         eventHandler.registerListener(new PlayerInteractListener(editedSpawners));
@@ -96,13 +90,8 @@ public class SilkSpawners extends JavaPlugin {
         eventHandler.registerListener(new SpawnerBreakListener());
     }
 
-    private void registerHooks() {
-        HookLoader hookLoader = new HookLoader(this);
-        hookLoader.addHook("shopguiplus.ShopGUIPlusHook", "ShopGUIPlus", PluginConfig.HOOK_SHOPGUIPLUS);
-        hookLoader.register();
-    }
-
     private void registerCommands() {
+        log.info("Registering commands");
         SilkSpawnersCommandHandler commandHandler = new SilkSpawnersCommandHandler(this, "silkspawners");
         commandHandler.addCommand(new GiveCommand());
         commandHandler.addCommand(new SetCommand());
@@ -114,8 +103,20 @@ public class SilkSpawners extends JavaPlugin {
         commandHandler.register();
     }
 
+    private void registerApiService() {
+        log.info("Registering API service");
+        new SilkSpawnersService(this).register();
+    }
+
+    private void registerHooks() {
+        log.info("Registering hooks");
+        HookLoader hookLoader = new HookLoader(this);
+        hookLoader.addHook("shopguiplus.ShopGUIPlusHook", "ShopGUIPlus", PluginConfig.HOOK_SHOPGUIPLUS);
+        hookLoader.register();
+    }
+
     public synchronized boolean reloadConfiguration() {
-        if (!configLoader.reload()) return false;
+        if (!loader.get(ConfigLoader.class).reload()) return false;
         versionChecker.restart();
         return true;
     }
@@ -125,5 +126,17 @@ public class SilkSpawners extends JavaPlugin {
         if (versionChecker == null) return;
         log.info("Stopping version checker");
         versionChecker.stop();
+    }
+
+    public ServerPlatform getPlatform() {
+        return loader.get(PlatformLoader.class).getServerPlatform();
+    }
+
+    public Bukkit getBukkitHandler() {
+        return loader.get(CrossVersionHandler.class).getBukkitHandler();
+    }
+
+    public LocaleHandler getLocale() {
+        return loader.get(LocaleHandler.class);
     }
 }

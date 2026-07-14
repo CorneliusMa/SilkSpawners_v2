@@ -1,16 +1,23 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.loader.Loader;
+import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
+import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 
-public class SpawnerLoader {
+public class SpawnerLoader implements Loader {
 
-    private final SilkSpawners plugin;
+    private final CrossVersionHandler versionHandler;
 
-    public SpawnerLoader(SilkSpawners plugin) {
-        this.plugin = plugin;
+    private final PlatformLoader platformLoader;
+
+    public SpawnerLoader(CrossVersionHandler versionHandler, PlatformLoader platformLoader) {
+        this.versionHandler = versionHandler;
+        this.platformLoader = platformLoader;
     }
 
-    public void load() {
-        SpawnerContext.commit(plugin.getBukkitHandler(), plugin.getPlatform());
+    @Override
+    public boolean load() {
+        SpawnerContext.commit(versionHandler.getBukkitHandler(), platformLoader.getServerPlatform());
+        return true;
     }
 }

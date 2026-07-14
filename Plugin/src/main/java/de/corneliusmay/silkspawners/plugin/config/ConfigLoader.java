@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.config;
 import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
+import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
-public class ConfigLoader {
+public class ConfigLoader implements Loader {
 
     private final Plugin plugin;
 
@@ -40,18 +41,21 @@ public class ConfigLoader {
         return currentVersion;
     }
 
+    @Override
     public boolean load() {
         log(Level.INFO, "Loading configuration...");
-        return apply(true);
+        if (apply()) return true;
+        log(Level.SEVERE, "Disabling plugin due to invalid configuration value");
+        return false;
     }
 
     public boolean reload() {
         log(Level.INFO, "Reloading configuration...");
         plugin.reloadConfig();
-        return apply(false);
+        return apply();
     }
 
-    private boolean apply(boolean initialLoad) {
+    private boolean apply() {
         FileConfiguration config = plugin.getConfig();
 
         int configVersion = getConfigVersion(config);
@@ -75,10 +79,6 @@ public class ConfigLoader {
         }
 
         if (valid) ConfigRegistry.commit(values);
-        else if (initialLoad) {
-            plugin.getLogger().severe("Disabling plugin due to invalid configuration value");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
-        }
         return valid;
     }
 
