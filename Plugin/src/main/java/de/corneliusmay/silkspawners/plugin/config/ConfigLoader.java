@@ -9,16 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+@RequiredArgsConstructor
 public class ConfigLoader implements Loader {
 
     private final Plugin plugin;
-
-    public ConfigLoader(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");

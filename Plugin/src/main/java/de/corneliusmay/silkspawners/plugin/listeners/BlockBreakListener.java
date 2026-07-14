@@ -4,36 +4,48 @@ import de.corneliusmay.silkspawners.api.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.api.events.SpawnerDropEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
-import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
+@RequiredArgsConstructor
+public class BlockBreakListener implements Listener {
 
-    @Override
+    private final SpawnerFactory spawnerFactory;
+
+    private final SilkDropCheck silkDropCheck;
+
+    private final LocaleHandler locale;
+
+    private final ServerPlatform platform;
+
     @EventHandler(priority = EventPriority.HIGHEST)
-    protected void onCall(BlockBreakEvent e) {
+    public void onCall(BlockBreakEvent e) {
         if (e.isCancelled()) return;
 
-        Spawner.fromBlock(e.getBlock()).ifPresent(spawner -> handleSpawnerBreak(e, spawner));
+        spawnerFactory.fromBlock(e.getBlock()).ifPresent(spawner -> handleSpawnerBreak(e, spawner));
     }
 
     private void handleSpawnerBreak(BlockBreakEvent e, Spawner spawner) {
         Player p = e.getPlayer();
-        if (!new SilkDropCheck(plugin).canSilkDrop(p, spawner)) {
+        if (!silkDropCheck.canSilkDrop(p, spawner)) {
             destroySpawner(p, e, spawner);
             return;
         }
 
         int dropChance = PluginConfig.SPAWNER_DROP_CHANCE.get();
         SpawnerDropEvent dropEvent = new SpawnerDropEvent(
-                p, spawner, e.getBlock().getLocation(), spawner.getItemStack(), dropChance, Spawner::snapshot);
+                p, spawner, e.getBlock().getLocation(), spawner.getItemStack(), dropChance, spawnerFactory::snapshot);
         Bukkit.getPluginManager().callEvent(dropEvent);
 
         if (dropEvent.isCancelled()) return;
@@ -43,7 +55,8 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
             return;
         }
 
-        SpawnerBreakEvent event = new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), Spawner::snapshot);
+        SpawnerBreakEvent event =
+                new SpawnerBreakEvent(p, spawner, e.getBlock().getLocation(), spawnerFactory::snapshot);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
@@ -57,7 +70,7 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
                 ? event.getSpawner().getItemStack()
                 : dropEvent.getDrop();
         if (new Explosion(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).applies(p)) {
-            plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> dropItem(e, spawnerItem), 2);
+            platform.runTaskLater(e.getBlock().getLocation(), () -> dropItem(e, spawnerItem), 2);
         } else {
             p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
         }
@@ -67,13 +80,13 @@ public class BlockBreakListener extends SilkSpawnersListener<BlockBreakEvent> {
         if (!PluginConfig.SPAWNER_DESTROYABLE.get()) {
             e.setCancelled(true);
             if (PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY.get())
-                p.sendMessage(plugin.getLocale().getMessage("SPAWNER_DESTROY_DENIED"));
+                p.sendMessage(locale.getMessage("SPAWNER_DESTROY_DENIED"));
             return;
         }
 
         Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_NORMAL);
         if (!explosion.applies(p)) return;
-        plugin.getPlatform().runTaskLater(e.getBlock().getLocation(), () -> runExplosion(explosion, p, e, spawner), 1);
+        platform.runTaskLater(e.getBlock().getLocation(), () -> runExplosion(explosion, p, e, spawner), 1);
     }
 
     private void dropItem(BlockBreakEvent e, ItemStack spawnerItem) {

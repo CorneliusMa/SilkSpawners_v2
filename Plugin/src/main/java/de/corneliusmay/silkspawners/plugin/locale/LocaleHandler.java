@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.locale;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
@@ -25,13 +26,17 @@ public class LocaleHandler implements Loader {
 
     private final SilkSpawners plugin;
 
+    // Only exists to make the config load before the locale
+    private final ConfigLoader config;
+
     private final File localePath;
 
     @Getter
     private volatile ResourceBundle resourceBundle;
 
-    public LocaleHandler(SilkSpawners plugin) {
+    public LocaleHandler(SilkSpawners plugin, ConfigLoader config) {
         this.plugin = plugin;
+        this.config = config;
         this.localePath = new File(plugin.getDataFolder() + "/locale");
     }
 

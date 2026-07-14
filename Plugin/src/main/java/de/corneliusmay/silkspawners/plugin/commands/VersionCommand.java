@@ -2,12 +2,16 @@ package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import org.bukkit.command.CommandSender;
 
 public class VersionCommand extends SilkSpawnersCommand {
 
-    public VersionCommand() {
+    private final VersionChecker versionChecker;
+
+    public VersionCommand(VersionChecker versionChecker) {
         super("version", true);
+        this.versionChecker = versionChecker;
     }
 
     @Override
@@ -15,14 +19,13 @@ public class VersionCommand extends SilkSpawnersCommand {
         if (args.length != 0) return invalidSyntax(sender);
 
         if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) {
-            sendMessage(sender, "ERROR", plugin.getVersionChecker().getInstalledVersion());
+            sendMessage(sender, "ERROR", versionChecker.getInstalledVersion());
             return false;
         }
 
-        String latestVersion = plugin.getVersionChecker().getLatestVersion();
-        if (plugin.getVersionChecker().check(latestVersion))
-            sendMessage(sender, "INFO", plugin.getVersionChecker().getInstalledVersion());
-        else sendMessage(sender, "UPDATE_AVAILABLE", plugin.getVersionChecker().getInstalledVersion(), latestVersion);
+        String latestVersion = versionChecker.getLatestVersion();
+        if (versionChecker.check(latestVersion)) sendMessage(sender, "INFO", versionChecker.getInstalledVersion());
+        else sendMessage(sender, "UPDATE_AVAILABLE", versionChecker.getInstalledVersion(), latestVersion);
         return true;
     }
 }

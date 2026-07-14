@@ -5,9 +5,10 @@ import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@RequiredArgsConstructor
 public class PlatformLoader implements Loader {
 
     private final SilkSpawners plugin;
@@ -15,11 +16,10 @@ public class PlatformLoader implements Loader {
     private final ComponentLoader<ServerPlatform> loader =
             new ComponentLoader<>(ServerPlatform.class, "platform", JavaPlugin.class);
 
-    @Getter
     private ServerPlatform serverPlatform;
 
-    public PlatformLoader(SilkSpawners plugin) {
-        this.plugin = plugin;
+    public ServerPlatform getServerPlatform() {
+        return serverPlatform;
     }
 
     @Override

@@ -6,14 +6,16 @@ import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
-import lombok.Getter;
 
 public class CrossVersionHandler implements Loader {
 
     private final ComponentLoader<Bukkit> loader = new ComponentLoader<>(Bukkit.class, "bukkit");
 
-    @Getter
     private Bukkit bukkitHandler;
+
+    public Bukkit getBukkitHandler() {
+        return bukkitHandler;
+    }
 
     private boolean fail(String message) {
         Logger.error(message);

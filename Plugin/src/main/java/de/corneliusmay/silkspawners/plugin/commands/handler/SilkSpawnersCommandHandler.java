@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,42 +17,34 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private final SilkSpawners plugin;
 
+    private final LocaleHandler locale;
+
     @Getter(AccessLevel.PACKAGE)
     private final String mainCommand;
 
     private final SilkSpawnersCommand helpCommand;
 
-    private SilkSpawnersCommand defaultCommand;
-
     private final List<SilkSpawnersCommand> commands;
 
     private final SilkSpawnersTabCompleter tabCompleter;
 
-    public SilkSpawnersCommandHandler(SilkSpawners plugin, String command) {
+    public SilkSpawnersCommandHandler(SilkSpawners plugin, LocaleHandler locale, String command) {
         this.plugin = plugin;
+        this.locale = locale;
         this.mainCommand = command;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
         this.helpCommand = addHelpCommand();
     }
 
-    public SilkSpawnersCommandHandler(SilkSpawners plugin, String command, SilkSpawnersCommand defaultCommand) {
-        this(plugin, command);
-        this.defaultCommand = addDefaultCommand(defaultCommand);
-    }
-
     @Override
     public boolean onCommand(CommandSender commandSender, Command c, String s, String[] args) {
-        if (args.length < 1) {
-            if (defaultCommand == null || !defaultCommand.hasPermission(commandSender))
-                return helpCommand.execute(commandSender, new String[0]);
-            else return defaultCommand.execute(commandSender, new String[0]);
-        }
+        if (args.length < 1) return helpCommand.execute(commandSender, new String[0]);
 
         SilkSpawnersCommand command = getCommand(args[0]);
         if (command == null) {
             commandSender.sendMessage(
-                    plugin.getLocale().getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
+                    locale.getMessage("COMMAND_NOT_FOUND", getAvailableCommandsString(commandSender)));
             return false;
         }
 
@@ -63,7 +56,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     public void addCommand(SilkSpawnersCommand command) {
         if (getCommand(command.getCommand()) != null) return;
         command.setCommandHandler(this);
-        command.setPlugin(plugin);
+        command.setLocale(locale);
         commands.add(command);
     }
 
@@ -71,11 +64,6 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         HelpCommand help = new HelpCommand(this);
         addCommand(help);
         return help;
-    }
-
-    private SilkSpawnersCommand addDefaultCommand(SilkSpawnersCommand command) {
-        addCommand(command);
-        return command;
     }
 
     public void register() {

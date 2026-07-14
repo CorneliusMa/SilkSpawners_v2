@@ -1,7 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
 import com.google.common.base.Preconditions;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import java.io.IOException;
@@ -15,13 +14,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class VersionChecker {
 
     private static final URI LATEST_RELEASE_URI =
             URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest");
 
-    private final SilkSpawners plugin;
+    @Getter
+    private final String installedVersion;
 
     @Getter
     private volatile String latestVersion;
@@ -31,10 +33,6 @@ public class VersionChecker {
     private Integer runningInterval;
 
     private HttpClient client;
-
-    public VersionChecker(SilkSpawners plugin) {
-        this.plugin = plugin;
-    }
 
     public synchronized void start() {
         Integer interval = configuredInterval();
@@ -114,10 +112,6 @@ public class VersionChecker {
             if (latestVersion[i] < installed) return true;
         }
         return true;
-    }
-
-    public String getInstalledVersion() {
-        return plugin.getDescription().getVersion();
     }
 
     private Integer[] castVersionString(String version) {

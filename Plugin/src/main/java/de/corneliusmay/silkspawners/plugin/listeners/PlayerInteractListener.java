@@ -2,34 +2,40 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import java.util.Optional;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractEvent> {
+@RequiredArgsConstructor
+public class PlayerInteractListener implements Listener {
+
+    private final SpawnerFactory spawnerFactory;
+
+    private final LocaleHandler locale;
+
+    private final ServerPlatform platform;
 
     private final Set<Location> editedSpawners;
 
-    public PlayerInteractListener(Set<Location> editedSpawners) {
-        this.editedSpawners = editedSpawners;
-    }
-
-    @Override
     @EventHandler(priority = EventPriority.HIGHEST)
-    protected void onCall(PlayerInteractEvent e) {
+    public void onCall(PlayerInteractEvent e) {
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = e.getClickedBlock();
 
-        Spawner.fromBlock(block).ifPresent(spawner -> handleSpawnerInteract(e, block, spawner));
+        spawnerFactory.fromBlock(block).ifPresent(spawner -> handleSpawnerInteract(e, block, spawner));
     }
 
     private void handleSpawnerInteract(PlayerInteractEvent e, Block block, Spawner spawner) {
@@ -39,13 +45,12 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
             return;
         }
 
-        this.plugin
-                .getPlatform()
-                .runTaskLater(blockLocation, () -> handleSpawnerChange(e, block, blockLocation, spawner), 1);
+        platform.runTaskLater(blockLocation, () -> handleSpawnerChange(e, block, blockLocation, spawner), 1);
     }
 
     private void handleSpawnerChange(PlayerInteractEvent e, Block block, Location blockLocation, Spawner spawner) {
-        Optional<Spawner> changedSpawner = Spawner.fromBlock(block.getWorld().getBlockAt(blockLocation));
+        Optional<Spawner> changedSpawner =
+                spawnerFactory.fromBlock(block.getWorld().getBlockAt(blockLocation));
         if (changedSpawner.isEmpty()) {
             editedSpawners.remove(blockLocation);
             return;
@@ -59,23 +64,23 @@ public class PlayerInteractListener extends SilkSpawnersListener<PlayerInteractE
         }
 
         if (!canChangeSpawner(e.getPlayer(), newSpawner)) {
-            spawner.setSpawnerBlockType(block, this.editedSpawners);
+            spawnerFactory.applyToBlock(spawner, block, this.editedSpawners);
             if (PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE.get())
-                e.getPlayer().sendMessage(plugin.getLocale().getMessage("SPAWNER_CHANGE_DENIED"));
+                e.getPlayer().sendMessage(locale.getMessage("SPAWNER_CHANGE_DENIED"));
             return;
         }
 
         SpawnerChangeEvent event =
-                new SpawnerChangeEvent(e.getPlayer(), spawner, blockLocation, newSpawner, Spawner::snapshot);
+                new SpawnerChangeEvent(e.getPlayer(), spawner, blockLocation, newSpawner, spawnerFactory::snapshot);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
-            spawner.setSpawnerBlockType(block, this.editedSpawners);
+            spawnerFactory.applyToBlock(spawner, block, this.editedSpawners);
             return;
         }
 
         if (event.getNewSpawner() != newSpawner) {
-            Spawner.of(event.getNewSpawner()).setSpawnerBlockType(block, this.editedSpawners);
+            spawnerFactory.applyToBlock(spawnerFactory.of(event.getNewSpawner()), block, this.editedSpawners);
             return;
         }
 
