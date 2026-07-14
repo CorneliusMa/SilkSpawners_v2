@@ -30,21 +30,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class SilkSpawners extends JavaPlugin {
 
     @Getter
-    private Logger log;
-
-    @Getter
     private VersionChecker versionChecker;
 
     private PluginLoader loader;
 
     @Override
     public void onEnable() {
-        log = new Logger();
         loader = new PluginLoader(this);
 
         ConfigLoader config = new ConfigLoader(this);
         PlatformLoader platformLoader = new PlatformLoader(this);
-        CrossVersionHandler versionHandler = new CrossVersionHandler(this);
+        CrossVersionHandler versionHandler = new CrossVersionHandler();
         if (!loader.load(
                 config,
                 platformLoader,
@@ -59,14 +55,14 @@ public class SilkSpawners extends JavaPlugin {
         startOptional(this::startVersionChecker);
         startOptional(this::startMetrics);
 
-        log.info("Enabled SilkSpawners v" + versionChecker.getInstalledVersion());
+        Logger.info("Enabled SilkSpawners v" + versionChecker.getInstalledVersion());
     }
 
     private void startOptional(Runnable step) {
         try {
             step.run();
         } catch (RuntimeException ex) {
-            log.error("An optional startup step threw and was skipped", ex);
+            Logger.error("An optional startup step threw and was skipped", ex);
         }
     }
 
@@ -76,12 +72,12 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void startMetrics() {
-        log.info("Starting bStats integration");
+        Logger.info("Starting bStats integration");
         new Metrics(this, 15215);
     }
 
     private void registerListeners() {
-        log.info("Registering listeners");
+        Logger.info("Registering listeners");
         Set<Location> editedSpawners = ConcurrentHashMap.newKeySet();
         SilkSpawnersEventHandler eventHandler = new SilkSpawnersEventHandler(this);
         eventHandler.registerListener(new PlayerInteractListener(editedSpawners));
@@ -91,7 +87,7 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerCommands() {
-        log.info("Registering commands");
+        Logger.info("Registering commands");
         SilkSpawnersCommandHandler commandHandler = new SilkSpawnersCommandHandler(this, "silkspawners");
         commandHandler.addCommand(new GiveCommand());
         commandHandler.addCommand(new SetCommand());
@@ -104,12 +100,12 @@ public class SilkSpawners extends JavaPlugin {
     }
 
     private void registerApiService() {
-        log.info("Registering API service");
+        Logger.info("Registering API service");
         new SilkSpawnersService(this).register();
     }
 
     private void registerHooks() {
-        log.info("Registering hooks");
+        Logger.info("Registering hooks");
         HookLoader hookLoader = new HookLoader(this);
         hookLoader.addHook("shopguiplus.ShopGUIPlusHook", "ShopGUIPlus", PluginConfig.HOOK_SHOPGUIPLUS);
         hookLoader.register();
@@ -124,7 +120,7 @@ public class SilkSpawners extends JavaPlugin {
     @Override
     public void onDisable() {
         if (versionChecker == null) return;
-        log.info("Stopping version checker");
+        Logger.info("Stopping version checker");
         versionChecker.stop();
     }
 

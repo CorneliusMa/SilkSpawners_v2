@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.locale;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.loader.Loader;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
 import java.io.File;
@@ -36,15 +37,15 @@ public class LocaleHandler implements Loader {
 
     @Override
     public boolean load() {
-        plugin.getLog().info("Loading locale file");
+        Logger.info("Loading locale file");
         try {
             copyDefaultLocales(false);
             loadLocale();
             return true;
         } catch (MissingResourceException | URISyntaxException | IOException ex) {
-            plugin.getLog().error("Error loading locale file", ex);
-            plugin.getLog().warn("Disabling plugin due to missing locale file");
-            plugin.getLog().info("Available locales: " + getAvailableLocales());
+            Logger.error("Error loading locale file", ex);
+            Logger.warn("Disabling plugin due to missing locale file");
+            Logger.info("Available locales: " + getAvailableLocales());
             return false;
         }
     }

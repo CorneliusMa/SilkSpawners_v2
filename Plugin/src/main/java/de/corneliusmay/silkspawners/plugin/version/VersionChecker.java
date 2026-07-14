@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.version;
 import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -38,7 +39,7 @@ public class VersionChecker {
     public synchronized void start() {
         Integer interval = configuredInterval();
         if (interval != null) start(interval);
-        else plugin.getLog().warn("Update checking is disabled");
+        else Logger.warn("Update checking is disabled");
     }
 
     public synchronized void restart() {
@@ -70,13 +71,12 @@ public class VersionChecker {
     private void run(int interval) {
         try {
             while (true) {
-                plugin.getLog().info("Checking for updates");
-                if (!update()) plugin.getLog().error("Error getting latest version");
+                Logger.info("Checking for updates");
+                if (!update()) Logger.error("Error getting latest version");
                 else {
                     String currentLatestVersion = this.latestVersion;
-                    if (!check(currentLatestVersion))
-                        plugin.getLog().warn(updateAvailableMessage(currentLatestVersion));
-                    else plugin.getLog().info(upToDateMessage(currentLatestVersion));
+                    if (!check(currentLatestVersion)) Logger.warn(updateAvailableMessage(currentLatestVersion));
+                    else Logger.info(upToDateMessage(currentLatestVersion));
                 }
                 TimeUnit.HOURS.sleep(interval);
             }

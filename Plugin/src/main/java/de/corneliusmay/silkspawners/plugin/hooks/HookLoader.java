@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.hooks;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.hooks.Hook;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import java.util.ArrayList;
@@ -56,9 +57,9 @@ public class HookLoader {
 
             hook.register();
             registeredHooks.add(definition.hookName());
-            plugin.getLog().info("Hooked into " + definition.pluginName());
+            Logger.info("Hooked into " + definition.pluginName());
         } catch (Exception e) {
-            plugin.getLog().error("Failed to load hook " + definition.hookName(), e);
+            Logger.error("Failed to load hook " + definition.hookName(), e);
         }
     }
 }

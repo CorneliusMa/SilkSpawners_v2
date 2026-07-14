@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.platform;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.loader.Loader;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,10 +24,10 @@ public class PlatformLoader implements Loader {
 
     @Override
     public boolean load() {
-        plugin.getLog().info("Loading server platform");
+        Logger.info("Loading server platform");
         String platform = Server.isFolia() ? "folia" : "bukkit";
         this.serverPlatform = loader.instantiate(platform + ".PlatformImplementation", plugin);
-        plugin.getLog().info("Initialized plugin for " + platform + " server");
+        Logger.info("Initialized plugin for " + platform + " server");
         return true;
     }
 }
