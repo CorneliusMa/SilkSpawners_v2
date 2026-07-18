@@ -7,6 +7,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.ServicePriority;
 
+@Wired
 @RequiredArgsConstructor
 public class SilkSpawnersService implements SilkSpawnersAPI {
 

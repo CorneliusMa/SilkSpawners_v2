@@ -4,12 +4,14 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.MissingResourceException;
 import org.bukkit.command.CommandSender;
 
+@Wired
 public class LocaleCommand extends SilkSpawnersCommand {
 
     private final LocaleHandler localeHandler;

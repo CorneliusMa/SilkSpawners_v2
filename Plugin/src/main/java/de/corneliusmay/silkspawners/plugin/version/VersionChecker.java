@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.version;
 import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Wired
 @RequiredArgsConstructor
 public class VersionChecker {
 

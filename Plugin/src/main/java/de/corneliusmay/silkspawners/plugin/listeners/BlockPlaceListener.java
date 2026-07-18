@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -16,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Wired
 @RequiredArgsConstructor
 public class BlockPlaceListener implements Listener {
 

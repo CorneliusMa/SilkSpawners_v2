@@ -3,7 +3,8 @@ package de.corneliusmay.silkspawners.plugin.config;
 import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
-import de.corneliusmay.silkspawners.plugin.loader.Loader;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+@Wired
 @RequiredArgsConstructor
 public class ConfigLoader implements Loader {
 

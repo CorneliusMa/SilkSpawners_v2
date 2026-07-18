@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.plugin.loader;
+package de.corneliusmay.silkspawners.wiring;
 
 @FunctionalInterface
 public interface Loader {

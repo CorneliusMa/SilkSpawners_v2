@@ -4,11 +4,13 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabC
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+@Wired
 public class ExplosionCommand extends SilkSpawnersCommand {
 
     private final Plugin attachmentPlugin;

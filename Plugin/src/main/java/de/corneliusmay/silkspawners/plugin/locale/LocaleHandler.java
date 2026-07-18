@@ -3,10 +3,11 @@ package de.corneliusmay.silkspawners.plugin.locale;
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
@@ -16,6 +17,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import lombok.Getter;
 
+@Wired
 public class LocaleHandler implements Loader {
 
     private static final String DEFAULT_MESSAGE =

@@ -4,11 +4,13 @@ import de.corneliusmay.silkspawners.api.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+@Wired
 @RequiredArgsConstructor
 public class SpawnerBreakListener implements Listener {
 

@@ -3,16 +3,20 @@ package de.corneliusmay.silkspawners.plugin.version;
 import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker.getBukkitVersion;
 
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
-import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Provides;
+import de.corneliusmay.silkspawners.wiring.Wired;
 
+@Wired
 public class CrossVersionHandler implements Loader {
 
     private final ComponentLoader<Bukkit> loader = new ComponentLoader<>(Bukkit.class, "bukkit");
 
     private Bukkit bukkitHandler;
 
+    @Provides
     public Bukkit getBukkitHandler() {
         return bukkitHandler;
     }

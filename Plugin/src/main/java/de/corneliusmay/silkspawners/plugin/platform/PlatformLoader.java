@@ -2,12 +2,15 @@ package de.corneliusmay.silkspawners.plugin.platform;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
-import de.corneliusmay.silkspawners.plugin.loader.Loader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Provides;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Wired
 @RequiredArgsConstructor
 public class PlatformLoader implements Loader {
 
@@ -18,6 +21,7 @@ public class PlatformLoader implements Loader {
 
     private ServerPlatform serverPlatform;
 
+    @Provides
     public ServerPlatform getServerPlatform() {
         return serverPlatform;
     }

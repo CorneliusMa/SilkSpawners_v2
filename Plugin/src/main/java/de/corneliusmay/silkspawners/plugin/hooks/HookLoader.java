@@ -7,6 +7,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.hooks.Hook;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@Wired
 public class HookLoader {
 
     private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}

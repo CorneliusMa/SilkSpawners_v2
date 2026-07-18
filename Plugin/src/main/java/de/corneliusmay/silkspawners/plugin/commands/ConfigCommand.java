@@ -2,9 +2,11 @@ package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.function.BooleanSupplier;
 import org.bukkit.command.CommandSender;
 
+@Wired
 public class ConfigCommand extends SilkSpawnersCommand {
 
     private final BooleanSupplier configReloader;

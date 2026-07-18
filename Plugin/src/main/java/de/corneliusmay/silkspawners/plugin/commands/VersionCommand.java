@@ -3,8 +3,10 @@ package de.corneliusmay.silkspawners.plugin.commands;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import org.bukkit.command.CommandSender;
 
+@Wired
 public class VersionCommand extends SilkSpawnersCommand {
 
     private final VersionChecker versionChecker;
