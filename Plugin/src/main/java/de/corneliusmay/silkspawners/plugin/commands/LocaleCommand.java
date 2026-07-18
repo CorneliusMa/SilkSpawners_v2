@@ -6,7 +6,6 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.MissingResourceException;
 import org.bukkit.command.CommandSender;
@@ -30,7 +29,14 @@ public class LocaleCommand extends SilkSpawnersCommand {
                         try {
                             localeHandler.loadLocale();
                             sendMessage(sender, "RELOAD_SUCCESSFUL");
-                        } catch (MalformedURLException | MissingResourceException ex) {
+                            if (localeHandler.isIncomplete())
+                                sendMessage(
+                                        sender,
+                                        "INCOMPLETE",
+                                        configuredLocale(),
+                                        localeHandler.getCompletionPercent(),
+                                        LocaleHandler.CROWDIN_URL);
+                        } catch (IOException | MissingResourceException ex) {
                             ex.printStackTrace();
                             sendMessage(sender, "RELOAD_ERROR");
                         }
