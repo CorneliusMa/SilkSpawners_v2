@@ -50,6 +50,8 @@ public class LocaleHandler implements Loader {
     @Getter
     private volatile int completionPercent;
 
+    private volatile Locale loadedLocale;
+
     public LocaleHandler(SilkSpawners plugin, ConfigLoader config) {
         this.plugin = plugin;
         this.config = config;
@@ -103,11 +105,17 @@ public class LocaleHandler implements Loader {
         try (InputStream in = getClass().getResourceAsStream("/locales/messages_en.properties")) {
             this.bundledFallback = new PropertyResourceBundle(in);
         }
+        Locale locale = getLocale();
         this.fallbackBundle = ResourceBundle.getBundle("messages", Locale.ENGLISH, loader);
-        this.resourceBundle = ResourceBundle.getBundle("messages", getLocale(), loader);
+        this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
+        this.loadedLocale = locale;
         this.completionPercent = computeCompletionPercent();
         if (isIncomplete())
-            Logger.warn(MessageFormat.format(INCOMPLETE_WARNING, getLocale(), completionPercent, CROWDIN_URL));
+            Logger.warn(MessageFormat.format(INCOMPLETE_WARNING, locale, completionPercent, CROWDIN_URL));
+    }
+
+    public boolean isSelectedLocaleLoaded() {
+        return getLocale().equals(loadedLocale);
     }
 
     public boolean isIncomplete() {
