@@ -59,7 +59,7 @@ public class GiveCommand extends SilkSpawnersCommand {
 
         if (!sender.hasPermission(getPermissionString() + "." + spawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {
-            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.serializedName());
+            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.coloredName());
             return false;
         }
 
@@ -103,10 +103,10 @@ public class GiveCommand extends SilkSpawnersCommand {
         String trailingLetter = amount > 1 ? "s" : "";
         p.getInventory().addItem(item);
         if (p != sender) {
-            sendMessage(sender, "SUCCESS", amount, spawner.serializedName(), trailingLetter, p.getName());
-            sendMessage(p, "SUCCESS_TARGET", amount, spawner.serializedName(), trailingLetter, sender.getName());
+            sendMessage(sender, "SUCCESS", amount, spawner.coloredName(), trailingLetter, p.getName());
+            sendMessage(p, "SUCCESS_TARGET", amount, spawner.coloredName(), trailingLetter, sender.getName());
         } else {
-            sendMessage(sender, "SUCCESS_SELF", amount, spawner.serializedName(), trailingLetter);
+            sendMessage(sender, "SUCCESS_SELF", amount, spawner.coloredName(), trailingLetter);
         }
     }
 }

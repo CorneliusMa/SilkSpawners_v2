@@ -80,8 +80,9 @@ spawner:
   silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners (useful for custom pickaxes with higher enchantment levels)
   item:
     name: $d{entity} Spawner # The name of the spawner item dropped, {entity} is replaced with the mob name
-    prefix: $e # The text before the spawner name in the lore
-    prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
+    color: $e # The color of the mob name in chat messages
+    prefix: $7Spawns $e # The text before the mob name in the lore
+    prefixOld: [] # If you change your prefix, add the previous value to this list to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
     all: [] # Explosion tiers rolled whenever spawners are mined, with or without SilkTouch (see below)

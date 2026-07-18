@@ -29,8 +29,8 @@ public class Spawner implements SpawnerSnapshot {
         return serializedEntityType(entityType);
     }
 
-    public String serializedName() {
-        return serializedName(entityType);
+    public String coloredName() {
+        return PluginConfig.SPAWNER_ITEM_COLOR.get() + displayName(entityType);
     }
 
     public boolean isEmpty() {

@@ -56,7 +56,7 @@ public class SetCommand extends SilkSpawnersCommand {
 
         if (!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {
-            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", newSpawner.serializedName());
+            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", newSpawner.coloredName());
             return false;
         }
 
@@ -70,7 +70,7 @@ public class SetCommand extends SilkSpawnersCommand {
         Spawner spawner = targetSpawner.get();
 
         if (spawner.getEntityType() == newSpawner.getEntityType()) {
-            sendMessage(sender, "UNCHANGED", newSpawner.serializedName());
+            sendMessage(sender, "UNCHANGED", newSpawner.coloredName());
             return true;
         }
 
@@ -81,7 +81,7 @@ public class SetCommand extends SilkSpawnersCommand {
 
         Spawner result = spawnerFactory.of(event.getNewSpawner());
         spawnerFactory.applyToBlock(result, block, new HashSet<>());
-        sendMessage(sender, "SUCCESS", result.serializedName());
+        sendMessage(sender, "SUCCESS", result.coloredName());
         return true;
     }
 }
