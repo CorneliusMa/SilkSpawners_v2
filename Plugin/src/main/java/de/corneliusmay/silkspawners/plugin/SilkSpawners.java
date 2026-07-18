@@ -80,7 +80,7 @@ public class SilkSpawners extends JavaPlugin {
         hookLoader.register();
     }
 
-    public synchronized boolean reloadConfiguration() {
+    private synchronized boolean reloadConfiguration() {
         if (!loader.get(ConfigLoader.class).reload()) return false;
         try {
             LocaleHandler localeHandler = loader.get(LocaleHandler.class);
