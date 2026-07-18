@@ -5,6 +5,7 @@ import static de.corneliusmay.silkspawners.plugin.config.ConfigScope.*;
 import de.corneliusmay.silkspawners.plugin.config.formatters.BooleanConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.formatters.IntegerConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.formatters.MessageConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.migrators.LegacyDefaultMigrator;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionLegacyPowerMigrator;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTier;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTierListConfigValue;
@@ -13,7 +14,7 @@ import java.util.Locale;
 
 public final class PluginConfig {
 
-    public static final int CONFIG_VERSION = 3;
+    public static final int CONFIG_VERSION = 4;
 
     public static final ConfigKey<String> MESSAGE_PREFIX = message(MESSAGES, "prefix", "$8[$bSilkSpawners$8]");
     public static final ConfigKey<Locale> MESSAGE_LOCALE = builder(MESSAGES, "locale")
@@ -25,7 +26,10 @@ public final class PluginConfig {
     public static final ConfigKey<Boolean> SPAWNER_PICKAXE_REQUIRED = bool(SPAWNER, "pickaxeRequired", true);
     public static final ConfigKey<Boolean> SPAWNER_SILKTOUCH_REQUIRED = bool(SPAWNER, "silktouchRequired", true);
     public static final ConfigKey<Integer> SPAWNER_SILKTOUCH_LEVEL = integer(SPAWNER, "silktouchLevel", 1);
-    public static final ConfigKey<String> SPAWNER_ITEM_NAME = message(SPAWNER_ITEM, "name", "$dSpawner");
+    public static final ConfigKey<String> SPAWNER_ITEM_NAME = builder(SPAWNER_ITEM, "name")
+            .def("$d{entity} Spawner")
+            .migrator(4, new LegacyDefaultMigrator("$dSpawner", "$d{entity} Spawner"))
+            .formatter(new MessageConfigValue());
     public static final ConfigKey<String> SPAWNER_ITEM_PREFIX = builder(SPAWNER_ITEM, "prefix")
             .def("$e")
             .formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value));

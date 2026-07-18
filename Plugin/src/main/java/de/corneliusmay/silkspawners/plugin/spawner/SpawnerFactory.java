@@ -46,7 +46,7 @@ public class SpawnerFactory {
 
     public Optional<Spawner> ofType(EntityType entityType) {
         ItemStack itemStack = new ItemBuilder(bukkitHandler.getSpawnerMaterial())
-                .setDisplayName(PluginConfig.SPAWNER_ITEM_NAME.get())
+                .setDisplayName(Spawner.itemName(entityType))
                 .addToLore(Spawner.serializedName(entityType))
                 .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
                 .build();

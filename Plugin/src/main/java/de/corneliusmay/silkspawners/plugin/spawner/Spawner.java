@@ -45,8 +45,15 @@ public class Spawner implements SpawnerSnapshot {
         return entityType == null ? EMPTY : entityType.getName().toLowerCase();
     }
 
+    static String itemName(EntityType entityType) {
+        return PluginConfig.SPAWNER_ITEM_NAME.get().replace("{entity}", displayName(entityType));
+    }
+
     static String serializedName(EntityType entityType) {
-        return PluginConfig.SPAWNER_ITEM_PREFIX.get()
-                + StringUtils.capitalizeFully(serializedEntityType(entityType).replace("_", " "));
+        return PluginConfig.SPAWNER_ITEM_PREFIX.get() + displayName(entityType);
+    }
+
+    private static String displayName(EntityType entityType) {
+        return StringUtils.capitalizeFully(serializedEntityType(entityType).replace("_", " "));
     }
 }
