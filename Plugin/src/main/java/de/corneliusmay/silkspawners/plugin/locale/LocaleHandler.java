@@ -10,11 +10,13 @@ import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Wired
@@ -26,6 +28,11 @@ public class LocaleHandler implements Loader {
     private static final String MIXED_MESSAGE =
             "§cThe message for key {0} mixes legacy formatting codes with MiniMessage tags, which is not supported.§7\n Use §l§neither legacy codes or MiniMessage tags§7 for a message, not both.";
 
+    private static final String INCOMPLETE_WARNING =
+            "The locale {0} is incomplete ({1}% translated). Untranslated messages will be shown in English. You can help completing the translation at {2}";
+
+    public static final String CROWDIN_URL = "https://crowdin.com/project/silkspawners";
+
     private final SilkSpawners plugin;
 
     // Only exists to make the config load before the locale
@@ -35,6 +42,15 @@ public class LocaleHandler implements Loader {
 
     @Getter
     private volatile ResourceBundle resourceBundle;
+
+    private volatile ResourceBundle fallbackBundle;
+
+    private volatile ResourceBundle bundledFallback;
+
+    @Getter
+    private volatile int completionPercent;
+
+    private volatile Locale loadedLocale;
 
     public LocaleHandler(SilkSpawners plugin, ConfigLoader config) {
         this.plugin = plugin;
@@ -73,6 +89,7 @@ public class LocaleHandler implements Loader {
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (isEmptyBundle(file)) return FileVisitResult.CONTINUE;
                     Path targetFile = target.resolve(jarPath.relativize(file).toString());
                     if (overwrite) Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
                     else if (Files.notExists(targetFile)) Files.copy(file, targetFile);
@@ -82,10 +99,34 @@ public class LocaleHandler implements Loader {
         }
     }
 
-    public synchronized void loadLocale() throws MalformedURLException {
+    public synchronized void loadLocale() throws IOException, MissingResourceException {
         URL[] urls = {localePath.toURI().toURL()};
         ClassLoader loader = new URLClassLoader(urls);
-        this.resourceBundle = ResourceBundle.getBundle("messages", getLocale(), loader);
+        try (InputStream in = getClass().getResourceAsStream("/locales/messages_en.properties")) {
+            this.bundledFallback = new PropertyResourceBundle(in);
+        }
+        Locale locale = getLocale();
+        this.fallbackBundle = ResourceBundle.getBundle("messages", Locale.ENGLISH, loader);
+        this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
+        this.loadedLocale = locale;
+        this.completionPercent = computeCompletionPercent();
+        if (isIncomplete())
+            Logger.warn(MessageFormat.format(INCOMPLETE_WARNING, locale, completionPercent, CROWDIN_URL));
+    }
+
+    public boolean isSelectedLocaleLoaded() {
+        return getLocale().equals(loadedLocale);
+    }
+
+    public boolean isIncomplete() {
+        return completionPercent < 100;
+    }
+
+    private int computeCompletionPercent() {
+        Set<String> reference = referenceKeys();
+        if (reference.isEmpty()) return 100;
+        long translated = reference.stream().filter(resourceBundle::containsKey).count();
+        return (int) (100 * translated / reference.size());
     }
 
     private Locale getLocale() {
@@ -93,18 +134,62 @@ public class LocaleHandler implements Loader {
     }
 
     public String getAvailableLocales() {
-        File localesDir = new File(plugin.getDataFolder() + "/locale");
-        return Arrays.stream(localesDir.listFiles())
+        File[] files = localePath.listFiles();
+        if (files == null) return "";
+        Set<String> reference = referenceKeys();
+        return Arrays.stream(files)
                 .sorted()
-                .map((f) -> f.getName().replace("messages_", "").replace(".properties", ""))
-                .toList()
-                .toString()
-                .replace("[", "")
-                .replace("]", "");
+                .map((f) -> describeLocale(f, reference))
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(", "));
+    }
+
+    private String describeLocale(File file, Set<String> reference) {
+        Set<String> keys = loadProperties(file.toPath()).stringPropertyNames();
+        if (keys.isEmpty()) return null;
+        String name = file.getName().replace("messages_", "").replace(".properties", "");
+        if (reference.isEmpty()) return name;
+        long translated = keys.stream().filter(reference::contains).count();
+        return name + " (" + (100 * translated / reference.size()) + "%)";
     }
 
     public String getMessageClean(String key, Object... args) {
-        return MessageRenderer.render(resourceBundle.getString(key).replace("$", "§"), args);
+        return MessageRenderer.render(getRawMessage(key).replace("$", "§"), args);
+    }
+
+    private String getRawMessage(String key) {
+        try {
+            return resourceBundle.getString(key);
+        } catch (MissingResourceException ex) {
+            try {
+                return fallbackBundle.getString(key);
+            } catch (MissingResourceException fallbackEx) {
+                return bundledFallback.getString(key);
+            }
+        }
+    }
+
+    private boolean isEmptyBundle(Path file) {
+        return loadProperties(file).isEmpty();
+    }
+
+    private Set<String> referenceKeys() {
+        Properties properties = new Properties();
+        try (InputStream in = getClass().getResourceAsStream("/locales/messages_en.properties")) {
+            if (in != null) properties.load(in);
+        } catch (IOException ignored) {
+        }
+        return properties.stringPropertyNames();
+    }
+
+    private Properties loadProperties(Path file) {
+        Properties properties = new Properties();
+        try (InputStream in = Files.newInputStream(file)) {
+            properties.load(in);
+        } catch (IOException ex) {
+            // Unreadable files are treated as empty and thus not offered as locales
+        }
+        return properties;
     }
 
     public String getMessage(String key, Object... args) {

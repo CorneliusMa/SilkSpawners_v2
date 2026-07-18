@@ -7,8 +7,11 @@ import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.loader.PluginLoader;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
+import java.io.IOException;
+import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
@@ -83,6 +86,13 @@ public class SilkSpawners extends JavaPlugin {
 
     public synchronized boolean reloadConfiguration() {
         if (!loader.get(ConfigLoader.class).reload()) return false;
+        try {
+            LocaleHandler localeHandler = loader.get(LocaleHandler.class);
+            if (!localeHandler.isSelectedLocaleLoaded()) localeHandler.loadLocale();
+        } catch (IOException | MissingResourceException ex) {
+            Logger.error("Error loading locale file", ex);
+            return false;
+        }
         versionChecker.restart();
         return true;
     }
