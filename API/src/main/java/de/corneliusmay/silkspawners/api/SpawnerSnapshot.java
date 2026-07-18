@@ -19,6 +19,11 @@ public interface SpawnerSnapshot {
     EntityType getEntityType();
 
     /**
+     * @return the display name of the spawner's entity type
+     */
+    String getDisplayName();
+
+    /**
      * @return a copy of the spawner item representing this spawner, modifications
      * to the returned stack do not affect the spawner
      */
