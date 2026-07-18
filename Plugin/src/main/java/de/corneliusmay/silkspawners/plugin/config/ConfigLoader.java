@@ -3,28 +3,27 @@ package de.corneliusmay.silkspawners.plugin.config;
 import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
-public class ConfigLoader {
+@Wired
+@RequiredArgsConstructor
+public class ConfigLoader implements Loader {
 
     private final Plugin plugin;
-
-    public ConfigLoader(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            log(
-                    Level.INFO,
-                    "No config file was found. The config will be generated with the default" + " configuration");
+            log(Level.INFO, "No config file was found. The config will be generated with the default configuration");
             return CONFIG_VERSION;
         }
 
@@ -40,18 +39,21 @@ public class ConfigLoader {
         return currentVersion;
     }
 
+    @Override
     public boolean load() {
         log(Level.INFO, "Loading configuration...");
-        return apply(true);
+        if (apply()) return true;
+        log(Level.SEVERE, "Disabling plugin due to invalid configuration value");
+        return false;
     }
 
     public boolean reload() {
         log(Level.INFO, "Reloading configuration...");
         plugin.reloadConfig();
-        return apply(false);
+        return apply();
     }
 
-    private boolean apply(boolean initialLoad) {
+    private boolean apply() {
         FileConfiguration config = plugin.getConfig();
 
         int configVersion = getConfigVersion(config);
@@ -75,10 +77,6 @@ public class ConfigLoader {
         }
 
         if (valid) ConfigRegistry.commit(values);
-        else if (initialLoad) {
-            plugin.getLogger().severe("Disabling plugin due to invalid configuration value");
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
-        }
         return valid;
     }
 

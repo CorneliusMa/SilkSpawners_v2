@@ -4,6 +4,8 @@ import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.HashSet;
 import java.util.Optional;
 import org.bukkit.Bukkit;
@@ -12,10 +14,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+@Wired
 public class SetCommand extends SilkSpawnersCommand {
 
-    public SetCommand() {
+    private final SpawnerFactory spawnerFactory;
+
+    private final de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler;
+
+    public SetCommand(SpawnerFactory spawnerFactory, de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler) {
         super("set", true, new EntityTabCompleter());
+        this.spawnerFactory = spawnerFactory;
+        this.bukkitHandler = bukkitHandler;
     }
 
     @Override
@@ -37,7 +46,7 @@ public class SetCommand extends SilkSpawnersCommand {
             }
         }
 
-        Optional<Spawner> requestedSpawner = Spawner.ofType(entityType);
+        Optional<Spawner> requestedSpawner = spawnerFactory.ofType(entityType);
         if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[0]);
             return false;
@@ -51,8 +60,8 @@ public class SetCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        Block block = plugin.getBukkitHandler().getTargetBlock(player);
-        Optional<Spawner> targetSpawner = Spawner.fromBlock(block);
+        Block block = bukkitHandler.getTargetBlock(player);
+        Optional<Spawner> targetSpawner = spawnerFactory.fromBlock(block);
         if (targetSpawner.isEmpty()) {
             sendMessage(sender, "INVALID_TARGET");
             return false;
@@ -66,12 +75,12 @@ public class SetCommand extends SilkSpawnersCommand {
         }
 
         SpawnerChangeEvent event =
-                new SpawnerChangeEvent(player, spawner, block.getLocation(), newSpawner, Spawner::snapshot);
+                new SpawnerChangeEvent(player, spawner, block.getLocation(), newSpawner, spawnerFactory::snapshot);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
-        Spawner result = Spawner.of(event.getNewSpawner());
-        result.setSpawnerBlockType(block, new HashSet<>());
+        Spawner result = spawnerFactory.of(event.getNewSpawner());
+        spawnerFactory.applyToBlock(result, block, new HashSet<>());
         sendMessage(sender, "SUCCESS", result.serializedName());
         return true;
     }

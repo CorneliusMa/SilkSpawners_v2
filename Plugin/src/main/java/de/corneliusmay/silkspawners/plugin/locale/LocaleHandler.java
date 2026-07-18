@@ -1,9 +1,13 @@
 package de.corneliusmay.silkspawners.plugin.locale;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
 import java.net.*;
@@ -13,7 +17,8 @@ import java.text.MessageFormat;
 import java.util.*;
 import lombok.Getter;
 
-public class LocaleHandler {
+@Wired
+public class LocaleHandler implements Loader {
 
     private static final String DEFAULT_MESSAGE =
             "§cNo value found for key {0} using locale {1}.§7\n Use §l§n/silkspawners locale update confirm§7 to update the locale files.\n §eWarning!§7 Updating the locale files will overwrite all changes§7.";
@@ -23,26 +28,31 @@ public class LocaleHandler {
 
     private final SilkSpawners plugin;
 
+    // Only exists to make the config load before the locale
+    private final ConfigLoader config;
+
     private final File localePath;
 
     @Getter
     private volatile ResourceBundle resourceBundle;
 
-    public LocaleHandler(SilkSpawners plugin) {
+    public LocaleHandler(SilkSpawners plugin, ConfigLoader config) {
         this.plugin = plugin;
+        this.config = config;
         this.localePath = new File(plugin.getDataFolder() + "/locale");
     }
 
+    @Override
     public boolean load() {
+        Logger.info("Loading locale file");
         try {
             copyDefaultLocales(false);
             loadLocale();
             return true;
         } catch (MissingResourceException | URISyntaxException | IOException ex) {
-            plugin.getLog().error("Error loading locale file", ex);
-            plugin.getLog().warn("Disabling plugin due to missing locale file");
-            plugin.getLog().info("Available locales: " + getAvailableLocales());
-            plugin.getServer().getPluginManager().disablePlugin(plugin);
+            Logger.error("Error loading locale file", ex);
+            Logger.warn("Disabling plugin due to missing locale file");
+            Logger.info("Available locales: " + getAvailableLocales());
             return false;
         }
     }

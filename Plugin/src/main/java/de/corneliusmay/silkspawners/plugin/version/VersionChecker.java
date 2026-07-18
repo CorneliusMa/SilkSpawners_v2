@@ -1,8 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
 import com.google.common.base.Preconditions;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,14 +15,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Wired
+@RequiredArgsConstructor
 public class VersionChecker {
 
     private static final URI LATEST_RELEASE_URI =
             URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest");
 
-    private final SilkSpawners plugin;
-    private final HttpClient client;
+    @Getter
+    private final String installedVersion;
 
     @Getter
     private volatile String latestVersion;
@@ -30,15 +34,12 @@ public class VersionChecker {
 
     private Integer runningInterval;
 
-    public VersionChecker(SilkSpawners plugin) {
-        this.plugin = plugin;
-        client = HttpClient.newHttpClient();
-    }
+    private HttpClient client;
 
     public synchronized void start() {
         Integer interval = configuredInterval();
         if (interval != null) start(interval);
-        else plugin.getLog().warn("Update checking is disabled");
+        else Logger.warn("Update checking is disabled");
     }
 
     public synchronized void restart() {
@@ -70,13 +71,12 @@ public class VersionChecker {
     private void run(int interval) {
         try {
             while (true) {
-                plugin.getLog().info("Checking for updates");
-                if (!update()) plugin.getLog().error("Error getting latest version");
+                Logger.info("Checking for updates");
+                if (!update()) Logger.error("Error getting latest version");
                 else {
                     String currentLatestVersion = this.latestVersion;
-                    if (!check(currentLatestVersion))
-                        plugin.getLog().warn(updateAvailableMessage(currentLatestVersion));
-                    else plugin.getLog().info(upToDateMessage(currentLatestVersion));
+                    if (!check(currentLatestVersion)) Logger.warn(updateAvailableMessage(currentLatestVersion));
+                    else Logger.info(upToDateMessage(currentLatestVersion));
                 }
                 TimeUnit.HOURS.sleep(interval);
             }
@@ -89,6 +89,7 @@ public class VersionChecker {
             Pattern pattern = Pattern.compile("\"tag_name\":\"v([0-9\\.]+)\"");
             HttpRequest request =
                     HttpRequest.newBuilder().uri(LATEST_RELEASE_URI).GET().build();
+            if (client == null) client = HttpClient.newHttpClient();
             String latestVersionData =
                     client.send(request, HttpResponse.BodyHandlers.ofString()).body();
             Matcher matcher = pattern.matcher(latestVersionData);
@@ -108,14 +109,11 @@ public class VersionChecker {
         Integer[] installedVersion = castVersionString(getInstalledVersion());
         Integer[] latestVersion = castVersionString(currentLatestVersion);
         for (int i = 0; i < latestVersion.length; i++) {
-            if (i >= installedVersion.length) return true;
-            if (latestVersion[i] > installedVersion[i]) return false;
+            int installed = i < installedVersion.length ? installedVersion[i] : 0;
+            if (latestVersion[i] > installed) return false;
+            if (latestVersion[i] < installed) return true;
         }
         return true;
-    }
-
-    public String getInstalledVersion() {
-        return plugin.getDescription().getVersion();
     }
 
     private Integer[] castVersionString(String version) {

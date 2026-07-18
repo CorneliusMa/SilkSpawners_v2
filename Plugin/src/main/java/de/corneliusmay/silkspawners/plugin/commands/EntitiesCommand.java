@@ -2,11 +2,13 @@ package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 
+@Wired
 public class EntitiesCommand extends SilkSpawnersCommand {
 
     public EntitiesCommand() {

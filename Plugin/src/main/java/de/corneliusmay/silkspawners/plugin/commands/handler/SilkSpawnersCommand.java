@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ public abstract class SilkSpawnersCommand {
     private SilkSpawnersCommandHandler commandHandler;
 
     @Setter(AccessLevel.PACKAGE)
-    protected SilkSpawners plugin;
+    private LocaleHandler locale;
 
     @Getter(AccessLevel.PACKAGE)
     private final String command;
@@ -39,11 +39,9 @@ public abstract class SilkSpawnersCommand {
     }
 
     private String getMessage(String key, Object... args) {
-        return plugin.getLocale()
-                .getMessage(
-                        "COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_"
-                                + key,
-                        args);
+        return locale.getMessage(
+                "COMMAND_" + commandHandler.getMainCommand().toUpperCase() + "_" + command.toUpperCase() + "_" + key,
+                args);
     }
 
     protected final void sendMessage(CommandSender sender, String key, Object... args) {
@@ -55,7 +53,7 @@ public abstract class SilkSpawnersCommand {
     }
 
     public boolean insufficientPermission(CommandSender sender) {
-        sender.sendMessage(plugin.getLocale().getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
+        sender.sendMessage(locale.getMessage("COMMAND_INSUFFICIENT_PERMISSIONS"));
         return false;
     }
 

@@ -1,19 +1,19 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@Wired
+@RequiredArgsConstructor
 public class SilkDropCheck {
 
-    private final SilkSpawners plugin;
-
-    public SilkDropCheck(SilkSpawners plugin) {
-        this.plugin = plugin;
-    }
+    private final Bukkit bukkitHandler;
 
     public boolean canSilkDrop(Player player, Spawner spawner) {
         return hasBreakPermission(player, spawner) && hasSilkTouchTool(player);
@@ -26,7 +26,7 @@ public class SilkDropCheck {
     }
 
     private boolean hasSilkTouchTool(Player player) {
-        return Arrays.stream(plugin.getBukkitHandler().getItemsInHand(player)).anyMatch(this::isSilkTouchTool);
+        return Arrays.stream(bukkitHandler.getItemsInHand(player)).anyMatch(this::isSilkTouchTool);
     }
 
     private boolean isSilkTouchTool(ItemStack item) {

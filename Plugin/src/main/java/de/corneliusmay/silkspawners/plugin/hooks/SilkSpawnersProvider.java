@@ -1,19 +1,23 @@
 package de.corneliusmay.silkspawners.plugin.hooks;
 
-import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
+@RequiredArgsConstructor
 class SilkSpawnersProvider implements SpawnerProvider {
+
+    private final SpawnerFactory spawnerFactory;
 
     @Override
     public ItemStack getSpawnerItem(EntityType entityType) {
-        return Spawner.ofType(entityType).map(Spawner::getItemStack).orElse(null);
+        return spawnerFactory.itemFor(entityType);
     }
 
     @Override
     public EntityType getSpawnerEntityType(ItemStack itemStack) {
-        return Spawner.fromItem(itemStack).map(Spawner::getEntityType).orElse(null);
+        return spawnerFactory.entityTypeOf(itemStack);
     }
 }

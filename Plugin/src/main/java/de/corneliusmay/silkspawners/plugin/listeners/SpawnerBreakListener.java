@@ -3,25 +3,30 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.api.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
-import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.wiring.Wired;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
-public class SpawnerBreakListener extends SilkSpawnersListener<SpawnerBreakEvent> {
+@Wired
+@RequiredArgsConstructor
+public class SpawnerBreakListener implements Listener {
 
-    @Override
+    private final ServerPlatform platform;
+
     @EventHandler(priority = EventPriority.HIGHEST)
-    protected void onCall(SpawnerBreakEvent e) {
+    public void onCall(SpawnerBreakEvent e) {
         if (e.isCancelled()) return;
         Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH);
         if (!explosion.applies(e.getPlayer())) return;
-        plugin.getPlatform()
-                .runTaskLater(
-                        e.getLocation(),
-                        () -> {
-                            if (e.isCancelled()) return;
-                            explosion.run(e.getPlayer(), e.getLocation().getWorld(), e.getLocation(), e.getSpawner());
-                        },
-                        1);
+        platform.runTaskLater(
+                e.getLocation(),
+                () -> {
+                    if (e.isCancelled()) return;
+                    explosion.run(e.getPlayer(), e.getLocation().getWorld(), e.getLocation(), e.getSpawner());
+                },
+                1);
     }
 }

@@ -21,7 +21,8 @@ final class ConfigRegistry {
     }
 
     static Object value(ConfigKey<?> key) {
-        return values.get(key);
+        Object value = values.get(key);
+        return value != null ? value : key.formatDefault();
     }
 
     static void commit(Map<ConfigKey<?>, Object> newValues) {

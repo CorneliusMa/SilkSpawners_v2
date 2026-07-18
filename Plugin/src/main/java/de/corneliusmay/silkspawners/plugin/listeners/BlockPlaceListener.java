@@ -2,32 +2,39 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerPlaceEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.plugin.listeners.handler.SilkSpawnersListener;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
+@Wired
+@RequiredArgsConstructor
+public class BlockPlaceListener implements Listener {
+
+    private final SpawnerFactory spawnerFactory;
+
+    private final de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler;
+
+    private final LocaleHandler locale;
 
     private final Set<Location> editedSpawners;
 
-    public BlockPlaceListener(Set<Location> editedSpawners) {
-        this.editedSpawners = editedSpawners;
-    }
-
-    @Override
     @EventHandler(priority = EventPriority.HIGHEST)
-    protected void onCall(BlockPlaceEvent e) {
+    public void onCall(BlockPlaceEvent e) {
         if (e.isCancelled()) return;
 
-        ItemStack[] itemsInHand = plugin.getBukkitHandler().getItemsInHand(e.getPlayer());
-        Spawner.fromItem(itemIsSpawner(itemsInHand)).ifPresent(spawner -> handleSpawnerPlace(e, spawner));
+        ItemStack[] itemsInHand = bukkitHandler.getItemsInHand(e.getPlayer());
+        spawnerFactory.fromItem(itemIsSpawner(itemsInHand)).ifPresent(spawner -> handleSpawnerPlace(e, spawner));
     }
 
     private void handleSpawnerPlace(BlockPlaceEvent e, Spawner spawner) {
@@ -37,12 +44,12 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
                 && !p.hasPermission("silkspawners.place.*")
                 && !PluginConfig.SPAWNER_PERMISSION_DISABLE_PLACE.get()) {
             e.setCancelled(true);
-            if (PluginConfig.SPAWNER_MESSAGE_DENY_PLACE.get())
-                p.sendMessage(plugin.getLocale().getMessage("SPAWNER_PLACE_DENIED"));
+            if (PluginConfig.SPAWNER_MESSAGE_DENY_PLACE.get()) p.sendMessage(locale.getMessage("SPAWNER_PLACE_DENIED"));
             return;
         }
 
-        SpawnerPlaceEvent event = new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation(), Spawner::snapshot);
+        SpawnerPlaceEvent event =
+                new SpawnerPlaceEvent(p, spawner, e.getBlock().getLocation(), spawnerFactory::snapshot);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
@@ -50,8 +57,8 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
             return;
         }
         this.editedSpawners.add(e.getBlock().getLocation());
-        Spawner placed = Spawner.of(event.getSpawner());
-        placed.setSpawnerBlockType(e.getBlock(), this.editedSpawners);
+        Spawner placed = spawnerFactory.of(event.getSpawner());
+        spawnerFactory.applyToBlock(placed, e.getBlock(), this.editedSpawners);
     }
 
     private ItemStack itemIsSpawner(ItemStack[] items) {
@@ -61,7 +68,7 @@ public class BlockPlaceListener extends SilkSpawnersListener<BlockPlaceEvent> {
     private ItemStack itemIsSpawner(ItemStack[] items, int i) {
         if (items.length == i) return null;
 
-        if (items[i].getType() == plugin.getBukkitHandler().getSpawnerMaterial()) return items[i];
+        if (items[i].getType() == bukkitHandler.getSpawnerMaterial()) return items[i];
         else return itemIsSpawner(items, i + 1);
     }
 }

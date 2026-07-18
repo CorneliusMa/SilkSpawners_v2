@@ -14,14 +14,16 @@ artifacts {
     add(shadowJarArtifact.name, tasks.named("shadowJar"))
 }
 
-val nonCoreModules = setOf("Plugin", "ApiExample", "Publication")
+val nonCoreModules = setOf("Plugin", "ApiExample", "Publication", "Wiring", "WiringProcessor")
 val coreModules = rootProject.subprojects
     .filter { it.name !in nonCoreModules }
     .map { it.path }
 
 dependencies {
     compileOnly(libs.bukkit)
+    annotationProcessor(project(":WiringProcessor"))
 
+    implementation(project(":Wiring"))
     implementation(libs.bstats.bukkit)
     implementation(libs.adventure.minimessage)
     implementation(libs.adventure.serializer.legacy)

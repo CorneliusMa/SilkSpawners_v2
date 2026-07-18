@@ -5,6 +5,9 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -12,10 +15,17 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@Wired
 public class GiveCommand extends SilkSpawnersCommand {
 
-    public GiveCommand() {
+    private final SpawnerFactory spawnerFactory;
+
+    private final ServerPlatform platform;
+
+    public GiveCommand(SpawnerFactory spawnerFactory, ServerPlatform platform) {
         super("give", true, new OnlinePlayersTabCompleter(), new EntityTabCompleter());
+        this.spawnerFactory = spawnerFactory;
+        this.platform = platform;
     }
 
     @Override
@@ -39,7 +49,7 @@ public class GiveCommand extends SilkSpawnersCommand {
             }
         }
 
-        Optional<Spawner> requestedSpawner = Spawner.ofType(entityType);
+        Optional<Spawner> requestedSpawner = spawnerFactory.ofType(entityType);
         if (requestedSpawner.isEmpty()) {
             sendMessage(sender, "ENTITY_NOT_FOUND", args[1]);
             return false;
@@ -67,11 +77,10 @@ public class GiveCommand extends SilkSpawnersCommand {
         }
 
         int requestedAmount = amount;
-        plugin.getPlatform()
-                .runOnEntity(
-                        p,
-                        () -> giveSpawner(sender, p, spawner, requestedAmount),
-                        () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
+        platform.runOnEntity(
+                p,
+                () -> giveSpawner(sender, p, spawner, requestedAmount),
+                () -> sendMessage(sender, "PLAYER_NOT_FOUND", p.getName()));
         return true;
     }
 

@@ -2,27 +2,36 @@ package de.corneliusmay.silkspawners.plugin.platform;
 
 import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
-import lombok.Getter;
+import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Provides;
+import de.corneliusmay.silkspawners.wiring.Wired;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class PlatformLoader {
+@Wired
+@RequiredArgsConstructor
+public class PlatformLoader implements Loader {
 
     private final SilkSpawners plugin;
 
     private final ComponentLoader<ServerPlatform> loader =
             new ComponentLoader<>(ServerPlatform.class, "platform", JavaPlugin.class);
 
-    @Getter
     private ServerPlatform serverPlatform;
 
-    public PlatformLoader(SilkSpawners plugin) {
-        this.plugin = plugin;
+    @Provides
+    public ServerPlatform getServerPlatform() {
+        return serverPlatform;
     }
 
-    public void load() {
+    @Override
+    public boolean load() {
+        Logger.info("Loading server platform");
         String platform = Server.isFolia() ? "folia" : "bukkit";
         this.serverPlatform = loader.instantiate(platform + ".PlatformImplementation", plugin);
-        plugin.getLog().info("Initialized plugin for " + platform + " server");
+        Logger.info("Initialized plugin for " + platform + " server");
+        return true;
     }
 }

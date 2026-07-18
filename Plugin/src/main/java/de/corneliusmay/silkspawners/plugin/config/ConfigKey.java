@@ -2,6 +2,7 @@ package de.corneliusmay.silkspawners.plugin.config;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueFormatter;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NavigableMap;
 import lombok.AccessLevel;
@@ -40,5 +41,11 @@ public final class ConfigKey<T> {
     @SuppressWarnings("unchecked")
     public T get() {
         return (T) ConfigRegistry.value(this);
+    }
+
+    Object formatDefault() {
+        if (list)
+            return Arrays.stream((String[]) defaultValue).map(formatter::format).toList();
+        return formatter.format(defaultValue);
     }
 }

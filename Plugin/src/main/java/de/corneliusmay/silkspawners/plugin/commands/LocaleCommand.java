@@ -3,16 +3,22 @@ package de.corneliusmay.silkspawners.plugin.commands;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.MissingResourceException;
 import org.bukkit.command.CommandSender;
 
+@Wired
 public class LocaleCommand extends SilkSpawnersCommand {
 
-    public LocaleCommand() {
+    private final LocaleHandler localeHandler;
+
+    public LocaleCommand(LocaleHandler localeHandler) {
         super("locale", true, new StaticTabCompletion("setting", "reload", "update"));
+        this.localeHandler = localeHandler;
     }
 
     @Override
@@ -22,7 +28,7 @@ public class LocaleCommand extends SilkSpawnersCommand {
                 switch (args[0].toLowerCase()) {
                     case "reload" -> {
                         try {
-                            plugin.getLocale().loadLocale();
+                            localeHandler.loadLocale();
                             sendMessage(sender, "RELOAD_SUCCESSFUL");
                         } catch (MalformedURLException | MissingResourceException ex) {
                             ex.printStackTrace();
@@ -31,8 +37,7 @@ public class LocaleCommand extends SilkSpawnersCommand {
                     }
                     case "setting" -> {
                         String locale = configuredLocale();
-                        sendMessage(
-                                sender, "SETTING", locale, plugin.getLocale().getAvailableLocales());
+                        sendMessage(sender, "SETTING", locale, localeHandler.getAvailableLocales());
                     }
                     case "update" -> sendMessage(sender, "UPDATE_WARNING");
                     default -> invalidSyntax(sender);
@@ -42,8 +47,8 @@ public class LocaleCommand extends SilkSpawnersCommand {
                 if (!args[0].equalsIgnoreCase("update")) return invalidSyntax(sender);
                 if (!args[1].equalsIgnoreCase("confirm")) return invalidSyntax(sender);
                 try {
-                    plugin.getLocale().copyDefaultLocales(true);
-                    plugin.getLocale().loadLocale();
+                    localeHandler.copyDefaultLocales(true);
+                    localeHandler.loadLocale();
                     sendMessage(sender, "UPDATE_SUCCESSFUL");
                 } catch (URISyntaxException | MissingResourceException | IOException ex) {
                     sendMessage(sender, "UPDATE_ERROR");
