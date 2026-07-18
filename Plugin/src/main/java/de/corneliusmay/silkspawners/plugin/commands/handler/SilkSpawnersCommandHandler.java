@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
@@ -13,11 +12,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.java.JavaPlugin;
 
 @Wired
 public class SilkSpawnersCommandHandler implements CommandExecutor {
 
-    private final SilkSpawners plugin;
+    private final JavaPlugin plugin;
 
     private final LocaleHandler locale;
 
@@ -30,7 +30,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private final SilkSpawnersTabCompleter tabCompleter;
 
-    public SilkSpawnersCommandHandler(SilkSpawners plugin, LocaleHandler locale, String command) {
+    public SilkSpawnersCommandHandler(JavaPlugin plugin, LocaleHandler locale, String command) {
         this.plugin = plugin;
         this.locale = locale;
         this.mainCommand = command;

@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.locale;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
@@ -18,6 +17,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import org.bukkit.plugin.Plugin;
 
 @Wired
 public class LocaleHandler implements Loader {
@@ -33,7 +33,7 @@ public class LocaleHandler implements Loader {
 
     public static final String CROWDIN_URL = "https://crowdin.com/project/silkspawners";
 
-    private final SilkSpawners plugin;
+    private final Plugin plugin;
 
     // Only exists to make the config load before the locale
     private final ConfigLoader config;
@@ -52,7 +52,7 @@ public class LocaleHandler implements Loader {
 
     private volatile Locale loadedLocale;
 
-    public LocaleHandler(SilkSpawners plugin, ConfigLoader config) {
+    public LocaleHandler(Plugin plugin, ConfigLoader config) {
         this.plugin = plugin;
         this.config = config;
         this.localePath = new File(plugin.getDataFolder() + "/locale");

@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.platform;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
@@ -14,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 @RequiredArgsConstructor
 public class PlatformLoader implements Loader {
 
-    private final SilkSpawners plugin;
+    private final JavaPlugin plugin;
 
     private final ComponentLoader<ServerPlatform> loader =
             new ComponentLoader<>(ServerPlatform.class, "platform", JavaPlugin.class);
