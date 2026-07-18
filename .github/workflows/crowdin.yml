@@ -14,7 +14,7 @@ jobs:
       - uses: actions/create-github-app-token@v3.2.0
         id: app-token
         with:
-          app-id: ${{ secrets.CROWDIN_APP_ID }}
+          client-id: ${{ secrets.CROWDIN_APP_ID }}
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
 
       - uses: actions/checkout@v6.0.3
