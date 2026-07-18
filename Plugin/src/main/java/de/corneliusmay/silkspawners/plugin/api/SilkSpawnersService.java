@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.api;
 
 import de.corneliusmay.silkspawners.api.SilkSpawnersAPI;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
@@ -16,13 +15,14 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 
 @Wired
 @RequiredArgsConstructor
 public class SilkSpawnersService implements SilkSpawnersAPI {
 
-    private final SilkSpawners plugin;
+    private final Plugin plugin;
 
     private final SpawnerFactory spawnerFactory;
 

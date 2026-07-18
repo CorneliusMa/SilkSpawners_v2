@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.hooks;
 
-import de.corneliusmay.silkspawners.plugin.SilkSpawners;
 import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
@@ -22,7 +21,7 @@ public class HookLoader {
 
     private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}
 
-    private final SilkSpawners plugin;
+    private final JavaPlugin plugin;
 
     private final PluginManager pluginManager;
 
@@ -35,7 +34,7 @@ public class HookLoader {
     private final ComponentLoader<Hook> loader =
             new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
 
-    public HookLoader(SilkSpawners plugin, SpawnerFactory spawnerFactory) {
+    public HookLoader(JavaPlugin plugin, SpawnerFactory spawnerFactory) {
         this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
         this.spawnerProvider = new SilkSpawnersProvider(spawnerFactory);

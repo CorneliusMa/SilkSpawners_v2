@@ -1,133 +1,138 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
 import com.google.common.base.Preconditions;
+import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
+import de.corneliusmay.silkspawners.plugin.utils.Schedule;
+import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import org.bukkit.plugin.Plugin;
 
 @Wired
-@RequiredArgsConstructor
-public class VersionChecker {
+public class VersionChecker implements Loader {
 
     private static final URI LATEST_RELEASE_URI =
             URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest");
 
+    private static final Pattern RELEASE_TAG_PATTERN = Pattern.compile("\"tag_name\":\"v([0-9.]+)\"");
+
+    private final HttpClient client = HttpClient.newHttpClient();
+
     @Getter
     private final String installedVersion;
 
-    @Getter
+    // Only exists to make the config load before the version check
+    private final ConfigLoader config;
+
     private volatile String latestVersion;
 
-    private Thread thread;
+    private Schedule schedule;
 
-    private Integer runningInterval;
+    public VersionChecker(Plugin plugin, ConfigLoader config) {
+        this.installedVersion = plugin.getDescription().getVersion();
+        this.config = config;
+    }
 
-    private HttpClient client;
+    @Override
+    public boolean load() {
+        Logger.info("Starting version checker");
+        start();
+        return true;
+    }
 
-    public synchronized void start() {
-        Integer interval = configuredInterval();
-        if (interval != null) start(interval);
-        else Logger.warn("Update checking is disabled");
+    public Optional<String> getAvailableUpdate() {
+        return Optional.ofNullable(latestVersion).filter(latest -> !isUpToDate(latest));
     }
 
     public synchronized void restart() {
-        if (thread != null && thread.isAlive() && Objects.equals(configuredInterval(), runningInterval)) return;
+        Optional<Duration> interval = configuredInterval();
+        if (schedule != null && interval.isPresent() && schedule.isRunning(interval.get())) return;
         stop();
         start();
     }
 
-    private Integer configuredInterval() {
-        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) return null;
-        return PluginConfig.UPDATE_CHECK_INTERVAL.get();
-    }
-
-    private void start(int interval) {
-        Preconditions.checkState(thread == null);
-        runningInterval = interval;
-        thread = new Thread(() -> run(interval));
-        thread.start();
-    }
-
     public synchronized void stop() {
-        if (this.thread != null) {
-            this.thread.interrupt();
-            this.thread = null;
-        }
-        runningInterval = null;
+        if (schedule == null) return;
+        schedule.stop();
+        schedule = null;
     }
 
-    private void run(int interval) {
-        try {
-            while (true) {
-                Logger.info("Checking for updates");
-                if (!update()) Logger.error("Error getting latest version");
-                else {
-                    String currentLatestVersion = this.latestVersion;
-                    if (!check(currentLatestVersion)) Logger.warn(updateAvailableMessage(currentLatestVersion));
-                    else Logger.info(upToDateMessage(currentLatestVersion));
-                }
-                TimeUnit.HOURS.sleep(interval);
-            }
-        } catch (InterruptedException ignored) {
-        }
+    private synchronized void start() {
+        Optional<Duration> interval = configuredInterval();
+        if (interval.isPresent()) start(interval.get());
+        else Logger.warn("Update checking is disabled");
     }
 
-    private boolean update() throws InterruptedException {
+    private Optional<Duration> configuredInterval() {
+        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) return Optional.empty();
+        return Optional.of(Duration.ofHours(PluginConfig.UPDATE_CHECK_INTERVAL.get()));
+    }
+
+    private void start(Duration interval) {
+        Preconditions.checkState(schedule == null);
+        schedule = new Schedule("SilkSpawners-VersionChecker", interval, this::check);
+    }
+
+    private void check() throws InterruptedException {
+        Logger.info("Checking for updates");
+        Optional<String> fetched = fetchLatestVersion();
+        if (fetched.isEmpty()) return;
+        String latest = fetched.get();
+        latestVersion = latest;
+        if (isUpToDate(latest)) Logger.info(upToDateMessage(latest));
+        else Logger.warn(updateAvailableMessage(latest));
+    }
+
+    private Optional<String> fetchLatestVersion() throws InterruptedException {
         try {
-            Pattern pattern = Pattern.compile("\"tag_name\":\"v([0-9\\.]+)\"");
             HttpRequest request =
                     HttpRequest.newBuilder().uri(LATEST_RELEASE_URI).GET().build();
-            if (client == null) client = HttpClient.newHttpClient();
-            String latestVersionData =
+            String body =
                     client.send(request, HttpResponse.BodyHandlers.ofString()).body();
-            Matcher matcher = pattern.matcher(latestVersionData);
-            if (matcher.find()) {
-                latestVersion = matcher.group(1);
-                return true;
-            }
-            return false;
+            Matcher matcher = RELEASE_TAG_PATTERN.matcher(body);
+            if (matcher.find()) return Optional.of(matcher.group(1));
+            Logger.error("Error getting latest version");
+            return Optional.empty();
         } catch (IOException ex) {
-            ex.printStackTrace();
-            return false;
+            Logger.error("Error getting latest version", ex);
+            return Optional.empty();
         }
     }
 
-    public boolean check(String currentLatestVersion) {
-        if (currentLatestVersion == null) return true;
-        Integer[] installedVersion = castVersionString(getInstalledVersion());
-        Integer[] latestVersion = castVersionString(currentLatestVersion);
-        for (int i = 0; i < latestVersion.length; i++) {
-            int installed = i < installedVersion.length ? installedVersion[i] : 0;
-            if (latestVersion[i] > installed) return false;
-            if (latestVersion[i] < installed) return true;
+    private boolean isUpToDate(String latestVersion) {
+        int[] installed = parseVersion(installedVersion);
+        int[] latest = parseVersion(latestVersion);
+        for (int i = 0; i < latest.length; i++) {
+            int installedPart = i < installed.length ? installed[i] : 0;
+            if (latest[i] != installedPart) return latest[i] < installedPart;
         }
         return true;
     }
 
-    private Integer[] castVersionString(String version) {
-        return Arrays.stream(version.split("\\.")).map((Integer::parseInt)).toArray(Integer[]::new);
+    private int[] parseVersion(String version) {
+        return Arrays.stream(version.split("\\.")).mapToInt(Integer::parseInt).toArray();
     }
 
-    private String updateAvailableMessage(String currentLatestVersion) {
+    private String updateAvailableMessage(String latestVersion) {
         return "§eUpdate available! Download at https://modrinth.com/plugin/silkspawners §f\nInstalled version: v"
-                + getInstalledVersion()
+                + installedVersion
                 + "\nLatest version: v"
-                + currentLatestVersion;
+                + latestVersion;
     }
 
-    private String upToDateMessage(String currentLatestVersion) {
-        return "The plugin is up to date (Current release v" + currentLatestVersion + ")";
+    private String upToDateMessage(String latestVersion) {
+        return "The plugin is up to date (Current release v" + latestVersion + ")";
     }
 }

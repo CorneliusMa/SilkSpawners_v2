@@ -23,24 +23,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class SilkSpawners extends JavaPlugin {
 
-    private VersionChecker versionChecker;
-
     private PluginLoader loader;
 
     @Override
     public void onEnable() {
         loader = new PluginLoader(this);
-        versionChecker = loader.create(VersionChecker.class, getDescription().getVersion());
         if (!loader.load()) return;
 
         registerListeners();
         registerCommands();
         registerApiService();
         registerHooks();
-        startOptional(versionChecker::start);
         startOptional(this::startMetrics);
 
-        Logger.info("Enabled SilkSpawners v" + versionChecker.getInstalledVersion());
+        Logger.info("Enabled SilkSpawners v" + loader.get(VersionChecker.class).getInstalledVersion());
     }
 
     private void startOptional(Runnable step) {
@@ -67,7 +63,7 @@ public class SilkSpawners extends JavaPlugin {
     private void registerCommands() {
         Logger.info("Registering commands");
         SilkSpawnersCommandHandler commandHandler = loader.create(SilkSpawnersCommandHandler.class, "silkspawners");
-        loader.createAll(SilkSpawnersCommand.class, versionChecker, (BooleanSupplier) this::reloadConfiguration)
+        loader.createAll(SilkSpawnersCommand.class, (BooleanSupplier) this::reloadConfiguration)
                 .forEach(commandHandler::addCommand);
         commandHandler.register();
     }
@@ -84,7 +80,7 @@ public class SilkSpawners extends JavaPlugin {
         hookLoader.register();
     }
 
-    public synchronized boolean reloadConfiguration() {
+    private synchronized boolean reloadConfiguration() {
         if (!loader.get(ConfigLoader.class).reload()) return false;
         try {
             LocaleHandler localeHandler = loader.get(LocaleHandler.class);
@@ -93,12 +89,13 @@ public class SilkSpawners extends JavaPlugin {
             Logger.error("Error loading locale file", ex);
             return false;
         }
-        versionChecker.restart();
+        loader.get(VersionChecker.class).restart();
         return true;
     }
 
     @Override
     public void onDisable() {
+        VersionChecker versionChecker = loader == null ? null : loader.get(VersionChecker.class);
         if (versionChecker == null) return;
         Logger.info("Stopping version checker");
         versionChecker.stop();
