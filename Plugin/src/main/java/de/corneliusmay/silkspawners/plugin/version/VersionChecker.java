@@ -1,11 +1,11 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
 import com.google.common.base.Preconditions;
-import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.Schedule;
 import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Requires;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URI;
@@ -17,10 +17,12 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Requires(PluginConfig.class)
+@RequiredArgsConstructor
 public class VersionChecker implements Loader {
 
     private static final URI LATEST_RELEASE_URI =
@@ -30,19 +32,14 @@ public class VersionChecker implements Loader {
 
     private final HttpClient client = HttpClient.newHttpClient();
 
-    @Getter
-    private final String installedVersion;
-
-    // Only exists to make the config load before the version check
-    private final ConfigLoader config;
+    private final Plugin plugin;
 
     private volatile String latestVersion;
 
     private Schedule schedule;
 
-    public VersionChecker(Plugin plugin, ConfigLoader config) {
-        this.installedVersion = plugin.getDescription().getVersion();
-        this.config = config;
+    public String getInstalledVersion() {
+        return plugin.getDescription().getVersion();
     }
 
     @Override
@@ -112,7 +109,7 @@ public class VersionChecker implements Loader {
     }
 
     private boolean isUpToDate(String latestVersion) {
-        int[] installed = parseVersion(installedVersion);
+        int[] installed = parseVersion(getInstalledVersion());
         int[] latest = parseVersion(latestVersion);
         for (int i = 0; i < latest.length; i++) {
             int installedPart = i < installed.length ? installed[i] : 0;
@@ -127,7 +124,7 @@ public class VersionChecker implements Loader {
 
     private String updateAvailableMessage(String latestVersion) {
         return "§eUpdate available! Download at https://modrinth.com/plugin/silkspawners §f\nInstalled version: v"
-                + installedVersion
+                + getInstalledVersion()
                 + "\nLatest version: v"
                 + latestVersion;
     }

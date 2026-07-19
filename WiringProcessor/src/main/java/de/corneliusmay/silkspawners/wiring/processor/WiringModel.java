@@ -20,6 +20,10 @@ class WiringModel {
 
     private final Map<String, Product> products = new TreeMap<>();
 
+    private final Map<String, String> initializers = new TreeMap<>();
+
+    private final Map<String, List<String>> requirements = new TreeMap<>();
+
     void addComponent(String component, boolean loader, List<Parameter> parameters) {
         components.put(component, new Component(loader, parameters));
     }
@@ -28,12 +32,24 @@ class WiringModel {
         return products.put(product, provider);
     }
 
+    String addInitializer(String holder, String loader) {
+        return initializers.put(holder, loader);
+    }
+
+    void addRequirements(String component, List<String> holders) {
+        requirements.put(component, holders);
+    }
+
     boolean isComponent(String type) {
         return components.containsKey(type);
     }
 
     boolean isProduct(String type) {
         return products.containsKey(type);
+    }
+
+    boolean isInitialized(String holder) {
+        return initializers.containsKey(holder);
     }
 
     boolean isEmpty() {
@@ -48,6 +64,14 @@ class WiringModel {
         return Collections.unmodifiableMap(products);
     }
 
+    Map<String, String> initializers() {
+        return Collections.unmodifiableMap(initializers);
+    }
+
+    Map<String, List<String>> requirements() {
+        return Collections.unmodifiableMap(requirements);
+    }
+
     List<String> dependencies(String component) {
         List<String> dependencies = new ArrayList<>();
         for (Parameter parameter : components.get(component).parameters()) {
@@ -56,6 +80,10 @@ class WiringModel {
                 String owner = products.get(parameter.erasedClass()).owner();
                 if (isComponent(owner)) dependencies.add(owner);
             }
+        }
+        for (String holder : requirements.getOrDefault(component, List.of())) {
+            String initializer = initializers.get(holder);
+            if (initializer != null && isComponent(initializer)) dependencies.add(initializer);
         }
         return dependencies;
     }
