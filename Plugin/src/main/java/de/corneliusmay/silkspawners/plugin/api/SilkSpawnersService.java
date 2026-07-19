@@ -50,6 +50,11 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
     }
 
     @Override
+    public String getDisplayName(EntityType entityType) {
+        return Spawner.displayName(entityType);
+    }
+
+    @Override
     public SpawnerSnapshot getSpawner(Block block) {
         return spawnerFactory.fromBlock(block).orElse(null);
     }

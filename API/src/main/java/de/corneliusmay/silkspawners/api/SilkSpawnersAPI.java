@@ -41,6 +41,14 @@ public interface SilkSpawnersAPI {
     boolean isSpawnerItem(@Nullable ItemStack itemStack);
 
     /**
+     * Returns the display name of the given entity type, as used on spawner items.
+     *
+     * @param entityType the entity type, {@code null} for an empty spawner
+     * @return the display name of the entity type
+     */
+    String getDisplayName(@Nullable EntityType entityType);
+
+    /**
      * Reads a placed spawner block.
      *
      * @return a snapshot of the spawner, or {@code null} if the block is no spawner
