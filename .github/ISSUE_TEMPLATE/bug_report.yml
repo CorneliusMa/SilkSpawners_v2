@@ -1,0 +1,84 @@
+name: Bug Report
+description: Report something that is not working as expected
+labels: ["bug"]
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before reporting
+      options:
+        - label: I have checked the [FAQ](https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md) and searched [existing issues](https://github.com/CorneliusMa/SilkSpawners_v2/issues?q=is%3Aissue)
+          required: true
+        - label: I can reproduce the bug with the [latest release](https://github.com/CorneliusMa/SilkSpawners_v2/releases/latest)
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Place a spawner ...
+        2. Mine it with ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: SilkSpawners version
+      description: Shown by `/silkspawners version`.
+      placeholder: "3.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: server-software
+    attributes:
+      label: Server software
+      options:
+        - Paper
+        - Spigot
+        - Purpur
+        - Folia
+        - Bukkit
+        - Other (please mention in the description)
+    validations:
+      required: true
+  - type: input
+    id: server-version
+    attributes:
+      label: Server version
+      description: Output of the `/version` command.
+      placeholder: "1.21.8"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Errors and log output
+      description: Any related errors or log lines from the server console. This will be automatically formatted, no need for backticks.
+      render: shell
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration
+      description: Your `config.yml`, if it differs from the default. This will be automatically formatted, no need for backticks.
+      render: yaml
+  - type: input
+    id: related-plugins
+    attributes:
+      label: Related plugins
+      description: Other plugins involved, if the bug concerns an integration.
+      placeholder: "ShopGUI+ 1.x, EconomyShopGUI 6.x"
