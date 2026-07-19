@@ -52,9 +52,10 @@ spawner:
   silktouchRequired: true # If set to false, spawners will drop even if the used pickaxe does not have SilkTouch
   silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners (useful for custom pickaxes with higher enchantment levels)
   item:
-    name: $dSpawner # The name of the spawner item dropped
-    prefix: $e # The text before the spawner name in the lore
-    prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
+    name: $d{entity} Spawner # The name of the spawner item dropped, {entity} is replaced with the mob name
+    color: $e # The color of the mob name in chat messages
+    prefix: $7Spawns $e # The text before the mob name in the lore
+    prefixOld: [] # If you change your prefix, add the previous value to this list to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
     all: [] # Explosion tiers rolled whenever spawners are mined, with or without SilkTouch (see below)
@@ -69,7 +70,7 @@ spawner:
     disablePlace: false # If set to true, no permission is required to place spawners
     disableChange: false # If set to true, no permission is required to change spawners with eggs
 update:
-  configVersion: 3 # Do not change this value manually! It is automatically managed by the plugin
+  configVersion: 4 # Do not change this value manually! It is automatically managed by the plugin
   check:
     enabled: true # If set to true, the plugin will check for updates
     interval: 24 # The interval in hours at which to check for updates
@@ -99,7 +100,7 @@ spawner:
       breakBlocks: true # Optional: the explosion damages surrounding blocks (default true)
 ```
 
-All tier options are described in the [README](https://github.com/CorneliusMa/SilkSpawners_v2#configuration). Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
+Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
 ![Crowdin Localization](https://badges.crowdin.net/silkspawners/localized.svg)
@@ -132,6 +133,7 @@ COMMAND_SILKSPAWNERS_HELP_MESSAGE_SET = $7Use this command to change already pla
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_ENTITIES = $7Use this command to see entities that can be used in commands and permissions. \nUsage\: /silkspawners entities
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_VERSION = $7Use this command to see, if updates are available. \nUsage\: /silkspawners version
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to update them from the .jar file. Updating may be necessary if new messages have been added in an update. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale [setting/reload/update]
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_CONFIG = $7Use this command to reload the configuration from the config.yml file. \nUsage\: /silkspawners config reload
 
 COMMAND_SILKSPAWNERS_GIVE_USAGE = $ePlease use /silkspawners give <Player> <Mob> [Amount]
 COMMAND_SILKSPAWNERS_GIVE_PLAYER_NOT_FOUND = $7The player $c{0}$7 is not online.
@@ -149,6 +151,7 @@ COMMAND_SILKSPAWNERS_SET_ENTITY_NOT_FOUND = $7The entity $c{0}$7 is no valid spa
 COMMAND_SILKSPAWNERS_SET_INSUFFICIENT_ENTITY_PERMISSION = $7You do not have the permission to set spawners to $c{0}$7.
 COMMAND_SILKSPAWNERS_SET_INVALID_TARGET = $7You must look at a spawner to change.
 COMMAND_SILKSPAWNERS_SET_SUCCESS = $7Successfully set spawner to {0}$7.
+COMMAND_SILKSPAWNERS_SET_UNCHANGED = $7The spawner is already set to {0}$7.
 
 COMMAND_SILKSPAWNERS_EXPLOSION_USAGE = $ePlease use /silkspawners explosion <enable/disable/setting> <Player>
 COMMAND_SILKSPAWNERS_EXPLOSION_PLAYER_NOT_FOUND = $7The Player $c{0}$7 is not online.
@@ -169,6 +172,7 @@ COMMAND_SILKSPAWNERS_LOCALE_USAGE = $ePlease use /silkspawners locale [setting/r
 COMMAND_SILKSPAWNERS_LOCALE_SETTING = $7The currently used locale is {0}. Available locales are\: {1}
 COMMAND_SILKSPAWNERS_LOCALE_RELOAD_SUCCESSFUL = $7The locale was reloaded successfully.
 COMMAND_SILKSPAWNERS_LOCALE_RELOAD_ERROR = $cAn error occurred reloading the locale.
+COMMAND_SILKSPAWNERS_LOCALE_INCOMPLETE = $eThe locale {0} is incomplete ({1}% translated).$7 Untranslated messages are shown in English.\nYou can help completing the translation at {2}
 COMMAND_SILKSPAWNERS_LOCALE_UPDATE_WARNING = $eWarning\!$7 Updating the locale files will $coverwrite all changes$7.\n If you want to proceed, run /silkspawners locale update confirm.
 COMMAND_SILKSPAWNERS_LOCALE_UPDATE_SUCCESSFUL = $7The locale files were updated and reloaded successfully.
 COMMAND_SILKSPAWNERS_LOCALE_UPDATE_ERROR = $cAn error occurred.$7 Please contact the developer if this problem persists.
@@ -185,12 +189,15 @@ Common questions and problems are answered in the [FAQ](https://github.com/Corne
 
 ## Integrations
 
+### EconomyShopGUI
+[EconomyShopGUI](https://www.spigotmc.org/resources/economyshopgui.69927/) supports SilkSpawners out of the box, so spawners bought and sold in its shops are SilkSpawners items. Its `spawner-provider` option detects SilkSpawners automatically when set to `AUTO` (the default), or can be pinned with `spawner-provider: SILKSPAWNERSV2`.
+
 ### ShopGUI+
 If [ShopGUI+](https://www.spigotmc.org/resources/shopgui-1-8-1-21.6515/) is installed, SilkSpawners automatically registers itself as its spawner provider, so spawners bought and sold in shops are SilkSpawners items. The hook can be disabled by setting `hooks.shopguiplus` to `false` in the configuration.
 
 ## For developers
 
-SilkSpawners fires custom Bukkit events (`SpawnerPlaceEvent`, `SpawnerBreakEvent`) that other plugins can listen to. See [Developer documentation](https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/DEVELOPERS.md) for details.
+SilkSpawners provides a developer API with a `SilkSpawnersAPI` service and custom Bukkit events. See the [Developer documentation](https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/DEVELOPERS.md) for details.
 
 ## Tutorial
 
