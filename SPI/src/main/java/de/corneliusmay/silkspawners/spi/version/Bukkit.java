@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.spi.version;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public interface Bukkit {
@@ -12,4 +13,6 @@ public interface Bukkit {
     ItemStack[] getItemsInHand(Player player);
 
     Material getSpawnerMaterial();
+
+    ItemFlag getHideAdditionalTooltipFlag();
 }
