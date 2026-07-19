@@ -1,0 +1,35 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: ["enhancement"]
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before requesting
+      options:
+        - label: I have searched [existing issues](https://github.com/CorneliusMa/SilkSpawners_v2/issues?q=is%3Aissue) for this feature
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the use case or limitation that motivates this request.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What should the feature look like? Commands, permissions, config options, ...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Workarounds or other approaches you have considered.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else that helps, e.g. screenshots or examples from other plugins.

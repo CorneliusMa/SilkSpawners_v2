@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Translations
+    url: https://crowdin.com/project/silkspawners
+    about: Report translation mistakes or contribute new translations on Crowdin. Translation pull requests and issues are not accepted here.
+  - name: Developer API documentation
+    url: https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/DEVELOPERS.md
+    about: Integrating SilkSpawners into your own plugin? Check the developer documentation first.

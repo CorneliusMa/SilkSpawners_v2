@@ -1,0 +1,22 @@
+name: Question / Support
+description: Ask a question about setup, configuration or usage
+labels: ["question"]
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before asking
+      options:
+        - label: I have checked the [FAQ](https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md), the [README](https://github.com/CorneliusMa/SilkSpawners_v2#readme) and searched [existing issues](https://github.com/CorneliusMa/SilkSpawners_v2/issues?q=is%3Aissue)
+          required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: textarea
+    id: setup
+    attributes:
+      label: Your setup
+      description: If relevant, your SilkSpawners version, server software and version, and configuration.
