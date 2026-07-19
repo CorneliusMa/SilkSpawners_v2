@@ -49,6 +49,7 @@ public class SpawnerFactory {
                 .setDisplayName(Spawner.itemName(entityType))
                 .addToLore(Spawner.serializedName(entityType))
                 .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
+                .addItemFlags(bukkitHandler.getHideAdditionalTooltipFlag())
                 .build();
         return validated(new Spawner(entityType, itemStack));
     }

@@ -6,6 +6,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
@@ -34,5 +35,10 @@ public class BukkitHandler implements Bukkit {
     @Override
     public Material getSpawnerMaterial() {
         return Material.SPAWNER;
+    }
+
+    @Override
+    public ItemFlag getHideAdditionalTooltipFlag() {
+        return ItemFlag.HIDE_ADDITIONAL_TOOLTIP;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public class BukkitHandler implements Bukkit {
@@ -22,5 +23,10 @@ public class BukkitHandler implements Bukkit {
     @Override
     public Material getSpawnerMaterial() {
         return Material.MOB_SPAWNER;
+    }
+
+    @Override
+    public ItemFlag getHideAdditionalTooltipFlag() {
+        return ItemFlag.HIDE_POTION_EFFECTS;
     }
 }

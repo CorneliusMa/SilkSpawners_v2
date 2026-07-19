@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.utils;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -10,16 +11,6 @@ public class ItemBuilder {
 
     private final ItemStack stack;
     private final ItemMeta meta;
-
-    public ItemBuilder(ItemStack stack) {
-        this.stack = stack;
-        this.meta = this.stack.getItemMeta();
-    }
-
-    public ItemBuilder(Material material, int amount) {
-        this.stack = new ItemStack(material, amount);
-        this.meta = this.stack.getItemMeta();
-    }
 
     public ItemBuilder(Material material) {
         this.stack = new ItemStack(material, 1);
@@ -41,6 +32,11 @@ public class ItemBuilder {
 
     public ItemBuilder addToLore(List<String> loreArray) {
         for (String lore : loreArray) addToLore(lore);
+        return this;
+    }
+
+    public ItemBuilder addItemFlags(ItemFlag... flags) {
+        this.meta.addItemFlags(flags);
         return this;
     }
 
