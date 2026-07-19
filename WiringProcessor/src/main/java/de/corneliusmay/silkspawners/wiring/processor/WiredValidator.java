@@ -1,12 +1,15 @@
 package de.corneliusmay.silkspawners.wiring.processor;
 
+import de.corneliusmay.silkspawners.wiring.Initializes;
 import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Requires;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -16,6 +19,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
@@ -129,6 +133,39 @@ class WiredValidator {
         if (previous != null) error(getter, "Product is already provided by " + previous.owner());
     }
 
+    void validateInitializes(TypeElement loader) {
+        if (loader.getAnnotation(Wired.class) == null || !isSubtype(loader, LOADER)) {
+            error(loader, "@Initializes requires a @Wired loader");
+            return;
+        }
+        for (String holder : holders(loader.getAnnotation(Initializes.class)::value)) {
+            String previous =
+                    model.addInitializer(holder, loader.getQualifiedName().toString());
+            if (previous != null) error(loader, "Holder is already initialized by " + previous);
+        }
+    }
+
+    void validateRequires(TypeElement component) {
+        if (component.getAnnotation(Wired.class) == null) {
+            error(component, "@Requires classes must be @Wired");
+            return;
+        }
+        model.addRequirements(
+                component.getQualifiedName().toString(), holders(component.getAnnotation(Requires.class)::value));
+    }
+
+    // Class values in annotations are only accessible as mirrors during processing
+    private List<String> holders(Supplier<Class<?>[]> value) {
+        try {
+            value.get();
+            return List.of();
+        } catch (MirroredTypesException ex) {
+            return ex.getTypeMirrors().stream()
+                    .map(mirror -> processingEnv.getTypeUtils().erasure(mirror).toString())
+                    .toList();
+        }
+    }
+
     // Only external types can arrive as explicit arguments, so anything from this build must be resolvable
     void validateGraph() {
         if (registry == null)
@@ -155,6 +192,19 @@ class WiredValidator {
         for (Map.Entry<String, WiringModel.Product> product : model.products().entrySet()) {
             if (model.isComponent(product.getKey()))
                 error(getterAnchor(product.getValue()), "Product type is also a @Wired component: " + product.getKey());
+        }
+        for (Map.Entry<String, String> initializer : model.initializers().entrySet()) {
+            String holder = initializer.getKey();
+            Element anchor = processingEnv.getElementUtils().getTypeElement(initializer.getValue());
+            if (model.isComponent(holder)) error(anchor, "Initialized holder is also a @Wired component: " + holder);
+            else if (model.isProduct(holder))
+                error(anchor, "Initialized holder is also a @Provides product: " + holder);
+        }
+        for (Map.Entry<String, List<String>> requirement : model.requirements().entrySet()) {
+            Element anchor = processingEnv.getElementUtils().getTypeElement(requirement.getKey());
+            for (String holder : requirement.getValue()) {
+                if (!model.isInitialized(holder)) error(anchor, "No @Wired loader initializes: " + holder);
+            }
         }
         for (String component : model.components().keySet()) checkCycle(component, new ArrayList<>());
     }

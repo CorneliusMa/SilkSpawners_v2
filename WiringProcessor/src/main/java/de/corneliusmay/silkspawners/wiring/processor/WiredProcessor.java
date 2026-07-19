@@ -1,8 +1,10 @@
 package de.corneliusmay.silkspawners.wiring.processor;
 
 import com.google.auto.service.AutoService;
+import de.corneliusmay.silkspawners.wiring.Initializes;
 import de.corneliusmay.silkspawners.wiring.Provides;
 import de.corneliusmay.silkspawners.wiring.Registry;
+import de.corneliusmay.silkspawners.wiring.Requires;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -32,7 +34,11 @@ public class WiredProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         return Set.of(
-                Registry.class.getCanonicalName(), Wired.class.getCanonicalName(), Provides.class.getCanonicalName());
+                Registry.class.getCanonicalName(),
+                Wired.class.getCanonicalName(),
+                Provides.class.getCanonicalName(),
+                Initializes.class.getCanonicalName(),
+                Requires.class.getCanonicalName());
     }
 
     @Override
@@ -49,6 +55,10 @@ public class WiredProcessor extends AbstractProcessor {
             validator.validateComponent((TypeElement) element);
         for (Element element : roundEnvironment.getElementsAnnotatedWith(Provides.class))
             validator.validateProduct((ExecutableElement) element);
+        for (Element element : roundEnvironment.getElementsAnnotatedWith(Initializes.class))
+            validator.validateInitializes((TypeElement) element);
+        for (Element element : roundEnvironment.getElementsAnnotatedWith(Requires.class))
+            validator.validateRequires((TypeElement) element);
         // Emit the registry only once and before the final round so it still gets processed itself
         if (!generated && !model.isEmpty() && !roundEnvironment.processingOver()) {
             validator.validateGraph();
