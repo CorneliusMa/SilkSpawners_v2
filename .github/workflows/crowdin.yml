@@ -21,7 +21,7 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
-      - uses: crowdin/github-action@v2
+      - uses: crowdin/github-action@v2.16.3
         id: crowdin
         with:
           translation: "Plugin/src/main/resources/locales/messages_%two_letters_code%.properties"
