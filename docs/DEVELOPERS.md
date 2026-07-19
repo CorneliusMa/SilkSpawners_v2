@@ -129,7 +129,7 @@ A runnable example plugin lives in the [`ApiExample`](../ApiExample) module - bu
 
 ## Shop integrations
 
-There is no SilkSpawners-side registration for shop integrations: `getSpawnerItem` and `getEntityType` are the integration surface. Wire them into your shop plugin from your own `onEnable` (with `depend: [SilkSpawners_v2]`), the same way the bundled ShopGUI+ integration does it internally.
+There is no SilkSpawners-side registration for shop integrations: `getSpawnerItem` and `getEntityType` are the integration surface, and `getDisplayName` provides the entity name for labeling shop entries. Wire them into your shop plugin from your own `onEnable` (with `depend: [SilkSpawners_v2]`), the same way the bundled ShopGUI+ integration does it internally.
 
 Pull requests for new bundled hooks are welcome - see [Adding a plugin hook](../CONTRIBUTING.md#adding-a-plugin-hook) in the contributing guide.
 

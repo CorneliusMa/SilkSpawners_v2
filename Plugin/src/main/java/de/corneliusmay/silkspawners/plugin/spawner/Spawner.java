@@ -58,7 +58,7 @@ public class Spawner implements SpawnerSnapshot {
         return PluginConfig.SPAWNER_ITEM_PREFIX.get() + displayName(entityType);
     }
 
-    private static String displayName(EntityType entityType) {
+    public static String displayName(EntityType entityType) {
         return StringUtils.capitalizeFully(serializedEntityType(entityType).replace("_", " "));
     }
 }
