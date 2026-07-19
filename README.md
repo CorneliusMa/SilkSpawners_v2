@@ -143,6 +143,9 @@ Common questions and problems are answered in the [FAQ](docs/FAQ.md).
 
 ## Integrations
 
+### EconomyShopGUI
+[EconomyShopGUI](https://www.spigotmc.org/resources/economyshopgui.69927/) supports SilkSpawners out of the box, so spawners bought and sold in its shops are SilkSpawners items. Its `spawner-provider` option detects SilkSpawners automatically when set to `AUTO` (the default), or can be pinned with `spawner-provider: SILKSPAWNERSV2`.
+
 ### ShopGUI+
 If [ShopGUI+](https://www.spigotmc.org/resources/shopgui-1-8-1-21.6515/) is installed, SilkSpawners automatically registers itself as its spawner provider, so spawners bought and sold in shops are SilkSpawners items. The hook can be disabled by setting `hooks.shopguiplus` to `false` in the configuration.
 
