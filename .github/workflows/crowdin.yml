@@ -48,6 +48,7 @@ jobs:
       - name: Enable auto-merge
         if: steps.crowdin.outputs.pull_request_url != ''
         run: |
+          PR_URL="${PR_URL//\"/}"
           gh pr edit "$PR_URL" --add-label "automerge"
           gh pr merge --auto --squash "$PR_URL"
         env:
