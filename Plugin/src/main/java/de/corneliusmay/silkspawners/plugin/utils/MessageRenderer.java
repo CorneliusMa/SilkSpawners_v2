@@ -35,7 +35,8 @@ public class MessageRenderer {
 
     public static String render(String template, Object... args) {
         if (isMixed(template)) throw new MixedFormattingException();
-        if (template.indexOf('§') != -1) return MessageFormat.format(template, args);
+        // Crowdin only escapes apostrophes in strings containing variables, so plain strings must skip MessageFormat
+        if (template.indexOf('§') != -1) return args.length == 0 ? template : MessageFormat.format(template, args);
 
         // Args are inserted as components because they may contain legacy codes, which MiniMessage rejects
         TagResolver.Builder resolver = TagResolver.builder();
