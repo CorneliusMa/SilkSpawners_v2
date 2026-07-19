@@ -46,7 +46,7 @@ public class SpawnerFactory {
 
     public Optional<Spawner> ofType(EntityType entityType) {
         ItemStack itemStack = new ItemBuilder(bukkitHandler.getSpawnerMaterial())
-                .setDisplayName(PluginConfig.SPAWNER_ITEM_NAME.get())
+                .setDisplayName(Spawner.itemName(entityType))
                 .addToLore(Spawner.serializedName(entityType))
                 .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
                 .build();
@@ -86,19 +86,18 @@ public class SpawnerFactory {
     }
 
     private EntityType parseEntityType(String lore) {
-        String name;
         String prefix = PluginConfig.SPAWNER_ITEM_PREFIX.get();
-        String oldPrefix = PluginConfig.SPAWNER_ITEM_PREFIX_OLD.get();
-        if (lore.startsWith(prefix)) {
-            name = lore.substring(prefix.length()).replace(" ", "_").toLowerCase();
-        } else if (!oldPrefix.equals("") && lore.startsWith(oldPrefix)) {
-            name = lore.substring(oldPrefix.length()).replace(" ", "_").toLowerCase();
-        } else {
-            return null; // Invalid lore
+        if (lore.startsWith(prefix)) return entityTypeFromName(lore.substring(prefix.length()));
+        for (String oldPrefix : PluginConfig.SPAWNER_ITEM_PREFIX_OLD.get()) {
+            if (!oldPrefix.isEmpty() && lore.startsWith(oldPrefix))
+                return entityTypeFromName(lore.substring(oldPrefix.length()));
         }
-        if (name.equalsIgnoreCase(Spawner.EMPTY)) {
-            return null;
-        }
+        return null; // Invalid lore
+    }
+
+    private EntityType entityTypeFromName(String displayName) {
+        String name = displayName.replace(" ", "_").toLowerCase();
+        if (name.equalsIgnoreCase(Spawner.EMPTY)) return null;
         return EntityType.fromName(name);
     }
 }

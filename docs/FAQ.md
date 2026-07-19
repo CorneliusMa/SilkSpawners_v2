@@ -76,7 +76,7 @@ Only spawner items created by SilkSpawners - mined spawners or ones from `/silks
 <details>
 <summary><b>After changing <code>spawner.item.prefix</code>, previously mined spawners no longer work</b></summary>
 
-Set `spawner.item.prefixOld` to your previous prefix - items created before the change then stay recognized.
+Add your previous prefix to the `spawner.item.prefixOld` list - items created before the change then stay recognized. The list must hold all former prefixes, so items survive repeated changes.
 
 </details>
 

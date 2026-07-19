@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 @Wired
@@ -59,8 +62,9 @@ public class ConfigLoader implements Loader {
         FileConfiguration config = plugin.getConfig();
 
         int configVersion = getConfigVersion(config);
+        ConfigurationSection legacyConfig = legacyCopy(config);
         for (ConfigKey<?> key : PluginConfig.values()) {
-            init(key, config, configVersion);
+            init(key, config, legacyConfig, configVersion);
         }
         config.options().copyDefaults(true);
         plugin.saveConfig();
@@ -82,9 +86,10 @@ public class ConfigLoader implements Loader {
         return valid;
     }
 
-    private void init(ConfigKey<?> key, FileConfiguration config, int initialVersion) {
+    private void init(
+            ConfigKey<?> key, FileConfiguration config, ConfigurationSection legacyConfig, int initialVersion) {
         migrateLegacyKey(key, config, initialVersion);
-        migrateValue(key, config, initialVersion);
+        migrateValue(key, config, legacyConfig, initialVersion);
         config.addDefault(key.getPath(), key.getDefaultValue());
     }
 
@@ -101,7 +106,8 @@ public class ConfigLoader implements Loader {
         }
     }
 
-    private void migrateValue(ConfigKey<?> key, FileConfiguration config, int initialVersion) {
+    private void migrateValue(
+            ConfigKey<?> key, FileConfiguration config, ConfigurationSection legacyConfig, int initialVersion) {
         if (initialVersion >= CONFIG_VERSION || key.getMigrators().isEmpty()) return;
 
         Object value = config.get(key.getPath(), null);
@@ -109,7 +115,7 @@ public class ConfigLoader implements Loader {
         for (List<ConfigValueMigrator> versionMigrators :
                 key.getMigrators().tailMap(initialVersion, false).values()) {
             for (ConfigValueMigrator migrator : versionMigrators) {
-                Object result = migrator.migrate(value);
+                Object result = migrator.migrate(value, legacyConfig);
                 if (result != null) {
                     value = result;
                     migrated = true;
@@ -117,6 +123,16 @@ public class ConfigLoader implements Loader {
             }
         }
         if (migrated) config.set(key.getPath(), value);
+    }
+
+    private ConfigurationSection legacyCopy(FileConfiguration config) {
+        try {
+            YamlConfiguration copy = new YamlConfiguration();
+            copy.loadFromString(config.saveToString());
+            return copy;
+        } catch (InvalidConfigurationException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     private Object load(ConfigKey<?> key, FileConfiguration config) {

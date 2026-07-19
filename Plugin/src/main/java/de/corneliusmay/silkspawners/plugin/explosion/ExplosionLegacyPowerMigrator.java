@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.configuration.ConfigurationSection;
 
 public class ExplosionLegacyPowerMigrator implements ConfigValueMigrator {
 
     @Override
-    public Object migrate(Object legacyValue) {
+    public Object migrate(Object legacyValue, ConfigurationSection legacyConfig) {
         Integer power = legacyPower(legacyValue);
         if (power == null) return null;
 

@@ -5,15 +5,18 @@ import static de.corneliusmay.silkspawners.plugin.config.ConfigScope.*;
 import de.corneliusmay.silkspawners.plugin.config.formatters.BooleanConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.formatters.IntegerConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.formatters.MessageConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.migrators.InheritValueMigrator;
+import de.corneliusmay.silkspawners.plugin.config.migrators.LegacyDefaultMigrator;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionLegacyPowerMigrator;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTier;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTierListConfigValue;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerPrefixOldMigrator;
 import java.util.List;
 import java.util.Locale;
 
 public final class PluginConfig {
 
-    public static final int CONFIG_VERSION = 3;
+    public static final int CONFIG_VERSION = 4;
 
     public static final ConfigKey<String> MESSAGE_PREFIX = message(MESSAGES, "prefix", "$8[$bSilkSpawners$8]");
     public static final ConfigKey<Locale> MESSAGE_LOCALE = builder(MESSAGES, "locale")
@@ -25,14 +28,23 @@ public final class PluginConfig {
     public static final ConfigKey<Boolean> SPAWNER_PICKAXE_REQUIRED = bool(SPAWNER, "pickaxeRequired", true);
     public static final ConfigKey<Boolean> SPAWNER_SILKTOUCH_REQUIRED = bool(SPAWNER, "silktouchRequired", true);
     public static final ConfigKey<Integer> SPAWNER_SILKTOUCH_LEVEL = integer(SPAWNER, "silktouchLevel", 1);
-    public static final ConfigKey<String> SPAWNER_ITEM_NAME = message(SPAWNER_ITEM, "name", "$dSpawner");
-    public static final ConfigKey<String> SPAWNER_ITEM_PREFIX = builder(SPAWNER_ITEM, "prefix")
-            .def("$e")
-            .formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value));
-    public static final ConfigKey<String> SPAWNER_ITEM_PREFIX_OLD = builder(SPAWNER_ITEM, "prefixOld")
-            .def("")
-            .legacy(SPAWNER_ITEM.getPath() + "prefix-old")
+    public static final ConfigKey<String> SPAWNER_ITEM_NAME = builder(SPAWNER_ITEM, "name")
+            .def("$d{entity} Spawner")
+            .migrator(4, new LegacyDefaultMigrator("$dSpawner", "$d{entity} Spawner"))
             .formatter(new MessageConfigValue());
+    public static final ConfigKey<String> SPAWNER_ITEM_COLOR = builder(SPAWNER_ITEM, "color")
+            .def("$e")
+            .migrator(4, new InheritValueMigrator(SPAWNER_ITEM.getPath() + "prefix"))
+            .formatter(new MessageConfigValue());
+    public static final ConfigKey<String> SPAWNER_ITEM_PREFIX = builder(SPAWNER_ITEM, "prefix")
+            .def("$7Spawns $e")
+            .migrator(4, new LegacyDefaultMigrator("$e", "$7Spawns $e"))
+            .formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value));
+    public static final ConfigKey<List<String>> SPAWNER_ITEM_PREFIX_OLD = builder(SPAWNER_ITEM, "prefixOld")
+            .def(new String[0])
+            .legacy(SPAWNER_ITEM.getPath() + "prefix-old")
+            .migrator(4, new SpawnerPrefixOldMigrator(SPAWNER_ITEM.getPath() + "prefix", "$e"))
+            .listFormatter(new MessageConfigValue());
     public static final ConfigKey<List<String>> SPAWNER_ITEM_LORE =
             builder(SPAWNER_ITEM, "lore").def(new String[0]).listFormatter(new MessageConfigValue());
     public static final ConfigKey<List<ExplosionTier>> SPAWNER_EXPLOSION_ALL =

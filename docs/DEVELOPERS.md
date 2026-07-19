@@ -74,6 +74,7 @@ Events and the API describe spawners through the `SpawnerSnapshot` interface ins
 | Method | Description |
 | --- | --- |
 | `getEntityType()` | The spawner's entity type, `null` for an empty spawner |
+| `getDisplayName()` | The entity display name, e.g. `Armor Stand` |
 | `getItemStack()` | The spawner item representing this spawner |
 | `isEmpty()` | Whether the spawner has no entity type |
 

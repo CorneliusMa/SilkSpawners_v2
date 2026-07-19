@@ -79,9 +79,10 @@ spawner:
   silktouchRequired: true # If set to false, spawners will drop even if the used pickaxe does not have SilkTouch
   silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners (useful for custom pickaxes with higher enchantment levels)
   item:
-    name: $dSpawner # The name of the spawner item dropped
-    prefix: $e # The text before the spawner name in the lore
-    prefixOld: '' # If you change your prefix, set this value to your old prefix to keep existing spawners functional
+    name: $d{entity} Spawner # The name of the spawner item dropped, {entity} is replaced with the mob name
+    color: $e # The color of the mob name in chat messages
+    prefix: $7Spawns $e # The text before the mob name in the lore
+    prefixOld: [] # If you change your prefix, add the previous value to this list to keep existing spawners functional
     lore: [] # Set an array for this value to set a custom lore
   explosion:
     all: [] # Explosion tiers rolled whenever spawners are mined, with or without SilkTouch (see below)
@@ -96,7 +97,7 @@ spawner:
     disablePlace: false # If set to true, no permission is required to place spawners
     disableChange: false # If set to true, no permission is required to change spawners with eggs
 update:
-  configVersion: 3 # Do not change this value manually! It is automatically managed by the plugin
+  configVersion: 4 # Do not change this value manually! It is automatically managed by the plugin
   check:
     enabled: true # If set to true, the plugin will check for updates
     interval: 24 # The interval in hours at which to check for updates
