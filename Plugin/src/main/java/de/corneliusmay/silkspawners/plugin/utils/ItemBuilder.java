@@ -12,16 +12,6 @@ public class ItemBuilder {
     private final ItemStack stack;
     private final ItemMeta meta;
 
-    public ItemBuilder(ItemStack stack) {
-        this.stack = stack;
-        this.meta = this.stack.getItemMeta();
-    }
-
-    public ItemBuilder(Material material, int amount) {
-        this.stack = new ItemStack(material, amount);
-        this.meta = this.stack.getItemMeta();
-    }
-
     public ItemBuilder(Material material) {
         this.stack = new ItemStack(material, 1);
         this.meta = this.stack.getItemMeta();
