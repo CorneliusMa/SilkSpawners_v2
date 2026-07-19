@@ -1,11 +1,11 @@
 package de.corneliusmay.silkspawners.plugin.locale;
 
-import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
 import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Requires;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
@@ -17,9 +17,12 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Requires(PluginConfig.class)
+@RequiredArgsConstructor
 public class LocaleHandler implements Loader {
 
     private static final String DEFAULT_MESSAGE =
@@ -35,11 +38,6 @@ public class LocaleHandler implements Loader {
 
     private final Plugin plugin;
 
-    // Only exists to make the config load before the locale
-    private final ConfigLoader config;
-
-    private final File localePath;
-
     @Getter
     private volatile ResourceBundle resourceBundle;
 
@@ -52,10 +50,8 @@ public class LocaleHandler implements Loader {
 
     private volatile Locale loadedLocale;
 
-    public LocaleHandler(Plugin plugin, ConfigLoader config) {
-        this.plugin = plugin;
-        this.config = config;
-        this.localePath = new File(plugin.getDataFolder() + "/locale");
+    private File localePath() {
+        return new File(plugin.getDataFolder() + "/locale");
     }
 
     @Override
@@ -74,7 +70,7 @@ public class LocaleHandler implements Loader {
     }
 
     public synchronized void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
-        Path target = Paths.get(plugin.getDataFolder() + "/locale");
+        Path target = localePath().toPath();
         URI resource = getClass().getResource("").toURI();
         try (FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap())) {
             final Path jarPath = fileSystem.getPath("/locales");
@@ -100,7 +96,7 @@ public class LocaleHandler implements Loader {
     }
 
     public synchronized void loadLocale() throws IOException, MissingResourceException {
-        URL[] urls = {localePath.toURI().toURL()};
+        URL[] urls = {localePath().toURI().toURL()};
         ClassLoader loader = new URLClassLoader(urls);
         try (InputStream in = getClass().getResourceAsStream("/locales/messages_en.properties")) {
             this.bundledFallback = new PropertyResourceBundle(in);
@@ -134,7 +130,7 @@ public class LocaleHandler implements Loader {
     }
 
     public String getAvailableLocales() {
-        File[] files = localePath.listFiles();
+        File[] files = localePath().listFiles();
         if (files == null) return "";
         Set<String> reference = referenceKeys();
         return Arrays.stream(files)
