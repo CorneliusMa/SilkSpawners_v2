@@ -1,7 +1,7 @@
 [versions]
 adventure = "4.26.1"
 auto-service = "1.1.1"
-spotless = "8.4.0"
+spotless = "8.7.0"
 
 [libraries]
 bukkit = { module = "org.bukkit:bukkit", version = "1.8-R0.1-SNAPSHOT" }
