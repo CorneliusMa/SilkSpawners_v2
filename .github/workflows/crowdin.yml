@@ -17,7 +17,7 @@ jobs:
           client-id: ${{ secrets.CROWDIN_APP_ID }}
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
 
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
         with:
           token: ${{ steps.app-token.outputs.token }}
 
