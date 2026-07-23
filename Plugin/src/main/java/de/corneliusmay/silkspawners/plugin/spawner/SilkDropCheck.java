@@ -34,7 +34,7 @@ public class SilkDropCheck {
     }
 
     private boolean isRequiredTool(ItemStack item) {
-        return item.getType().toString().contains("PICKAXE") || !PluginConfig.SPAWNER_PICKAXE_REQUIRED.get();
+        return bukkitHandler.isPickaxe(item) || !PluginConfig.SPAWNER_PICKAXE_REQUIRED.get();
     }
 
     private boolean hasRequiredSilkTouchLevel(ItemStack item) {

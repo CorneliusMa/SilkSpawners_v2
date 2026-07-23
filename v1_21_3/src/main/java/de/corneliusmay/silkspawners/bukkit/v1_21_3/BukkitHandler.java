@@ -2,6 +2,7 @@ package de.corneliusmay.silkspawners.bukkit.v1_21_3;
 
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
@@ -40,5 +41,10 @@ public class BukkitHandler implements Bukkit {
     @Override
     public ItemFlag getHideAdditionalTooltipFlag() {
         return ItemFlag.HIDE_ADDITIONAL_TOOLTIP;
+    }
+
+    @Override
+    public boolean isPickaxe(ItemStack item) {
+        return Tag.ITEMS_PICKAXES.isTagged(item.getType());
     }
 }

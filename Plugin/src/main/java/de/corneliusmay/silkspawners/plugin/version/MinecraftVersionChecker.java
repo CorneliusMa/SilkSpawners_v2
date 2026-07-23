@@ -15,6 +15,9 @@ class MinecraftVersionChecker {
         if (version.isNewerOrEqualTo(1, 20, 5)) {
             return "v1_20_5";
         }
+        if (version.isNewerOrEqualTo(1, 16, 0)) {
+            return "v1_16";
+        }
         if (version.isNewerOrEqualTo(1, 13, 1)) {
             return "v1_13_1";
         }

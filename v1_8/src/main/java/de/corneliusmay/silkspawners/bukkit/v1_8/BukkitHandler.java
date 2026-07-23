@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.bukkit.v1_8;
 
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import java.util.EnumSet;
 import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,6 +10,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public class BukkitHandler implements Bukkit {
+
+    private static final Set<Material> PICKAXES = EnumSet.of(
+            Material.WOOD_PICKAXE,
+            Material.STONE_PICKAXE,
+            Material.IRON_PICKAXE,
+            Material.GOLD_PICKAXE,
+            Material.DIAMOND_PICKAXE);
 
     @Override
     public Block getTargetBlock(Player player) {
@@ -28,5 +36,10 @@ public class BukkitHandler implements Bukkit {
     @Override
     public ItemFlag getHideAdditionalTooltipFlag() {
         return ItemFlag.HIDE_POTION_EFFECTS;
+    }
+
+    @Override
+    public boolean isPickaxe(ItemStack item) {
+        return PICKAXES.contains(item.getType());
     }
 }
