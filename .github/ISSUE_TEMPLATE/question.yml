@@ -1,6 +1,6 @@
 name: Question / Support
 description: Ask a question about setup, configuration or usage
-labels: ["question"]
+labels: ["help wanted"]
 body:
   - type: checkboxes
     id: checks
