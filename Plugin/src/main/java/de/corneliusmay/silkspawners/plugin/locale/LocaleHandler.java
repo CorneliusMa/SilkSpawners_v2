@@ -129,6 +129,13 @@ public class LocaleHandler implements Loader {
         return PluginConfig.MESSAGE_LOCALE.get();
     }
 
+    public String getLocaleDisplayName() {
+        Locale locale = getLocale();
+        String displayName = locale.getDisplayName(Locale.ENGLISH);
+        // Unrecognized codes (eg. a self-made "test" locale) echo back as-is instead of resolving to a language name
+        return displayName.equalsIgnoreCase(locale.getLanguage()) ? "Custom" : displayName;
+    }
+
     public String getAvailableLocales() {
         File[] files = localePath().listFiles();
         if (files == null) return "";

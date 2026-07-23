@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -49,7 +50,9 @@ public class SilkSpawners extends JavaPlugin {
 
     private void startMetrics() {
         Logger.info("Starting bStats integration");
-        new Metrics(this, 15215);
+        Metrics metrics = new Metrics(this, 15215);
+        LocaleHandler localeHandler = loader.get(LocaleHandler.class);
+        metrics.addCustomChart(new SimplePie("locale", localeHandler::getLocaleDisplayName));
     }
 
     private void registerListeners() {
