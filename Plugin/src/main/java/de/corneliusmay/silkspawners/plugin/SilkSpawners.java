@@ -84,10 +84,7 @@ public class SilkSpawners extends JavaPlugin {
         if (loader == null) return;
 
         VersionChecker versionChecker = loader.get(VersionChecker.class);
-        if (versionChecker != null) {
-            Logger.info("Stopping version checker");
-            versionChecker.stop();
-        }
+        if (versionChecker != null) versionChecker.stop();
 
         MetricsHandler metricsHandler = loader.get(MetricsHandler.class);
         if (metricsHandler != null) metricsHandler.stop();

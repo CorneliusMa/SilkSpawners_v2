@@ -62,6 +62,7 @@ public class VersionChecker implements Loader {
 
     public synchronized void stop() {
         if (schedule == null) return;
+        Logger.info("Stopping version checker");
         schedule.stop();
         schedule = null;
     }
