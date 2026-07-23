@@ -55,7 +55,7 @@ public class Spawner implements SpawnerSnapshot {
     }
 
     static String serializedName(EntityType entityType) {
-        return PluginConfig.SPAWNER_ITEM_PREFIX.get() + displayName(entityType);
+        return PluginConfig.SPAWNER_ITEM_PREFIX.get() + (entityType == null ? "Nothing" : displayName(entityType));
     }
 
     public static String displayName(EntityType entityType) {

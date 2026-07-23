@@ -1,29 +1,27 @@
-package de.corneliusmay.silkspawners.bukkit.v1_20_5;
+package de.corneliusmay.silkspawners.bukkit.v1_16;
 
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import java.util.EnumSet;
+import java.util.Set;
 import org.bukkit.Material;
-import org.bukkit.Tag;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.RayTraceResult;
 
 public class BukkitHandler implements Bukkit {
 
+    private static final Set<Material> PICKAXES = EnumSet.of(
+            Material.WOODEN_PICKAXE,
+            Material.STONE_PICKAXE,
+            Material.IRON_PICKAXE,
+            Material.GOLDEN_PICKAXE,
+            Material.DIAMOND_PICKAXE,
+            Material.NETHERITE_PICKAXE);
+
     @Override
     public Block getTargetBlock(Player player) {
-        double range = 5;
-
-        AttributeInstance blockRange = player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE);
-        if (blockRange != null) {
-            range = blockRange.getValue();
-        }
-
-        RayTraceResult hitResult = player.rayTraceBlocks(range);
-        return hitResult != null ? hitResult.getHitBlock() : null;
+        return player.getTargetBlockExact(5);
     }
 
     @Override
@@ -40,11 +38,11 @@ public class BukkitHandler implements Bukkit {
 
     @Override
     public ItemFlag getHideAdditionalTooltipFlag() {
-        return ItemFlag.HIDE_ADDITIONAL_TOOLTIP;
+        return ItemFlag.HIDE_POTION_EFFECTS;
     }
 
     @Override
     public boolean isPickaxe(ItemStack item) {
-        return Tag.ITEMS_PICKAXES.isTagged(item.getType());
+        return PICKAXES.contains(item.getType());
     }
 }

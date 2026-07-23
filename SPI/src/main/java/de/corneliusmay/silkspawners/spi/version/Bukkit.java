@@ -15,4 +15,6 @@ public interface Bukkit {
     Material getSpawnerMaterial();
 
     ItemFlag getHideAdditionalTooltipFlag();
+
+    boolean isPickaxe(ItemStack item);
 }

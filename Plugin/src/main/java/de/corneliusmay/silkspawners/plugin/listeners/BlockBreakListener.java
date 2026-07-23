@@ -10,6 +10,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.wiring.Wired;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,7 +53,7 @@ public class BlockBreakListener implements Listener {
 
         if (dropEvent.isCancelled()) return;
 
-        if (Math.random() * 100 > dropEvent.getDropChance()) {
+        if (ThreadLocalRandom.current().nextDouble() * 100 > dropEvent.getDropChance()) {
             destroySpawner(p, e, spawner);
             return;
         }
