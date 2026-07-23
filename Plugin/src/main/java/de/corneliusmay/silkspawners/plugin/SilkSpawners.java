@@ -8,6 +8,7 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.loader.PluginLoader;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.plugin.metrics.MetricsHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import java.io.IOException;
@@ -15,8 +16,6 @@ import java.util.MissingResourceException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -35,24 +34,8 @@ public class SilkSpawners extends JavaPlugin {
         registerCommands();
         registerApiService();
         registerHooks();
-        startOptional(this::startMetrics);
 
         Logger.info("Enabled SilkSpawners v" + loader.get(VersionChecker.class).getInstalledVersion());
-    }
-
-    private void startOptional(Runnable step) {
-        try {
-            step.run();
-        } catch (RuntimeException ex) {
-            Logger.error("An optional startup step threw and was skipped", ex);
-        }
-    }
-
-    private void startMetrics() {
-        Logger.info("Starting bStats integration");
-        Metrics metrics = new Metrics(this, 15215);
-        LocaleHandler localeHandler = loader.get(LocaleHandler.class);
-        metrics.addCustomChart(new SimplePie("locale", localeHandler::getLocaleDisplayName));
     }
 
     private void registerListeners() {
@@ -98,9 +81,15 @@ public class SilkSpawners extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        VersionChecker versionChecker = loader == null ? null : loader.get(VersionChecker.class);
-        if (versionChecker == null) return;
-        Logger.info("Stopping version checker");
-        versionChecker.stop();
+        if (loader == null) return;
+
+        VersionChecker versionChecker = loader.get(VersionChecker.class);
+        if (versionChecker != null) {
+            Logger.info("Stopping version checker");
+            versionChecker.stop();
+        }
+
+        MetricsHandler metricsHandler = loader.get(MetricsHandler.class);
+        if (metricsHandler != null) metricsHandler.stop();
     }
 }
