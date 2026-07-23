@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Optional;
 import java.util.Set;
@@ -19,11 +20,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 @Wired
 @RequiredArgsConstructor
-public class SpawnerFactory {
+public class SpawnerFactory implements Loader {
 
     private final Bukkit bukkitHandler;
 
     private final ServerPlatform platform;
+
+    @Override
+    public boolean load() {
+        return true;
+    }
 
     public Optional<Spawner> fromBlock(Block block) {
         if (block == null || block.getType() != bukkitHandler.getSpawnerMaterial()) return Optional.empty();
