@@ -69,14 +69,14 @@ Set `spawner.destroyable: false`. Spawners can then only be broken by players wh
 <details>
 <summary><b>A placed spawner spawns pigs / nothing instead of the mob on the item</b></summary>
 
-Only spawner items created by SilkSpawners - mined spawners or ones from `/silkspawners give` - carry the mob information. Spawners from the creative inventory, vanilla `/give` or other plugins are placed with the server default. This also happens to previously mined spawners if `spawner.item.prefix` was changed - see the next question.
+Only spawner items created by SilkSpawners - mined spawners or ones from `/silkspawners give` - carry the mob information. Spawners from the creative inventory, vanilla `/give` or other plugins are placed with the server default.
 
 </details>
 
 <details>
-<summary><b>After changing <code>spawner.item.prefix</code>, previously mined spawners no longer work</b></summary>
+<summary><b>Do spawner items from older plugin versions keep working after updating?</b></summary>
 
-Add your previous prefix to the `spawner.item.prefixOld` list - items created before the change then stay recognized. The list must hold all former prefixes, so items survive repeated changes.
+Yes, automatically. The mob is stored invisibly in the item data, so the name and lore are purely cosmetic - items created before this was added are still identified by their lore prefix, and the update carries your previous `spawner.item.prefix` value over to the `spawner.item.prefixOld` list on its own.
 
 </details>
 

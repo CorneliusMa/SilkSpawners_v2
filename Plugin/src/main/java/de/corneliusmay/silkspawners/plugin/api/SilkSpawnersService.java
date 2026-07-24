@@ -47,7 +47,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public boolean isSpawnerItem(ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() == versionAdapter.getSpawnerMaterial();
+        return spawnerFactory.fromItem(itemStack).isPresent();
     }
 
     @Override

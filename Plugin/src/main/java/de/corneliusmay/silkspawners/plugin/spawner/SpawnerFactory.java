@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
+import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Loader;
@@ -22,6 +23,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 @RequiredArgsConstructor
 public class SpawnerFactory implements Loader {
 
+    // The stored location of every spawner item's identity. Changing this orphans all existing items
+    private static final String ENTITY_TAG = "silkspawners:entity";
+
     private final VersionAdapter versionAdapter;
 
     private final ServerPlatform platform;
@@ -39,7 +43,18 @@ public class SpawnerFactory implements Loader {
 
     public Optional<Spawner> fromItem(ItemStack itemStack) {
         if (itemStack == null || itemStack.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();
-        return validated(new Spawner(parseEntityType(itemStack), itemStack.clone()));
+        ItemStack item = itemStack.clone();
+        String entityName = versionAdapter.readTag(item, ENTITY_TAG);
+        if (entityName != null) {
+            EntityType entityType = EntityNames.resolve(entityName);
+            if (entityType == null && !entityName.equals(Spawner.EMPTY)) {
+                Logger.warn("Ignoring spawner item with unrecognized entity '" + entityName
+                        + "' (not supported on this server version)");
+                return Optional.empty();
+            }
+            return validated(new Spawner(entityType, item));
+        }
+        return validated(new Spawner(parseLegacyEntityType(item), item));
     }
 
     public ItemStack itemFor(EntityType entityType) {
@@ -53,9 +68,9 @@ public class SpawnerFactory implements Loader {
     public Optional<Spawner> ofType(EntityType entityType) {
         ItemStack itemStack = new ItemBuilder(versionAdapter.getSpawnerMaterial())
                 .setDisplayName(Spawner.itemName(entityType))
-                .addToLore(Spawner.serializedName(entityType))
-                .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
+                .addToLore(Spawner.itemLore(entityType))
                 .addItemFlags(versionAdapter.getHideAdditionalTooltipFlag())
+                .writeTag(versionAdapter, ENTITY_TAG, Spawner.serializedEntityType(entityType))
                 .build();
         return validated(new Spawner(entityType, itemStack));
     }
@@ -86,15 +101,10 @@ public class SpawnerFactory implements Loader {
         return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
     }
 
-    private EntityType parseEntityType(ItemStack itemStack) {
+    private EntityType parseLegacyEntityType(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null || itemMeta.getLore() == null || itemMeta.getLore().isEmpty()) return null;
-        return parseEntityType(itemMeta.getLore().get(0));
-    }
-
-    private EntityType parseEntityType(String lore) {
-        String prefix = PluginConfig.SPAWNER_ITEM_PREFIX.get();
-        if (lore.startsWith(prefix)) return entityTypeFromName(lore.substring(prefix.length()));
+        String lore = itemMeta.getLore().get(0);
         for (String oldPrefix : PluginConfig.SPAWNER_ITEM_PREFIX_OLD.get()) {
             if (!oldPrefix.isEmpty() && lore.startsWith(oldPrefix))
                 return entityTypeFromName(lore.substring(oldPrefix.length()));
@@ -105,6 +115,6 @@ public class SpawnerFactory implements Loader {
     private EntityType entityTypeFromName(String displayName) {
         String name = displayName.replace(" ", "_").toLowerCase();
         if (name.equalsIgnoreCase(Spawner.EMPTY)) return null;
-        return EntityType.fromName(name);
+        return EntityNames.resolve(name);
     }
 }

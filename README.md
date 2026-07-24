@@ -81,9 +81,8 @@ spawner:
   item:
     name: $d{entity} Spawner # The name of the spawner item dropped, {entity} is replaced with the mob name
     color: $e # The color of the mob name in chat messages
-    prefix: $7Spawns $e # The text before the mob name in the lore
-    prefixOld: [] # If you change your prefix, add the previous value to this list to keep existing spawners functional
-    lore: [] # Set an array for this value to set a custom lore
+    prefixOld: [] # Lore prefixes used by spawner items from older plugin versions, kept so those items stay recognized
+    lore: ['$7Spawns $e{entity}'] # The lore of the spawner item, {entity} is replaced with the mob name
   explosion:
     all: [] # Explosion tiers rolled whenever spawners are mined, with or without SilkTouch (see below)
     normal: [] # Explosion tiers rolled when spawners are mined without SilkTouch (see below)

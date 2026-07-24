@@ -34,11 +34,14 @@ include(
     "PlatformBukkit",
     "PlatformFolia",
     "HookShopGuiPlus",
+    "NBT",
+    "PDC",
     "v1_8",
     "v1_9_4",
     "v1_12_0",
     "v1_13_1",
     "v1_16",
+    "v1_16_5",
     "v1_20_5",
     "v1_21_3"
 )

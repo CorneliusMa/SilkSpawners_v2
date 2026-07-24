@@ -1,5 +1,5 @@
 plugins {
-    id("silkspawners.core-module")
+    id("silkspawners.nbt-module")
 }
 
 dependencies {

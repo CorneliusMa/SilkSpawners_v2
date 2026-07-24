@@ -11,14 +11,20 @@ public class SpawnerPrefixOldMigrator implements ConfigValueMigrator {
 
     private final String prefixPath;
     private final String legacyPrefixDefault;
+    private final String legacyEmptyPrefixRender;
 
     @Override
     public Object migrate(Object legacyValue, ConfigurationSection legacyConfig) {
         List<String> prefixes = new ArrayList<>();
         if (legacyValue instanceof String prefix && !prefix.isEmpty()) prefixes.add(prefix);
-        Object legacyPrefix = legacyConfig.get(prefixPath);
-        if ((legacyPrefix == null || legacyPrefixDefault.equals(legacyPrefix))
-                && !prefixes.contains(legacyPrefixDefault)) prefixes.add(legacyPrefixDefault);
+        for (String prefix : effectivePrefixes(legacyConfig.get(prefixPath))) {
+            if (!prefixes.contains(prefix)) prefixes.add(prefix);
+        }
         return prefixes;
+    }
+
+    private List<String> effectivePrefixes(Object legacyPrefix) {
+        if (legacyPrefix instanceof String prefix && !prefix.isEmpty()) return List.of(prefix);
+        return List.of(legacyPrefixDefault, legacyEmptyPrefixRender);
     }
 }

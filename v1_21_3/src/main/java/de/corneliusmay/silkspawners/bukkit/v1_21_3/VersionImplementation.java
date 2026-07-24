@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.v1_21_3;
 
-import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
+import de.corneliusmay.silkspawners.bukkit.pdc.PDCVersionAdapter;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
-public class VersionImplementation implements VersionAdapter {
+public class VersionImplementation extends PDCVersionAdapter {
 
     @Override
     public Block getTargetBlock(Player player) {

@@ -17,4 +17,8 @@ public interface VersionAdapter {
     ItemFlag getHideAdditionalTooltipFlag();
 
     boolean isPickaxe(ItemStack item);
+
+    ItemStack writeTag(ItemStack itemStack, String tag, String value);
+
+    String readTag(ItemStack itemStack, String tag);
 }
