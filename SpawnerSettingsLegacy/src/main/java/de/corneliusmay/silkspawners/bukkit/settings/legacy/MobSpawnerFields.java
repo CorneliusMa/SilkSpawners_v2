@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.settings.legacy;
 
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import org.bukkit.block.CreatureSpawner;

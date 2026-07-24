@@ -1,8 +1,8 @@
 package de.corneliusmay.silkspawners.bukkit.v1_8;
 
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.bukkit.nbt.NBTVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.settings.legacy.MobSpawnerFields;
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
 import java.util.EnumSet;
 import java.util.Set;
 import org.bukkit.Material;

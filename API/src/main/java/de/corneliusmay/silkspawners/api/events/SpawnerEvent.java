@@ -1,7 +1,8 @@
 package de.corneliusmay.silkspawners.api.events;
 
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public abstract class SpawnerEvent extends Event implements Cancellable {
 
     private final Location location;
 
-    private final Function<EntityType, SpawnerSnapshot> snapshotFactory;
+    private final BiFunction<EntityType, SpawnerSettings, SpawnerSnapshot> snapshotFactory;
 
     private SpawnerSnapshot spawner;
 
@@ -33,7 +34,7 @@ public abstract class SpawnerEvent extends Event implements Cancellable {
             Player player,
             SpawnerSnapshot spawner,
             Location location,
-            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+            BiFunction<EntityType, SpawnerSettings, SpawnerSnapshot> snapshotFactory) {
         this.player = player;
         this.spawner = spawner;
         this.location = location;
@@ -79,8 +80,8 @@ public abstract class SpawnerEvent extends Event implements Cancellable {
         this.cancelled = cancelled;
     }
 
-    protected void replaceSpawner(EntityType entityType) {
-        this.spawner = createSnapshot(entityType);
+    protected void replaceSpawner(EntityType entityType, SpawnerSettings settings) {
+        this.spawner = createSnapshot(entityType, settings);
         this.spawnerReplaced = true;
     }
 
@@ -89,9 +90,9 @@ public abstract class SpawnerEvent extends Event implements Cancellable {
         return spawnerReplaced;
     }
 
-    protected SpawnerSnapshot createSnapshot(EntityType entityType) {
+    protected SpawnerSnapshot createSnapshot(EntityType entityType, SpawnerSettings settings) {
         if (entityType != null && !entityType.isSpawnable())
             throw new IllegalArgumentException("Entity type " + entityType + " is not spawnable");
-        return snapshotFactory.apply(entityType);
+        return snapshotFactory.apply(entityType, settings);
     }
 }

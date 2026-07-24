@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.settings;
 
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import org.bukkit.block.CreatureSpawner;
 

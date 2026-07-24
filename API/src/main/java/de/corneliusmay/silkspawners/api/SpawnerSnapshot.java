@@ -33,4 +33,10 @@ public interface SpawnerSnapshot {
      * @return whether the spawner has no entity type
      */
     boolean isEmpty();
+
+    /**
+     * @return the spawner's block settings, {@code null} if it uses the vanilla defaults
+     */
+    @Nullable
+    SpawnerSettings getSettings();
 }

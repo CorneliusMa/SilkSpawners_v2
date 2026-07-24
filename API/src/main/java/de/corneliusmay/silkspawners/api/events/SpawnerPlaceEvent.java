@@ -1,7 +1,8 @@
 package de.corneliusmay.silkspawners.api.events;
 
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -22,18 +23,30 @@ public class SpawnerPlaceEvent extends SpawnerEvent {
             Player player,
             SpawnerSnapshot spawner,
             Location location,
-            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+            BiFunction<EntityType, SpawnerSettings, SpawnerSnapshot> snapshotFactory) {
         super(player, spawner, location, snapshotFactory);
     }
 
     /**
-     * Replaces the placed spawner.
+     * Replaces the placed spawner. The replacement keeps the current spawner's block settings.
      *
      * @param entityType the new entity type, {@code null} for an empty spawner
      * @throws IllegalArgumentException if the entity type is neither {@code null} nor spawnable
      */
     public void setSpawner(@Nullable EntityType entityType) {
-        replaceSpawner(entityType);
+        replaceSpawner(entityType, getSpawner().getSettings());
+    }
+
+    /**
+     * Replaces the placed spawner with the given entity type and block settings.
+     *
+     * @param entityType the new entity type, {@code null} for an empty spawner
+     * @param settings the block settings, {@code null} for the vanilla defaults
+     * @throws IllegalArgumentException if the entity type is neither {@code null} nor spawnable,
+     *         or the settings are invalid
+     */
+    public void setSpawner(@Nullable EntityType entityType, @Nullable SpawnerSettings settings) {
+        replaceSpawner(entityType, settings);
     }
 
     @Override

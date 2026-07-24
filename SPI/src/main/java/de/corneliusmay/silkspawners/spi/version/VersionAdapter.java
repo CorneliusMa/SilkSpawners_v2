@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.spi.version;
 
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

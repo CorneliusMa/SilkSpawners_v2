@@ -60,10 +60,13 @@ Optional<SilkSpawnersAPI> api = SilkSpawnersApiProvider.find(); // empty instead
 | Method | Description |
 | --- | --- |
 | `getSpawnerItem(EntityType)` | Build the SilkSpawners spawner item for an entity type (`null` entity type = empty spawner, returns `null` for non-spawnable types) |
+| `getSpawnerItem(EntityType, SpawnerSettings)` | Same, with custom block settings the spawner will apply when placed (`null` settings = vanilla defaults) |
 | `getEntityType(ItemStack)` | Read the entity type back out of a spawner item (`null` if empty or not a SilkSpawners item) |
 | `isSpawnerItem(ItemStack)` | Whether the item is a spawner item |
 | `getSpawner(Block)` | Read a placed spawner block as a snapshot (`null` if the block is no spawner) |
-| `setSpawnerType(Block, EntityType)` | Change the entity type of a placed spawner block, returns `false` if the block is no spawner or the type is not spawnable |
+| `getSpawner(ItemStack)` | Read a spawner item as a snapshot (`null` if the item is no SilkSpawners item) |
+| `setSpawnerType(Block, EntityType)` | Change the entity type of a placed spawner block, keeping its settings; returns `false` if the block is no spawner or the type is not spawnable |
+| `setSpawnerType(Block, EntityType, SpawnerSettings)` | Same, but also writes the given block settings |
 | `getSupportedEntityTypes()` | All entity types a spawner can be set to |
 | `canSilkDrop(Player, EntityType)` | Whether the player would receive a spawner drop right now (break permission, silk touch tool and config rules) |
 
@@ -77,6 +80,9 @@ Events and the API describe spawners through the `SpawnerSnapshot` interface ins
 | `getDisplayName()` | The entity display name, e.g. `Armor Stand` |
 | `getItemStack()` | The spawner item representing this spawner |
 | `isEmpty()` | Whether the spawner has no entity type |
+| `getSettings()` | The spawner's block settings (`SpawnerSettings`), `null` when it uses the vanilla defaults |
+
+`SpawnerSettings` mirrors the vanilla spawner tuning fields (spawn delays, spawn count, entity cap, player range, spawn range). SilkSpawners preserves non-default settings through break and place cycles, and replacing a spawner through an event keeps them automatically - consumers never need to carry them by hand. To author settings instead of inheriting them, use the `setSpawner(EntityType, SpawnerSettings)` event overloads or `getSpawnerItem(EntityType, SpawnerSettings)`.
 
 ## Events
 

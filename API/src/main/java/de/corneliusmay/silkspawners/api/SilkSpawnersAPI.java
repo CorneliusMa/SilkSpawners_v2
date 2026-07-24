@@ -27,6 +27,18 @@ public interface SilkSpawnersAPI {
     ItemStack getSpawnerItem(@Nullable EntityType entityType);
 
     /**
+     * Builds the spawner item for the given entity type and block settings, using the configured
+     * name and lore.
+     *
+     * @param entityType the spawner's entity type, {@code null} for an empty spawner
+     * @param settings the block settings, {@code null} for the vanilla defaults
+     * @return the spawner item, or {@code null} if the entity type is not spawnable
+     * @throws IllegalArgumentException if the settings are invalid
+     */
+    @Nullable
+    ItemStack getSpawnerItem(@Nullable EntityType entityType, @Nullable SpawnerSettings settings);
+
+    /**
      * Reads the entity type back out of a spawner item.
      *
      * @return the entity type, or {@code null} if the item is no spawner item, is not
@@ -57,12 +69,35 @@ public interface SilkSpawnersAPI {
     SpawnerSnapshot getSpawner(Block block);
 
     /**
+     * Reads a spawner item.
+     *
+     * @return a snapshot of the spawner the item represents, or {@code null} if the item
+     *         is not recognized as a SilkSpawners spawner item
+     */
+    @Nullable
+    SpawnerSnapshot getSpawner(@Nullable ItemStack itemStack);
+
+    /**
      * Changes the entity type of a placed spawner block. The change is applied one tick later.
      *
      * @param entityType the new entity type, {@code null} to empty the spawner
      * @return {@code false} if the block is no spawner or the entity type is not spawnable
      */
     boolean setSpawnerType(Block block, @Nullable EntityType entityType);
+
+    /**
+     * Changes the entity type of a placed spawner block and applies the given block settings.
+     * The change is applied one tick later. Unlike the two-argument variant, which keeps the
+     * block's current settings, this always writes them.
+     *
+     * @param entityType the new entity type, {@code null} to empty the spawner
+     * @param settings the block settings to apply
+     * @return {@code false} if the block is no spawner or the entity type is not spawnable
+     * @throws IllegalArgumentException if the settings are invalid
+     * @throws NullPointerException if the settings are {@code null}, use the two-argument
+     *         variant to keep the block's current settings
+     */
+    boolean setSpawnerType(Block block, @Nullable EntityType entityType, SpawnerSettings settings);
 
     /**
      * @return all entity types a spawner can be set to; an empty spawner

@@ -1,9 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
 import java.util.List;
 import lombok.Getter;
 import org.bukkit.entity.EntityType;

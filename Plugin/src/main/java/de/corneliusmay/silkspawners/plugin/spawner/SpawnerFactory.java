@@ -1,11 +1,11 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
@@ -64,7 +64,12 @@ public class SpawnerFactory implements Loader {
     }
 
     public ItemStack itemFor(EntityType entityType) {
-        return ofType(entityType).map(Spawner::getItemStack).orElse(null);
+        return itemFor(entityType, null);
+    }
+
+    public ItemStack itemFor(EntityType entityType, SpawnerSettings settings) {
+        requireValid(settings);
+        return ofType(entityType, settings).map(Spawner::getItemStack).orElse(null);
     }
 
     public EntityType entityTypeOf(ItemStack itemStack) {
@@ -87,24 +92,32 @@ public class SpawnerFactory implements Loader {
         return validated(new Spawner(entityType, itemBuilder.build(), settings));
     }
 
-    public Spawner snapshot(EntityType entityType) {
-        return ofType(entityType)
+    public Spawner snapshot(EntityType entityType, SpawnerSettings settings) {
+        requireValid(settings);
+        return ofType(entityType, settings)
                 .orElseThrow(() -> new IllegalArgumentException("Entity type " + entityType + " is not spawnable"));
     }
 
     public Spawner of(SpawnerSnapshot snapshot) {
-        return snapshot instanceof Spawner spawner ? spawner : snapshot(snapshot.getEntityType());
+        return snapshot instanceof Spawner spawner
+                ? spawner
+                : snapshot(snapshot.getEntityType(), snapshot.getSettings());
     }
 
     public void applyToBlock(Spawner spawner, Block block, Set<Location> editedList) {
+        applyToBlock(spawner, block, spawner.getSettings(), editedList);
+    }
+
+    // Null settings keep the block's current values
+    public void applyToBlock(Spawner spawner, Block block, SpawnerSettings settings, Set<Location> editedList) {
+        requireValid(settings);
         platform.runTaskLater(
                 block.getLocation(),
                 () -> {
                     BlockState blockState = block.getState();
                     if (!(blockState instanceof CreatureSpawner creatureSpawner)) return;
                     creatureSpawner.setSpawnedType(spawner.getEntityType());
-                    if (spawner.getSettings() != null)
-                        versionAdapter.applySpawnerSettings(creatureSpawner, spawner.getSettings());
+                    if (settings != null) versionAdapter.applySpawnerSettings(creatureSpawner, settings);
                     blockState.update();
                     editedList.remove(block.getLocation());
                 },
@@ -113,6 +126,11 @@ public class SpawnerFactory implements Loader {
 
     private Optional<Spawner> validated(Spawner spawner) {
         return spawner.isValid() ? Optional.of(spawner) : Optional.empty();
+    }
+
+    private static void requireValid(SpawnerSettings settings) {
+        if (settings != null && !SpawnerSettingsFormat.isValid(settings))
+            throw new IllegalArgumentException("Invalid spawner settings " + settings);
     }
 
     private EntityType parseLegacyEntityType(ItemStack itemStack) {

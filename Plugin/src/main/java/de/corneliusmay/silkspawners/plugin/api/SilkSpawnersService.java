@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.api;
 
 import de.corneliusmay.silkspawners.api.SilkSpawnersAPI;
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
@@ -9,6 +10,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,11 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
     }
 
     @Override
+    public ItemStack getSpawnerItem(EntityType entityType, SpawnerSettings settings) {
+        return spawnerFactory.itemFor(entityType, settings);
+    }
+
+    @Override
     public EntityType getEntityType(ItemStack itemStack) {
         return spawnerFactory.entityTypeOf(itemStack);
     }
@@ -61,6 +68,11 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
     }
 
     @Override
+    public SpawnerSnapshot getSpawner(ItemStack itemStack) {
+        return spawnerFactory.fromItem(itemStack).orElse(null);
+    }
+
+    @Override
     public boolean setSpawnerType(Block block, EntityType entityType) {
         if (!isSpawnerBlock(block)) return false;
 
@@ -68,6 +80,18 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
         if (spawner.isEmpty()) return false;
 
         spawnerFactory.applyToBlock(spawner.get(), block, new HashSet<>());
+        return true;
+    }
+
+    @Override
+    public boolean setSpawnerType(Block block, EntityType entityType, SpawnerSettings settings) {
+        Objects.requireNonNull(settings, "settings");
+        if (!isSpawnerBlock(block)) return false;
+
+        Optional<Spawner> spawner = spawnerFactory.ofType(entityType);
+        if (spawner.isEmpty()) return false;
+
+        spawnerFactory.applyToBlock(spawner.get(), block, settings, new HashSet<>());
         return true;
     }
 

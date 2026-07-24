@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
-import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +9,9 @@ class SpawnerSettingsFormat {
 
     private static final SpawnerSettings DEFAULT = new SpawnerSettings(200, 800, 4, 6, 16, 4);
 
+    // Blocks can carry values the setters reject (e.g. via /data merge); treat them as vanilla
     static SpawnerSettings nonDefault(SpawnerSettings settings) {
-        return settings == null || DEFAULT.equals(settings) ? null : settings;
+        return settings == null || DEFAULT.equals(settings) || !isValid(settings) ? null : settings;
     }
 
     static String serialize(SpawnerSettings settings) {
@@ -44,7 +45,7 @@ class SpawnerSettingsFormat {
         return isValid(settings) ? settings : null;
     }
 
-    private static boolean isValid(SpawnerSettings settings) {
+    static boolean isValid(SpawnerSettings settings) {
         return settings.minSpawnDelay() >= 0
                 && settings.maxSpawnDelay() > 0
                 && settings.minSpawnDelay() <= settings.maxSpawnDelay()
