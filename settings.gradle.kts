@@ -40,7 +40,7 @@ include(
     "SpawnerSettingsLegacy",
     "v1_8",
     "v1_9_4",
-    "v1_12_0",
+    "v1_12_2",
     "v1_13_1",
     "v1_16",
     "v1_16_5",

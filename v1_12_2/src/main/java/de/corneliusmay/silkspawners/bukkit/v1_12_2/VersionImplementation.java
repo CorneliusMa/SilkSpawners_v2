@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.bukkit.v1_12_0;
+package de.corneliusmay.silkspawners.bukkit.v1_12_2;
 
 import de.corneliusmay.silkspawners.bukkit.nbt.NBTVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.settings.SpawnerSettingsVersionAdapter;

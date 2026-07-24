@@ -3,5 +3,5 @@ plugins {
 }
 
 versionModule {
-    spigotApi("1.20.6")
+    spigotApi("1.12.2")
 }
