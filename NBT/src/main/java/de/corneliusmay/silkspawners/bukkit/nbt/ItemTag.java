@@ -2,6 +2,8 @@ package de.corneliusmay.silkspawners.bukkit.nbt;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 // Writes to the compound the PersistentDataContainer of newer versions reads from, so items survive server upgrades
@@ -61,15 +63,19 @@ class ItemTag {
         }
     }
 
-    String read(ItemStack itemStack, String key) {
+    Map<String, String> read(ItemStack itemStack, String... keys) {
         try {
+            Map<String, String> values = new HashMap<>();
             Object nmsItem = asNmsCopy.invoke(itemStack);
-            if (nmsItem == null) return null;
+            if (nmsItem == null) return values;
             Object tag = getTag.invoke(nmsItem);
-            if (tag == null) return null;
+            if (tag == null) return values;
             Object container = getCompound.invoke(tag, CONTAINER_KEY);
-            String value = (String) getString.invoke(container, key);
-            return value.isEmpty() ? null : value;
+            for (String key : keys) {
+                String value = (String) getString.invoke(container, key);
+                if (!value.isEmpty()) values.put(key, value);
+            }
+            return values;
         } catch (Throwable ex) {
             throw new IllegalStateException(ex);
         }

@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.bukkit.v1_13_1;
 
 import de.corneliusmay.silkspawners.bukkit.nbt.NBTVersionAdapter;
+import de.corneliusmay.silkspawners.bukkit.settings.SpawnerSettingsVersionAdapter;
 import java.util.EnumSet;
 import java.util.Set;
 import org.bukkit.Material;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-public class VersionImplementation extends NBTVersionAdapter {
+public class VersionImplementation extends NBTVersionAdapter implements SpawnerSettingsVersionAdapter {
 
     private static final Set<Material> PICKAXES = EnumSet.of(
             Material.WOODEN_PICKAXE,

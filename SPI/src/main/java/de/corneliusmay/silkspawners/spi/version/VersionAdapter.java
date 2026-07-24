@@ -1,7 +1,10 @@
 package de.corneliusmay.silkspawners.spi.version;
 
+import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -20,5 +23,9 @@ public interface VersionAdapter {
 
     ItemStack writeTag(ItemStack itemStack, String tag, String value);
 
-    String readTag(ItemStack itemStack, String tag);
+    Map<String, String> readTags(ItemStack itemStack, String... tags);
+
+    SpawnerSettings readSpawnerSettings(CreatureSpawner spawner);
+
+    void applySpawnerSettings(CreatureSpawner spawner, SpawnerSettings settings);
 }

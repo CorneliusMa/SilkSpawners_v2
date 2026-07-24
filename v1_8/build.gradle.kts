@@ -3,5 +3,6 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":SpawnerSettingsLegacy"))
     compileOnly(libs.bukkit)
 }

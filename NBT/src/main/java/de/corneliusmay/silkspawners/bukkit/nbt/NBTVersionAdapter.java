@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.bukkit.nbt;
 
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
+import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class NBTVersionAdapter implements VersionAdapter {
@@ -13,7 +14,7 @@ public abstract class NBTVersionAdapter implements VersionAdapter {
     }
 
     @Override
-    public String readTag(ItemStack itemStack, String tag) {
-        return itemTag.read(itemStack, tag);
+    public Map<String, String> readTags(ItemStack itemStack, String... tags) {
+        return itemTag.read(itemStack, tags);
     }
 }

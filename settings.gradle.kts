@@ -36,6 +36,8 @@ include(
     "HookShopGuiPlus",
     "NBT",
     "PDC",
+    "SpawnerSettings",
+    "SpawnerSettingsLegacy",
     "v1_8",
     "v1_9_4",
     "v1_12_0",

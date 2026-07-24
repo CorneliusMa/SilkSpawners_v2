@@ -5,9 +5,11 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class SpawnerFactory implements Loader {
     // The stored location of every spawner item's identity. Changing this orphans all existing items
     private static final String ENTITY_TAG = "silkspawners:entity";
 
+    private static final String SETTINGS_TAG = "silkspawners:settings";
+
     private final VersionAdapter versionAdapter;
 
     private final ServerPlatform platform;
@@ -38,13 +42,14 @@ public class SpawnerFactory implements Loader {
     public Optional<Spawner> fromBlock(Block block) {
         if (block == null || block.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
-        return ofType(creatureSpawner.getSpawnedType());
+        return ofType(creatureSpawner.getSpawnedType(), versionAdapter.readSpawnerSettings(creatureSpawner));
     }
 
     public Optional<Spawner> fromItem(ItemStack itemStack) {
         if (itemStack == null || itemStack.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();
         ItemStack item = itemStack.clone();
-        String entityName = versionAdapter.readTag(item, ENTITY_TAG);
+        Map<String, String> tags = versionAdapter.readTags(item, ENTITY_TAG, SETTINGS_TAG);
+        String entityName = tags.get(ENTITY_TAG);
         if (entityName != null) {
             EntityType entityType = EntityNames.resolve(entityName);
             if (entityType == null && !entityName.equals(Spawner.EMPTY)) {
@@ -52,9 +57,10 @@ public class SpawnerFactory implements Loader {
                         + "' (not supported on this server version)");
                 return Optional.empty();
             }
-            return validated(new Spawner(entityType, item));
+            SpawnerSettings settings = SpawnerSettingsFormat.deserialize(tags.get(SETTINGS_TAG));
+            return validated(new Spawner(entityType, item, SpawnerSettingsFormat.nonDefault(settings)));
         }
-        return validated(new Spawner(parseLegacyEntityType(item), item));
+        return validated(new Spawner(parseLegacyEntityType(item), item, null));
     }
 
     public ItemStack itemFor(EntityType entityType) {
@@ -66,13 +72,19 @@ public class SpawnerFactory implements Loader {
     }
 
     public Optional<Spawner> ofType(EntityType entityType) {
-        ItemStack itemStack = new ItemBuilder(versionAdapter.getSpawnerMaterial())
+        return ofType(entityType, null);
+    }
+
+    public Optional<Spawner> ofType(EntityType entityType, SpawnerSettings settings) {
+        settings = SpawnerSettingsFormat.nonDefault(settings);
+        ItemBuilder itemBuilder = new ItemBuilder(versionAdapter.getSpawnerMaterial())
                 .setDisplayName(Spawner.itemName(entityType))
                 .addToLore(Spawner.itemLore(entityType))
                 .addItemFlags(versionAdapter.getHideAdditionalTooltipFlag())
-                .writeTag(versionAdapter, ENTITY_TAG, Spawner.serializedEntityType(entityType))
-                .build();
-        return validated(new Spawner(entityType, itemStack));
+                .writeTag(versionAdapter, ENTITY_TAG, Spawner.serializedEntityType(entityType));
+        if (settings != null)
+            itemBuilder.writeTag(versionAdapter, SETTINGS_TAG, SpawnerSettingsFormat.serialize(settings));
+        return validated(new Spawner(entityType, itemBuilder.build(), settings));
     }
 
     public Spawner snapshot(EntityType entityType) {
@@ -91,6 +103,8 @@ public class SpawnerFactory implements Loader {
                     BlockState blockState = block.getState();
                     if (!(blockState instanceof CreatureSpawner creatureSpawner)) return;
                     creatureSpawner.setSpawnedType(spawner.getEntityType());
+                    if (spawner.getSettings() != null)
+                        versionAdapter.applySpawnerSettings(creatureSpawner, spawner.getSettings());
                     blockState.update();
                     editedList.remove(block.getLocation());
                 },

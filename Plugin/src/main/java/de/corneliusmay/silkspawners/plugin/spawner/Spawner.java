@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
+import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
 import java.util.List;
 import lombok.Getter;
 import org.bukkit.entity.EntityType;
@@ -17,9 +18,13 @@ public class Spawner implements SpawnerSnapshot {
 
     private final ItemStack itemStack;
 
-    Spawner(EntityType entityType, ItemStack itemStack) {
+    @Getter
+    private final SpawnerSettings settings;
+
+    Spawner(EntityType entityType, ItemStack itemStack, SpawnerSettings settings) {
         this.entityType = entityType;
         this.itemStack = itemStack;
+        this.settings = settings;
     }
 
     public ItemStack getItemStack() {

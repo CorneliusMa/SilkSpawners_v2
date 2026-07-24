@@ -1,10 +1,13 @@
 package de.corneliusmay.silkspawners.bukkit.v1_9_4;
 
 import de.corneliusmay.silkspawners.bukkit.nbt.NBTVersionAdapter;
+import de.corneliusmay.silkspawners.bukkit.settings.legacy.MobSpawnerFields;
+import de.corneliusmay.silkspawners.spi.spawner.SpawnerSettings;
 import java.util.EnumSet;
 import java.util.Set;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +20,8 @@ public class VersionImplementation extends NBTVersionAdapter {
             Material.IRON_PICKAXE,
             Material.GOLD_PICKAXE,
             Material.DIAMOND_PICKAXE);
+
+    private final MobSpawnerFields spawnerSettings = new MobSpawnerFields();
 
     @Override
     public Block getTargetBlock(Player player) {
@@ -43,5 +48,15 @@ public class VersionImplementation extends NBTVersionAdapter {
     @Override
     public boolean isPickaxe(ItemStack item) {
         return PICKAXES.contains(item.getType());
+    }
+
+    @Override
+    public SpawnerSettings readSpawnerSettings(CreatureSpawner spawner) {
+        return spawnerSettings.read(spawner);
+    }
+
+    @Override
+    public void applySpawnerSettings(CreatureSpawner spawner, SpawnerSettings settings) {
+        spawnerSettings.apply(spawner, settings);
     }
 }
