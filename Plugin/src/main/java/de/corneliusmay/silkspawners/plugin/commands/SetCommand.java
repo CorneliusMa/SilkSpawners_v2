@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.HashSet;
 import java.util.Optional;
@@ -19,12 +20,12 @@ public class SetCommand extends SilkSpawnersCommand {
 
     private final SpawnerFactory spawnerFactory;
 
-    private final de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler;
+    private final VersionAdapter versionAdapter;
 
-    public SetCommand(SpawnerFactory spawnerFactory, de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler) {
+    public SetCommand(SpawnerFactory spawnerFactory, VersionAdapter versionAdapter) {
         super("set", true, new EntityTabCompleter());
         this.spawnerFactory = spawnerFactory;
-        this.bukkitHandler = bukkitHandler;
+        this.versionAdapter = versionAdapter;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class SetCommand extends SilkSpawnersCommand {
             return false;
         }
 
-        Block block = bukkitHandler.getTargetBlock(player);
+        Block block = versionAdapter.getTargetBlock(player);
         Optional<Spawner> targetSpawner = spawnerFactory.fromBlock(block);
         if (targetSpawner.isEmpty()) {
             sendMessage(sender, "INVALID_TARGET");

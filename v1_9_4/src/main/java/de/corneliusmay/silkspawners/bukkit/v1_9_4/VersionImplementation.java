@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.v1_9_4;
 
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import java.util.EnumSet;
 import java.util.Set;
 import org.bukkit.Material;
@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-public class BukkitHandler implements Bukkit {
+public class VersionImplementation implements VersionAdapter {
 
     private static final Set<Material> PICKAXES = EnumSet.of(
             Material.WOOD_PICKAXE,

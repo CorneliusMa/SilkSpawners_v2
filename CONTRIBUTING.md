@@ -76,7 +76,7 @@ For more just have a look at our commit history.
 
 ## Adding support for a new Minecraft version
 
-Version-specific code is isolated in per-version modules (`v1_8_4`, `v1_9_4`, …). Each module contains a single `BukkitHandler` that implements the [`Bukkit`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/version/Bukkit.java) API interface, and the correct handler is picked at runtime by `MinecraftVersionChecker`.
+Version-specific code is isolated in per-version modules (`v1_8_4`, `v1_9_4`, …). Each module contains a single `VersionImplementation` that implements the [`VersionAdapter`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/version/VersionAdapter.java) API interface, and the correct implementation is picked at runtime by `MinecraftVersionChecker`.
 
 **You only need a new module when the Bukkit API changes in a way that breaks the existing handler** - not for every Minecraft release. As long as the current handler keeps compiling and working against a newer server, nothing has to be done.
 
@@ -84,7 +84,7 @@ When a new module *is* required:
 
 1. Copy an existing module (e.g. `v1_21_3`) to `vX_Y_Z`. The module name marks the lowest server version its handler applies to.
 2. In its `build.gradle.kts`, bump the `compileOnly` `spigot-api` dependency to the version you are targeting.
-3. Update the `BukkitHandler` (package `de.corneliusmay.silkspawners.bukkit.vX_Y_Z`) so it implements every method of the `Bukkit` interface against the new API.
+3. Update the `VersionImplementation` (package `de.corneliusmay.silkspawners.bukkit.vX_Y_Z`) so it implements every method of the `VersionAdapter` interface against the new API.
 4. Register the module in [`settings.gradle.kts`](settings.gradle.kts). That is the only build change needed: the Plugin automatically compiles every registered module into the jar (and excludes it from jar minimization), except the non-core modules listed in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
 5. Add a branch to [`MinecraftVersionChecker.getBukkitVersion()`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java) returning `"vX_Y_Z"`. Keep the checks ordered from newest to oldest, since the first matching `versionIsNewerOrEqualTo(...)` wins.
 

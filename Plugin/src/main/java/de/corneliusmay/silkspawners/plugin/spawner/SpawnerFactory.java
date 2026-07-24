@@ -4,7 +4,7 @@ import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 @RequiredArgsConstructor
 public class SpawnerFactory implements Loader {
 
-    private final Bukkit bukkitHandler;
+    private final VersionAdapter versionAdapter;
 
     private final ServerPlatform platform;
 
@@ -32,13 +32,13 @@ public class SpawnerFactory implements Loader {
     }
 
     public Optional<Spawner> fromBlock(Block block) {
-        if (block == null || block.getType() != bukkitHandler.getSpawnerMaterial()) return Optional.empty();
+        if (block == null || block.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
         return ofType(creatureSpawner.getSpawnedType());
     }
 
     public Optional<Spawner> fromItem(ItemStack itemStack) {
-        if (itemStack == null || itemStack.getType() != bukkitHandler.getSpawnerMaterial()) return Optional.empty();
+        if (itemStack == null || itemStack.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();
         return validated(new Spawner(parseEntityType(itemStack), itemStack.clone()));
     }
 
@@ -51,11 +51,11 @@ public class SpawnerFactory implements Loader {
     }
 
     public Optional<Spawner> ofType(EntityType entityType) {
-        ItemStack itemStack = new ItemBuilder(bukkitHandler.getSpawnerMaterial())
+        ItemStack itemStack = new ItemBuilder(versionAdapter.getSpawnerMaterial())
                 .setDisplayName(Spawner.itemName(entityType))
                 .addToLore(Spawner.serializedName(entityType))
                 .addToLore(PluginConfig.SPAWNER_ITEM_LORE.get())
-                .addItemFlags(bukkitHandler.getHideAdditionalTooltipFlag())
+                .addItemFlags(versionAdapter.getHideAdditionalTooltipFlag())
                 .build();
         return validated(new Spawner(entityType, itemStack));
     }

@@ -4,7 +4,7 @@ import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecke
 
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Provides;
 import de.corneliusmay.silkspawners.wiring.Wired;
@@ -12,13 +12,13 @@ import de.corneliusmay.silkspawners.wiring.Wired;
 @Wired
 public class CrossVersionHandler implements Loader {
 
-    private final ComponentLoader<Bukkit> loader = new ComponentLoader<>(Bukkit.class, "bukkit");
+    private final ComponentLoader<VersionAdapter> loader = new ComponentLoader<>(VersionAdapter.class, "bukkit");
 
-    private Bukkit bukkitHandler;
+    private VersionAdapter versionAdapter;
 
     @Provides
-    public Bukkit getBukkitHandler() {
-        return bukkitHandler;
+    public VersionAdapter getVersionAdapter() {
+        return versionAdapter;
     }
 
     private boolean fail(String message) {
@@ -43,7 +43,7 @@ public class CrossVersionHandler implements Loader {
                     + ") is too old for the currently installed version of SilkSpawners");
         }
 
-        this.bukkitHandler = loader.instantiate(bukkitVersion + ".BukkitHandler");
+        this.versionAdapter = loader.instantiate(bukkitVersion + ".VersionImplementation");
         Logger.info("Loaded support for version " + version.getVersion());
         return true;
     }

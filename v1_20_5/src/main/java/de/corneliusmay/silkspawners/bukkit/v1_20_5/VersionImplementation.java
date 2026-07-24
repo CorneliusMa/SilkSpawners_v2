@@ -1,6 +1,6 @@
-package de.corneliusmay.silkspawners.bukkit.v1_21_3;
+package de.corneliusmay.silkspawners.bukkit.v1_20_5;
 
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
@@ -11,13 +11,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
-public class BukkitHandler implements Bukkit {
+public class VersionImplementation implements VersionAdapter {
 
     @Override
     public Block getTargetBlock(Player player) {
         double range = 5;
 
-        AttributeInstance blockRange = player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE);
+        AttributeInstance blockRange = player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE);
         if (blockRange != null) {
             range = blockRange.getValue();
         }

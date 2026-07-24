@@ -6,6 +6,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.HashSet;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     private final SpawnerFactory spawnerFactory;
 
-    private final de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler;
+    private final VersionAdapter versionAdapter;
 
     private final SilkDropCheck silkDropCheck;
 
@@ -46,7 +47,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     @Override
     public boolean isSpawnerItem(ItemStack itemStack) {
-        return itemStack != null && itemStack.getType() == bukkitHandler.getSpawnerMaterial();
+        return itemStack != null && itemStack.getType() == versionAdapter.getSpawnerMaterial();
     }
 
     @Override
@@ -71,7 +72,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
     }
 
     private boolean isSpawnerBlock(Block block) {
-        return block != null && block.getType() == bukkitHandler.getSpawnerMaterial();
+        return block != null && block.getType() == versionAdapter.getSpawnerMaterial();
     }
 
     @Override
