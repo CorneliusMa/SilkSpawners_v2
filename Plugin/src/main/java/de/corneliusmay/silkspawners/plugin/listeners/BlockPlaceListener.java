@@ -3,14 +3,13 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.api.events.SpawnerPlaceEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.plugin.spawner.EditedSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -28,7 +27,7 @@ public class BlockPlaceListener implements Listener {
 
     private final LocaleHandler locale;
 
-    private final Set<Location> editedSpawners;
+    private final EditedSpawners editedSpawners;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCall(BlockPlaceEvent e) {
@@ -57,9 +56,9 @@ public class BlockPlaceListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        this.editedSpawners.add(e.getBlock().getLocation());
+        this.editedSpawners.beginEdit(e.getBlock().getLocation());
         Spawner placed = spawnerFactory.of(event.getSpawner());
-        spawnerFactory.applyToBlock(placed, e.getBlock(), this.editedSpawners);
+        spawnerFactory.applyToBlock(placed, e.getBlock());
     }
 
     private ItemStack itemIsSpawner(ItemStack[] items) {

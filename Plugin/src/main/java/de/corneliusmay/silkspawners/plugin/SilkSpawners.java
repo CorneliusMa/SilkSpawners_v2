@@ -13,10 +13,7 @@ import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import java.io.IOException;
 import java.util.MissingResourceException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
-import org.bukkit.Location;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,10 +37,8 @@ public class SilkSpawners extends JavaPlugin {
 
     private void registerListeners() {
         Logger.info("Registering listeners");
-        Set<Location> editedSpawners = ConcurrentHashMap.newKeySet();
         PluginManager pluginManager = getServer().getPluginManager();
-        loader.createAll(Listener.class, editedSpawners)
-                .forEach(listener -> pluginManager.registerEvents(listener, this));
+        loader.createAll(Listener.class).forEach(listener -> pluginManager.registerEvents(listener, this));
     }
 
     private void registerCommands() {

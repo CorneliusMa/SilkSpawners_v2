@@ -9,7 +9,6 @@ import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -79,7 +78,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
         Optional<Spawner> spawner = spawnerFactory.ofType(entityType);
         if (spawner.isEmpty()) return false;
 
-        spawnerFactory.applyToBlock(spawner.get(), block, new HashSet<>());
+        spawnerFactory.applyToBlock(spawner.get(), block);
         return true;
     }
 
@@ -91,7 +90,7 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
         Optional<Spawner> spawner = spawnerFactory.ofType(entityType);
         if (spawner.isEmpty()) return false;
 
-        spawnerFactory.applyToBlock(spawner.get(), block, settings, new HashSet<>());
+        spawnerFactory.applyToBlock(spawner.get(), block, settings);
         return true;
     }
 

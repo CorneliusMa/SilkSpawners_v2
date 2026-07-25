@@ -7,7 +7,6 @@ import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
-import java.util.HashSet;
 import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -81,7 +80,7 @@ public class SetCommand extends SilkSpawnersCommand {
         if (event.isCancelled()) return false;
 
         Spawner result = spawnerFactory.of(event.getNewSpawner());
-        spawnerFactory.applyToBlock(result, block, new HashSet<>());
+        spawnerFactory.applyToBlock(result, block);
         sendMessage(sender, "SUCCESS", result.coloredName());
         return true;
     }

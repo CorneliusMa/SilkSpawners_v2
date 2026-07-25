@@ -27,8 +27,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addToLore(String lore) {
-        ArrayList<String> loreList =
-                this.meta.getLore() == null ? new ArrayList<>() : (ArrayList<String>) this.meta.getLore();
+        List<String> loreList = this.meta.getLore() == null ? new ArrayList<>() : new ArrayList<>(this.meta.getLore());
         loreList.add(lore);
         this.meta.setLore(loreList);
         return this;
