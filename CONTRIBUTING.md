@@ -86,7 +86,7 @@ When a new module *is* required:
 2. In its `build.gradle.kts`, declare the API version you are targeting: `versionModule { spigotApi("X.Y.Z") }`. The convention plugin derives the `spigot-api` dependency and the support modules from it.
 3. Update the `VersionImplementation` (package `de.corneliusmay.silkspawners.bukkit.vX_Y_Z`) so it implements the remaining methods of the `VersionAdapter` interface against the new API.
 4. Register the module in [`settings.gradle.kts`](settings.gradle.kts). That is the only build change needed: the Plugin automatically compiles every registered module into the jar (and excludes it from jar minimization), except the non-core modules listed in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
-5. Add a branch to [`MinecraftVersionChecker.getBukkitVersion()`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java) returning `"vX_Y_Z"`. Keep the checks ordered from newest to oldest, since the first matching `isNewerOrEqualTo(...)` wins.
+5. Add a `new Baseline(X, Y, Z)` entry to `SUPPORTED_BASELINES` in [`MinecraftVersionChecker`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java). The `vX_Y_Z` module name is derived from the baseline (a trailing `.0` patch is dropped, e.g. `1.16.0` → `v1_16`), so it always matches the module you registered. The highest baseline the server satisfies wins.
 
 There is no automated test for version handlers, so verify your changes on a real server running the target version.
 
