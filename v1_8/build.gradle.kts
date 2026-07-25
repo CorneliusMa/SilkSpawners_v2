@@ -1,7 +1,7 @@
 plugins {
-    id("silkspawners.core-module")
+    id("silkspawners.version-module")
 }
 
-dependencies {
-    compileOnly(libs.bukkit)
+versionModule {
+    spigotApi("1.8")
 }

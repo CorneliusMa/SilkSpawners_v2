@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
-import de.corneliusmay.silkspawners.spi.version.Bukkit;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 @RequiredArgsConstructor
 public class SilkDropCheck {
 
-    private final Bukkit bukkitHandler;
+    private final VersionAdapter versionAdapter;
 
     public boolean canSilkDrop(Player player, Spawner spawner) {
         return hasBreakPermission(player, spawner) && hasSilkTouchTool(player);
@@ -26,7 +26,7 @@ public class SilkDropCheck {
     }
 
     private boolean hasSilkTouchTool(Player player) {
-        return Arrays.stream(bukkitHandler.getItemsInHand(player)).anyMatch(this::isSilkTouchTool);
+        return Arrays.stream(versionAdapter.getItemsInHand(player)).anyMatch(this::isSilkTouchTool);
     }
 
     private boolean isSilkTouchTool(ItemStack item) {
@@ -34,7 +34,7 @@ public class SilkDropCheck {
     }
 
     private boolean isRequiredTool(ItemStack item) {
-        return bukkitHandler.isPickaxe(item) || !PluginConfig.SPAWNER_PICKAXE_REQUIRED.get();
+        return versionAdapter.isPickaxe(item) || !PluginConfig.SPAWNER_PICKAXE_REQUIRED.get();
     }
 
     private boolean hasRequiredSilkTouchLevel(ItemStack item) {

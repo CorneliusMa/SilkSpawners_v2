@@ -76,17 +76,17 @@ For more just have a look at our commit history.
 
 ## Adding support for a new Minecraft version
 
-Version-specific code is isolated in per-version modules (`v1_8_4`, `v1_9_4`, …). Each module contains a single `BukkitHandler` that implements the [`Bukkit`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/version/Bukkit.java) API interface, and the correct handler is picked at runtime by `MinecraftVersionChecker`.
+Version-specific code is isolated in per-version modules (`v1_8`, `v1_9_4`, …). Each module contains a single `VersionImplementation` that implements the [`VersionAdapter`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/version/VersionAdapter.java) API interface, and the correct implementation is picked at runtime by `MinecraftVersionChecker`. Version-dependent mechanics come from support modules along two axes: the spawner-tag methods are provided by a storage base class the implementation extends - `PDCVersionAdapter` (PDC module, for servers since 1.16.5) or `NBTVersionAdapter` (NBT module, reflection over versioned NMS packages for older servers) - and the spawner-settings methods by the `SpawnerSettingsVersionAdapter` mixin interface (SpawnerSettings module, for servers since 1.12) or by composing `MobSpawnerFields` (SpawnerSettingsLegacy module, NMS reflection for older servers). Every version module applies the `silkspawners.version-module` convention plugin, which selects the matching support modules and server artifact from the declared API version, so the build file never lists them itself.
 
-**You only need a new module when the Bukkit API changes in a way that breaks the existing handler** - not for every Minecraft release. As long as the current handler keeps compiling and working against a newer server, nothing has to be done.
+**You only need a new module when the Bukkit API changes in a way that breaks the existing implementation** - not for every Minecraft release. As long as the current implementation keeps compiling and working against a newer server, nothing has to be done.
 
 When a new module *is* required:
 
-1. Copy an existing module (e.g. `v1_21_3`) to `vX_Y_Z`. The module name marks the lowest server version its handler applies to.
-2. In its `build.gradle.kts`, bump the `compileOnly` `spigot-api` dependency to the version you are targeting.
-3. Update the `BukkitHandler` (package `de.corneliusmay.silkspawners.bukkit.vX_Y_Z`) so it implements every method of the `Bukkit` interface against the new API.
+1. Copy an existing module (e.g. `v1_21_3`) to `vX_Y_Z`. The module name marks the lowest server version its implementation applies to. New versions always extend `PDCVersionAdapter` and implement `SpawnerSettingsVersionAdapter`; the NBT and legacy-settings paths only exist for servers predating those APIs.
+2. In its `build.gradle.kts`, declare the API version you are targeting: `versionModule { spigotApi("X.Y.Z") }`. The convention plugin derives the `spigot-api` dependency and the support modules from it.
+3. Update the `VersionImplementation` (package `de.corneliusmay.silkspawners.bukkit.vX_Y_Z`) so it implements the remaining methods of the `VersionAdapter` interface against the new API.
 4. Register the module in [`settings.gradle.kts`](settings.gradle.kts). That is the only build change needed: the Plugin automatically compiles every registered module into the jar (and excludes it from jar minimization), except the non-core modules listed in [`Plugin/build.gradle.kts`](Plugin/build.gradle.kts).
-5. Add a branch to [`MinecraftVersionChecker.getBukkitVersion()`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java) returning `"vX_Y_Z"`. Keep the checks ordered from newest to oldest, since the first matching `versionIsNewerOrEqualTo(...)` wins.
+5. Add a branch to [`MinecraftVersionChecker.getBukkitVersion()`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/version/MinecraftVersionChecker.java) returning `"vX_Y_Z"`. Keep the checks ordered from newest to oldest, since the first matching `isNewerOrEqualTo(...)` wins.
 
 There is no automated test for version handlers, so verify your changes on a real server running the target version.
 

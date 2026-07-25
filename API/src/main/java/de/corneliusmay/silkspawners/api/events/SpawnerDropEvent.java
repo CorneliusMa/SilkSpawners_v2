@@ -1,8 +1,9 @@
 package de.corneliusmay.silkspawners.api.events;
 
+import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class SpawnerDropEvent extends SpawnerEvent {
             Location location,
             ItemStack drop,
             double dropChance,
-            Function<EntityType, SpawnerSnapshot> snapshotFactory) {
+            BiFunction<EntityType, SpawnerSettings, SpawnerSnapshot> snapshotFactory) {
         super(player, spawner, location, snapshotFactory);
         this.drop = drop;
         this.dropChance = dropChance;

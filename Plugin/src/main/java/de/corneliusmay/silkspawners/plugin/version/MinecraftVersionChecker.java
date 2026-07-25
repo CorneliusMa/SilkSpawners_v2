@@ -15,14 +15,17 @@ class MinecraftVersionChecker {
         if (version.isNewerOrEqualTo(1, 20, 5)) {
             return "v1_20_5";
         }
+        if (version.isNewerOrEqualTo(1, 16, 5)) {
+            return "v1_16_5";
+        }
         if (version.isNewerOrEqualTo(1, 16, 0)) {
             return "v1_16";
         }
         if (version.isNewerOrEqualTo(1, 13, 1)) {
             return "v1_13_1";
         }
-        if (version.isNewerOrEqualTo(1, 12, 0)) {
-            return "v1_12_0";
+        if (version.isNewerOrEqualTo(1, 12, 2)) {
+            return "v1_12_2";
         }
         if (version.isNewerOrEqualTo(1, 9, 4)) {
             return "v1_9_4";

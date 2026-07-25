@@ -1,7 +1,7 @@
 plugins {
-    id("silkspawners.core-module")
+    id("silkspawners.version-module")
 }
 
-dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.3-R0.1-SNAPSHOT")
+versionModule {
+    spigotApi("1.21.3")
 }

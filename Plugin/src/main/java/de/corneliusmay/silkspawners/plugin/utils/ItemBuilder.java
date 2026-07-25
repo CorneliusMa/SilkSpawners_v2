@@ -1,7 +1,9 @@
 package de.corneliusmay.silkspawners.plugin.utils;
 
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -11,10 +13,12 @@ public class ItemBuilder {
 
     private final ItemStack stack;
     private final ItemMeta meta;
+    private Function<ItemStack, ItemStack> tagWriter;
 
     public ItemBuilder(Material material) {
         this.stack = new ItemStack(material, 1);
         this.meta = this.stack.getItemMeta();
+        this.tagWriter = Function.identity();
     }
 
     public ItemBuilder setDisplayName(String displayName) {
@@ -40,8 +44,13 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder writeTag(VersionAdapter versionAdapter, String tag, String value) {
+        this.tagWriter = this.tagWriter.andThen(item -> versionAdapter.writeTag(item, tag, value));
+        return this;
+    }
+
     public ItemStack build() {
         this.stack.setItemMeta(this.meta);
-        return this.stack;
+        return this.tagWriter.apply(this.stack);
     }
 }

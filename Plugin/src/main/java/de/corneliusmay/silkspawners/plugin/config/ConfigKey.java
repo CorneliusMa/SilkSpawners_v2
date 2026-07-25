@@ -16,7 +16,6 @@ public final class ConfigKey<T> {
     @Getter(AccessLevel.PACKAGE)
     private final ConfigValueFormatter<?> formatter;
 
-    @Getter(AccessLevel.PACKAGE)
     private final Object defaultValue;
 
     @Getter(AccessLevel.PACKAGE)
@@ -41,6 +40,12 @@ public final class ConfigKey<T> {
     @SuppressWarnings("unchecked")
     public T get() {
         return (T) ConfigRegistry.value(this);
+    }
+
+    // Lists must reach the config as List, not array, or getStringList ignores the registered default
+    Object getDefaultValue() {
+        if (list) return Arrays.asList((String[]) defaultValue);
+        return defaultValue;
     }
 
     Object formatDefault() {

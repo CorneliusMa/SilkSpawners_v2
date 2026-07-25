@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class BlockPlaceListener implements Listener {
 
     private final SpawnerFactory spawnerFactory;
 
-    private final de.corneliusmay.silkspawners.spi.version.Bukkit bukkitHandler;
+    private final VersionAdapter versionAdapter;
 
     private final LocaleHandler locale;
 
@@ -33,7 +34,7 @@ public class BlockPlaceListener implements Listener {
     public void onCall(BlockPlaceEvent e) {
         if (e.isCancelled()) return;
 
-        ItemStack[] itemsInHand = bukkitHandler.getItemsInHand(e.getPlayer());
+        ItemStack[] itemsInHand = versionAdapter.getItemsInHand(e.getPlayer());
         spawnerFactory.fromItem(itemIsSpawner(itemsInHand)).ifPresent(spawner -> handleSpawnerPlace(e, spawner));
     }
 
@@ -68,7 +69,7 @@ public class BlockPlaceListener implements Listener {
     private ItemStack itemIsSpawner(ItemStack[] items, int i) {
         if (items.length == i) return null;
 
-        if (items[i].getType() == bukkitHandler.getSpawnerMaterial()) return items[i];
+        if (items[i].getType() == versionAdapter.getSpawnerMaterial()) return items[i];
         else return itemIsSpawner(items, i + 1);
     }
 }

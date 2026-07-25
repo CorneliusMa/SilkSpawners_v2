@@ -10,6 +10,7 @@ import de.corneliusmay.silkspawners.plugin.config.migrators.LegacyDefaultMigrato
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionLegacyPowerMigrator;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTier;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTierListConfigValue;
+import de.corneliusmay.silkspawners.plugin.spawner.SpawnerLoreMigrator;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerPrefixOldMigrator;
 import java.util.List;
 import java.util.Locale;
@@ -36,17 +37,16 @@ public final class PluginConfig {
             .def("$e")
             .migrator(4, new InheritValueMigrator(SPAWNER_ITEM.getPath() + "prefix"))
             .formatter(new MessageConfigValue());
-    public static final ConfigKey<String> SPAWNER_ITEM_PREFIX = builder(SPAWNER_ITEM, "prefix")
-            .def("$7Spawns $e")
-            .migrator(4, new LegacyDefaultMigrator("$e", "$7Spawns $e"))
-            .formatter(value -> value.isEmpty() ? "§f" : new MessageConfigValue().format(value));
     public static final ConfigKey<List<String>> SPAWNER_ITEM_PREFIX_OLD = builder(SPAWNER_ITEM, "prefixOld")
             .def(new String[0])
             .legacy(SPAWNER_ITEM.getPath() + "prefix-old")
-            .migrator(4, new SpawnerPrefixOldMigrator(SPAWNER_ITEM.getPath() + "prefix", "$e"))
+            .migrator(4, new SpawnerPrefixOldMigrator(SPAWNER_ITEM.getPath() + "prefix", "$e", "$f"))
             .listFormatter(new MessageConfigValue());
-    public static final ConfigKey<List<String>> SPAWNER_ITEM_LORE =
-            builder(SPAWNER_ITEM, "lore").def(new String[0]).listFormatter(new MessageConfigValue());
+    public static final ConfigKey<List<String>> SPAWNER_ITEM_LORE = builder(SPAWNER_ITEM, "lore")
+            .def(new String[] {"$7Spawns $e{entity}"})
+            .legacy(SPAWNER_ITEM.getPath() + "prefix")
+            .migrator(4, new SpawnerLoreMigrator(SPAWNER_ITEM.getPath() + "prefix", "$e", "$7Spawns $e{entity}"))
+            .listFormatter(new MessageConfigValue());
     public static final ConfigKey<List<ExplosionTier>> SPAWNER_EXPLOSION_ALL =
             builder(SPAWNER_EXPLOSION, "all").def(List.of()).formatter(new ExplosionTierListConfigValue());
     public static final ConfigKey<List<ExplosionTier>> SPAWNER_EXPLOSION_NORMAL = builder(SPAWNER_EXPLOSION, "normal")
