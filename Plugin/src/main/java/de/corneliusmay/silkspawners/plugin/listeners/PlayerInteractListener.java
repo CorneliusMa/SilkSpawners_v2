@@ -3,12 +3,12 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.plugin.spawner.EditedSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,7 +30,7 @@ public class PlayerInteractListener implements Listener {
 
     private final ServerPlatform platform;
 
-    private final Set<Location> editedSpawners;
+    private final EditedSpawners editedSpawners;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCall(PlayerInteractEvent e) {
@@ -42,7 +42,7 @@ public class PlayerInteractListener implements Listener {
 
     private void handleSpawnerInteract(PlayerInteractEvent e, Block block, Spawner spawner) {
         Location blockLocation = block.getLocation();
-        if (!editedSpawners.add(blockLocation)) {
+        if (!editedSpawners.beginEdit(blockLocation)) {
             e.setCancelled(true);
             return;
         }
@@ -54,19 +54,19 @@ public class PlayerInteractListener implements Listener {
         Optional<Spawner> changedSpawner =
                 spawnerFactory.fromBlock(block.getWorld().getBlockAt(blockLocation));
         if (changedSpawner.isEmpty()) {
-            editedSpawners.remove(blockLocation);
+            editedSpawners.endEdit(blockLocation);
             return;
         }
 
         Spawner newSpawner = changedSpawner.get();
 
         if (spawner.getEntityType() == newSpawner.getEntityType()) {
-            editedSpawners.remove(blockLocation);
+            editedSpawners.endEdit(blockLocation);
             return;
         }
 
         if (!canChangeSpawner(e.getPlayer(), newSpawner)) {
-            spawnerFactory.applyToBlock(spawner, block, this.editedSpawners);
+            spawnerFactory.applyToBlock(spawner, block);
             if (PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE.get())
                 e.getPlayer().sendMessage(locale.getMessage("SPAWNER_CHANGE_DENIED"));
             return;
@@ -77,16 +77,16 @@ public class PlayerInteractListener implements Listener {
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
-            spawnerFactory.applyToBlock(spawner, block, this.editedSpawners);
+            spawnerFactory.applyToBlock(spawner, block);
             return;
         }
 
         if (event.getNewSpawner() != newSpawner) {
-            spawnerFactory.applyToBlock(spawnerFactory.of(event.getNewSpawner()), block, this.editedSpawners);
+            spawnerFactory.applyToBlock(spawnerFactory.of(event.getNewSpawner()), block);
             return;
         }
 
-        editedSpawners.remove(blockLocation);
+        editedSpawners.endEdit(blockLocation);
     }
 
     private boolean canChangeSpawner(Player player, Spawner newSpawner) {

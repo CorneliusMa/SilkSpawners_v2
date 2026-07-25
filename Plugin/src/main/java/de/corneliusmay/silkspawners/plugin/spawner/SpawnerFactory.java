@@ -11,9 +11,7 @@ import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
@@ -33,6 +31,8 @@ public class SpawnerFactory implements Loader {
     private final VersionAdapter versionAdapter;
 
     private final ServerPlatform platform;
+
+    private final EditedSpawners editedSpawners;
 
     @Override
     public boolean load() {
@@ -104,22 +104,25 @@ public class SpawnerFactory implements Loader {
                 : snapshot(snapshot.getEntityType(), snapshot.getSettings());
     }
 
-    public void applyToBlock(Spawner spawner, Block block, Set<Location> editedList) {
-        applyToBlock(spawner, block, spawner.getSettings(), editedList);
+    public void applyToBlock(Spawner spawner, Block block) {
+        applyToBlock(spawner, block, spawner.getSettings());
     }
 
     // Null settings keep the block's current values
-    public void applyToBlock(Spawner spawner, Block block, SpawnerSettings settings, Set<Location> editedList) {
+    public void applyToBlock(Spawner spawner, Block block, SpawnerSettings settings) {
         requireValid(settings);
         platform.runTaskLater(
                 block.getLocation(),
                 () -> {
-                    BlockState blockState = block.getState();
-                    if (!(blockState instanceof CreatureSpawner creatureSpawner)) return;
-                    creatureSpawner.setSpawnedType(spawner.getEntityType());
-                    if (settings != null) versionAdapter.applySpawnerSettings(creatureSpawner, settings);
-                    blockState.update();
-                    editedList.remove(block.getLocation());
+                    try {
+                        BlockState blockState = block.getState();
+                        if (!(blockState instanceof CreatureSpawner creatureSpawner)) return;
+                        creatureSpawner.setSpawnedType(spawner.getEntityType());
+                        if (settings != null) versionAdapter.applySpawnerSettings(creatureSpawner, settings);
+                        blockState.update();
+                    } finally {
+                        editedSpawners.endEdit(block.getLocation());
+                    }
                 },
                 1);
     }
