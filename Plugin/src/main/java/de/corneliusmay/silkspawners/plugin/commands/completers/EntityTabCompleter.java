@@ -13,7 +13,7 @@ import org.bukkit.entity.EntityType;
 public class EntityTabCompleter implements TabCompletion {
 
     @Override
-    public List<String> update(SilkSpawnersCommand command, CommandSender sender) {
+    public List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args) {
         List<EntityType> entityTypes = new ArrayList<>();
         entityTypes.add(null); // empty
         entityTypes.addAll(SpawnableEntities.TYPES);
