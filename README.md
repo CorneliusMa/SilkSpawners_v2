@@ -40,7 +40,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - `/silkspawners set <Type>`
 - `/silkspawners explosion <enable/disable/setting> <Player>`
 - `/silkspawners locale <setting/reload/restore>`
-- `/silkspawners config <reload>`
+- `/silkspawners config <reload/get/set> [Setting] [Value]`
 - `/silkspawners entities`
 - `/silkspawners version`
 - `/silkspawners dump`
@@ -54,7 +54,8 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 > In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
 - **silkspawners.command.locale** - Use this command to reload and restore locale files.
-- **silkspawners.command.config** - Use this command to reload the configuration.
+- **silkspawners.command.config** - Use this command to view and reload the configuration.
+> In addition, set **silkspawners.command.config.set** to allow changing settings.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
 - **silkspawners.command.dump** - Use this command to create a diagnostic report for support requests.
@@ -79,7 +80,7 @@ spawner:
   destroyable: true  # If set to false, it won't be possible to destroy spawners without SilkTouch or without the permission
   pickaxeRequired: true # If set to false, spawners will always drop regardless of what the player is holding in his hand
   silktouchRequired: true # If set to false, spawners will drop even if the used pickaxe does not have SilkTouch
-  silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners (useful for custom pickaxes with higher enchantment levels)
+  silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine spawners, at least 1 (useful for custom pickaxes with higher enchantment levels)
   item:
     name: $d{entity} Spawner # The name of the spawner item dropped, {entity} is replaced with the mob name
     color: $e # The color of the mob name in chat messages
@@ -101,7 +102,7 @@ update:
   configVersion: 4 # Do not change this value manually! It is automatically managed by the plugin
   check:
     enabled: true # If set to true, the plugin will check for updates
-    interval: 24 # The interval in hours at which to check for updates
+    interval: 24 # The interval in hours at which to check for updates, at least 1
 hooks:
   shopguiplus: true # If set to true, SilkSpawners will hook into ShopGUI+ if it is installed
 ```
@@ -109,6 +110,13 @@ hooks:
 *If you want to use a dollar sign in a value, you can escape it by putting a backslash in front of it.*
 
 All messages (in the configuration and in locale files) can be formatted with either legacy color codes or [MiniMessage](https://docs.advntr.dev/minimessage/format.html) tags. Mixing both formats within the same message is **not** supported.
+
+**Changing settings in game:**
+
+- `/silkspawners config get <Setting>` shows the current value and what the setting does
+- `/silkspawners config set <Setting> <Value>` changes it in the `config.yml` file
+
+Settings and values are tab completed. Changing settings requires the `silkspawners.command.config.set` permission. Changes take effect immediately, except for `hooks.shopguiplus`, which needs a server restart. Lists and explosion tiers can only be changed in the file.
 
 **Explosion tiers:**
 

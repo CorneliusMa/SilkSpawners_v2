@@ -52,6 +52,9 @@ public class LocaleHandler implements Loader, Dumpable {
     @Getter
     private volatile int completionPercent;
 
+    @Getter
+    private volatile List<String> localeCodes = List.of();
+
     private volatile Locale loadedLocale;
 
     @Override
@@ -84,6 +87,7 @@ public class LocaleHandler implements Loader, Dumpable {
         this.resourceBundle = ResourceBundle.getBundle("messages", locale, loader);
         this.loadedLocale = locale;
         this.completionPercent = computeCompletionPercent();
+        this.localeCodes = readLocaleCodes();
         if (isIncomplete())
             Logger.warn(MessageFormat.format(INCOMPLETE_WARNING, locale, completionPercent, CROWDIN_URL));
     }
@@ -132,6 +136,17 @@ public class LocaleHandler implements Loader, Dumpable {
                 .map((f) -> describeLocale(f, reference))
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(", "));
+    }
+
+    private List<String> readLocaleCodes() {
+        File[] localeFiles = files.path().listFiles();
+        if (localeFiles == null) return List.of();
+        return Arrays.stream(localeFiles)
+                .sorted()
+                .filter(file -> LocaleFiles.isLocale(file.getName()))
+                .filter(file -> !loadProperties(file.toPath()).isEmpty())
+                .map(file -> LocaleFiles.localeCode(file.getName()))
+                .toList();
     }
 
     private String describeLocale(File file, Set<String> reference) {

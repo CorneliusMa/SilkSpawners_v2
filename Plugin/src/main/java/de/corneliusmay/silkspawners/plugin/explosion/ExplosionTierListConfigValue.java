@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.explosion;
 
+import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueException;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
 
     @Override
     public List<ExplosionTier> format(String value) {
-        throw new IllegalArgumentException("Expected a list of explosion tiers");
+        throw new ConfigValueException("Expected a list of explosion tiers");
     }
 
     @Override
@@ -19,6 +20,11 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
         if (value == null) return List.of();
         if (!(value instanceof List<?> tiers)) return format(String.valueOf(value));
         return tierList(tiers);
+    }
+
+    @Override
+    public boolean supportsInput() {
+        return false;
     }
 
     private List<ExplosionTier> tierList(List<?> entries) {
@@ -77,7 +83,7 @@ public class ExplosionTierListConfigValue implements ConfigValueFormatter<List<E
         throw invalid(index, "has a non-boolean '" + key + "' value: " + value);
     }
 
-    private IllegalArgumentException invalid(int index, String message) {
-        return new IllegalArgumentException("Explosion tier " + (index + 1) + " " + message);
+    private ConfigValueException invalid(int index, String message) {
+        return new ConfigValueException("Explosion tier " + (index + 1) + " " + message);
     }
 }

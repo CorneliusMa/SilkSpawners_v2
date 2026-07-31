@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,5 +28,11 @@ final class ConfigRegistry {
 
     static void commit(Map<ConfigKey<?>, Object> newValues) {
         values = Map.copyOf(newValues);
+    }
+
+    static void update(ConfigKey<?> key, Object value) {
+        Map<ConfigKey<?>, Object> updated = new HashMap<>(values);
+        updated.put(key, value);
+        values = Map.copyOf(updated);
     }
 }
