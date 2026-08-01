@@ -62,6 +62,14 @@ Where `type` can be any of the following:
 * **`revert`**: Explicitly reverting commit(s)
 * **`chore`**: Other changes that don't modify source or test files
 
+### The api scope
+
+Scopes are free-form, except `api`, which releases the `API` module. For `feat`, `fix` and `perf` the hook and CI enforce that scope and files agree:
+
+* Changing `API/` requires the `api` scope
+* Using the `api` scope requires changing `API/`
+* A breaking `api` change releases the plugin too, the API ships inside its jar
+
 ### Examples
 
 ```
@@ -73,6 +81,21 @@ build: change maven artifactId
 ```
 
 For more just have a look at our commit history.
+
+## Releases
+
+Versions are never edited by hand.
+
+* Each push to `master` recomputes the next version from the commits since the last release and opens or updates the `release/next` pull request
+* Merging it tags `v<version>` (plus `api-<version>`) and publishes to GitHub, Hangar and Modrinth
+* The branch is force updated on every push, so never commit to it
+* Text above the `<!-- commits -->` marker in the pull request body becomes the release notes and survives regeneration, the list below is refreshed. Empty means commit subjects are used
+
+Pre-releases: run the `Publish` workflow on `release/next`, the only branch it accepts.
+
+* Labelled `<next version>-beta.<commits since the last release>`
+* Published to the Hangar `Preview` and Modrinth `beta` channels
+* Tagged on the `master` commit built from, so they sort before the release
 
 ## Adding support for a new Minecraft version
 
