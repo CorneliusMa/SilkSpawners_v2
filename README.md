@@ -39,7 +39,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - `/silkspawners give <Player> <Type> [Amount]`
 - `/silkspawners set <Type>`
 - `/silkspawners explosion <enable/disable/setting> <Player>`
-- `/silkspawners locale <setting/reload/update>`
+- `/silkspawners locale <setting/reload/restore>`
 - `/silkspawners config <reload>`
 - `/silkspawners entities`
 - `/silkspawners version`
@@ -52,7 +52,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - **silkspawners.command.set** - Use this command to change already placed spawners.
 > In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
-- **silkspawners.command.locale** - Use this command to reload and update locale files.
+- **silkspawners.command.locale** - Use this command to reload and restore locale files.
 - **silkspawners.command.config** - Use this command to reload the configuration.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
@@ -129,9 +129,10 @@ spawner:
 Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
-> **To protect your locale files from unwanted overwriting, you must manually update the locale files with the /silkspawners locale command after an update.**
+> **New and reworded messages are applied to your locale files automatically on startup. Messages you edited yourself are never touched, so a customized message keeps its wording across updates.**
 
-If you want to create your own locale file, you should create a new file to prevent your changes from being overwritten when you update the locale files.
+Use `/silkspawners locale restore confirm` only to discard your own edits and return every message to the bundled default.
+If you want to create your own locale file, you should create a new file to prevent your changes from being overwritten when you restore the locale files.
 Locale files must be named accordingly to the messages_myfile.properties naming schema and can be used by setting myfile as locale.
 
 *If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.*

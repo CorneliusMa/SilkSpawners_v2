@@ -1,5 +1,6 @@
 plugins {
     id("silkspawners.java-conventions")
+    id("silkspawners.locale-signatures")
     alias(libs.plugins.shadow)
 }
 

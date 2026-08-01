@@ -16,7 +16,7 @@ public class LocaleCommand extends SilkSpawnersCommand {
     private final LocaleHandler localeHandler;
 
     public LocaleCommand(LocaleHandler localeHandler) {
-        super("locale", true, new StaticTabCompletion("setting", "reload", "update"));
+        super("locale", true, new StaticTabCompletion("setting", "reload", "restore"));
         this.localeHandler = localeHandler;
     }
 
@@ -45,19 +45,19 @@ public class LocaleCommand extends SilkSpawnersCommand {
                         String locale = configuredLocale();
                         sendMessage(sender, "SETTING", locale, localeHandler.getAvailableLocales());
                     }
-                    case "update" -> sendMessage(sender, "UPDATE_WARNING");
+                    case "restore" -> sendMessage(sender, "RESTORE_WARNING");
                     default -> invalidSyntax(sender);
                 }
             }
             case 2 -> {
-                if (!args[0].equalsIgnoreCase("update")) return invalidSyntax(sender);
+                if (!args[0].equalsIgnoreCase("restore")) return invalidSyntax(sender);
                 if (!args[1].equalsIgnoreCase("confirm")) return invalidSyntax(sender);
                 try {
-                    localeHandler.copyDefaultLocales(true);
+                    localeHandler.restore();
                     localeHandler.loadLocale();
-                    sendMessage(sender, "UPDATE_SUCCESSFUL");
+                    sendMessage(sender, "RESTORE_SUCCESSFUL");
                 } catch (URISyntaxException | MissingResourceException | IOException ex) {
-                    sendMessage(sender, "UPDATE_ERROR");
+                    sendMessage(sender, "RESTORE_ERROR");
                 }
             }
             default -> invalidSyntax(sender);

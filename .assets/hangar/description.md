@@ -12,7 +12,7 @@ Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 - `/silkspawners give <Player> <Type> [Amount]`
 - `/silkspawners set <Type>`
 - `/silkspawners explosion <enable/disable/setting> <Player>`
-- `/silkspawners locale <setting/reload/update>`
+- `/silkspawners locale <setting/reload/restore>`
 - `/silkspawners config <reload>`
 - `/silkspawners entities`
 - `/silkspawners version`
@@ -25,7 +25,7 @@ Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 - **silkspawners.command.set** - Use this command to change already placed spawners.
 > In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
-- **silkspawners.command.locale** - Use this command to reload and update locale files.
+- **silkspawners.command.locale** - Use this command to reload and restore locale files.
 - **silkspawners.command.config** - Use this command to reload the configuration.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
@@ -104,9 +104,10 @@ Changes to the tiers take effect after `/silkspawners config reload` or a server
 ## Custom messages
 ![Crowdin Localization](https://badges.crowdin.net/silkspawners/localized.svg)
 
-> **To protect your locale files from unwanted overwriting, you must manually update the locale files with the /silkspawners locale command after an update.**
+> **New and reworded messages are applied to your locale files automatically on startup. Messages you edited yourself are never touched, so a customized message keeps its wording across updates.**
 
-If you want to create your own locale file, you should create a new file to prevent your changes from being overwritten when you update the locale files.
+Use `/silkspawners locale restore confirm` only to discard your own edits and return every message to the bundled default.
+If you want to create your own locale file, you should create a new file to prevent your changes from being overwritten when you restore the locale files.
 Locale files must be named accordingly to the messages_myfile.properties naming schema and can be used by setting myfile as locale.
 
 **If you have created your own translation, it would be awesome if you could submit it at our [translation program](https://crowdin.com/project/silkspawners), so other people can use it too.**
@@ -131,7 +132,7 @@ COMMAND_SILKSPAWNERS_HELP_MESSAGE_GIVE = $7Use this command to give spawners to 
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_SET = $7Use this command to change already placed spawners. \nUsage\: /silkspawners set <Mob>
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_ENTITIES = $7Use this command to see entities that can be used in commands and permissions. \nUsage\: /silkspawners entities
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_VERSION = $7Use this command to see, if updates are available. \nUsage\: /silkspawners version
-COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to update them from the .jar file. Updating may be necessary if new messages have been added in an update. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale [setting/reload/update]
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to restore them from the .jar file. New and reworded messages are applied automatically on startup, so restoring is only needed to discard your own changes. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale [setting/reload/restore]
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_CONFIG = $7Use this command to reload the configuration from the config.yml file. \nUsage\: /silkspawners config reload
 
 COMMAND_SILKSPAWNERS_GIVE_USAGE = $ePlease use /silkspawners give <Player> <Mob> [Amount]
@@ -167,14 +168,14 @@ COMMAND_SILKSPAWNERS_VERSION_INFO = $aYou are up to date.$7\nThe currently insta
 COMMAND_SILKSPAWNERS_VERSION_UPDATE_AVAILABLE = $eAn update is available\!$7\nThe currently installed version is v{0}\nThe latest version is v{1}
 COMMAND_SILKSPAWNERS_VERSION_ERROR = $cUpdate checking is disabled. $7\nThe currently installed version is v{0}
 
-COMMAND_SILKSPAWNERS_LOCALE_USAGE = $ePlease use /silkspawners locale [setting/reload/update]
+COMMAND_SILKSPAWNERS_LOCALE_USAGE = $ePlease use /silkspawners locale [setting/reload/restore]
 COMMAND_SILKSPAWNERS_LOCALE_SETTING = $7The currently used locale is {0}. Available locales are\: {1}
 COMMAND_SILKSPAWNERS_LOCALE_RELOAD_SUCCESSFUL = $7The locale was reloaded successfully.
 COMMAND_SILKSPAWNERS_LOCALE_RELOAD_ERROR = $cAn error occurred reloading the locale.
 COMMAND_SILKSPAWNERS_LOCALE_INCOMPLETE = $eThe locale {0} is incomplete ({1}% translated).$7 Untranslated messages are shown in English.\nYou can help completing the translation at {2}
-COMMAND_SILKSPAWNERS_LOCALE_UPDATE_WARNING = $eWarning\!$7 Updating the locale files will $coverwrite all changes$7.\n If you want to proceed, run /silkspawners locale update confirm.
-COMMAND_SILKSPAWNERS_LOCALE_UPDATE_SUCCESSFUL = $7The locale files were updated and reloaded successfully.
-COMMAND_SILKSPAWNERS_LOCALE_UPDATE_ERROR = $cAn error occurred.$7 Please contact the developer if this problem persists.
+COMMAND_SILKSPAWNERS_LOCALE_RESTORE_WARNING = $eWarning\!$7 Restoring the locale files will $coverwrite all changes$7.\n If you want to proceed, run /silkspawners locale restore confirm.
+COMMAND_SILKSPAWNERS_LOCALE_RESTORE_SUCCESSFUL = $7The locale files were restored and reloaded successfully.
+COMMAND_SILKSPAWNERS_LOCALE_RESTORE_ERROR = $cAn error occurred.$7 Please contact the developer if this problem persists.
 
 COMMAND_SILKSPAWNERS_CONFIG_USAGE = $ePlease use /silkspawners config reload
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_SUCCESSFUL = $7The config was reloaded $asuccessfully$7.

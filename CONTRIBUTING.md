@@ -7,6 +7,24 @@ below.
 
 We will not accept pull requests adding translations. Please use our Crowdin [translation program](https://crowdin.com/project/silkspawners).
 
+Only `messages_en.properties` may be edited in this repository. It is the Crowdin source file, and every other
+locale file is downloaded from Crowdin by a nightly sync and opened as a pull request. Local changes to a translated
+file are never uploaded, so they are overwritten and lost on the next sync. Add or reword messages in English only.
+
+### Editing messages locally
+
+Locale files in a server's `plugins/SilkSpawners_v2/locale/` folder are merged on startup: new and reworded messages
+from the jar are applied, while messages the server owner edited are recognised as customizations and left alone.
+A message counts as plugin-written only if its current text matches the jar, or if it matches a wording the plugin
+shipped in a released version.
+
+That means an unreleased wording is indistinguishable from a customization. When you change a message and rebuild,
+the first change reaches your test server, because it replaces the released wording. Every further change to the
+same message does not, because your server now holds a wording that was never released, so the merge protects it.
+
+If a message change does not show up on your test server, that is why. Run `/silkspawners locale restore confirm`
+or delete the `locale` folder to pick it up.
+
 ## Pull Requests
 
 We will often add small changes to your pull request directly before merging it. These changes may range from formatting, slight refactoring where necessary to more advanced additions.
