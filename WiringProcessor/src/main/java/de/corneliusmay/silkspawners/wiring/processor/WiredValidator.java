@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.wiring.processor;
 import de.corneliusmay.silkspawners.wiring.Initializes;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Requires;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -103,6 +104,11 @@ class WiredValidator {
             error(component, "@Wired components need exactly one public constructor");
             return;
         }
+        // A per-injection component would never have its load() called
+        if (isSubtype(component, LOADER) && !isSingleton(component)) {
+            error(component, "Loader implementations must be @Singleton");
+            return;
+        }
         if (isSubtype(component, LISTENER)) validateListener(component);
         collect(component, constructors.get(0));
     }
@@ -115,8 +121,8 @@ class WiredValidator {
             error(getter, "@Provides requires a public no-argument getter");
             return;
         }
-        if (owner.getAnnotation(Wired.class) == null || !isSubtype(owner, LOADER)) {
-            error(getter, "@Provides getters must live on a @Wired loader");
+        if (owner.getAnnotation(Wired.class) == null || !isSingleton(owner)) {
+            error(getter, "@Provides getters must live on a @Wired singleton");
             return;
         }
         String product =
@@ -133,15 +139,19 @@ class WiredValidator {
         if (previous != null) error(getter, "Product is already provided by " + previous.owner());
     }
 
-    void validateInitializes(TypeElement loader) {
-        if (loader.getAnnotation(Wired.class) == null || !isSubtype(loader, LOADER)) {
-            error(loader, "@Initializes requires a @Wired loader");
+    void validateSingleton(TypeElement component) {
+        if (component.getAnnotation(Wired.class) == null) error(component, "@Singleton classes must be @Wired");
+    }
+
+    void validateInitializes(TypeElement component) {
+        if (component.getAnnotation(Wired.class) == null || !isSingleton(component)) {
+            error(component, "@Initializes requires a @Wired singleton");
             return;
         }
-        for (String holder : holders(loader.getAnnotation(Initializes.class)::value)) {
+        for (String holder : holders(component.getAnnotation(Initializes.class)::value)) {
             String previous =
-                    model.addInitializer(holder, loader.getQualifiedName().toString());
-            if (previous != null) error(loader, "Holder is already initialized by " + previous);
+                    model.addInitializer(holder, component.getQualifiedName().toString());
+            if (previous != null) error(component, "Holder is already initialized by " + previous);
         }
     }
 
@@ -179,10 +189,10 @@ class WiredValidator {
             for (int index = 0; index < parameters.size(); index++) {
                 WiringModel.Parameter parameter = parameters.get(index);
                 if (model.isComponent(parameter.erasedClass())) continue;
-                if (parameter.loader())
+                if (parameter.singleton())
                     error(
                             parameterAnchor(element, index),
-                            "Loader dependency is not @Wired: " + parameter.erasedClass());
+                            "Singleton dependency is not @Wired: " + parameter.erasedClass());
                 else if (parameter.internal() && !model.isProduct(parameter.erasedClass()))
                     error(
                             parameterAnchor(element, index),
@@ -254,10 +264,10 @@ class WiredValidator {
                 .map(type -> new WiringModel.Parameter(
                         processingEnv.getTypeUtils().erasure(type).toString(),
                         type.toString(),
-                        isLoader(type),
+                        isSingleton(type),
                         isInternal(type)))
                 .toList();
-        model.addComponent(component.getQualifiedName().toString(), isSubtype(component, LOADER), parameters);
+        model.addComponent(component.getQualifiedName().toString(), isSingleton(component), parameters);
     }
 
     private List<ExecutableElement> publicConstructors(TypeElement type) {
@@ -304,9 +314,16 @@ class WiredValidator {
         return true;
     }
 
-    private boolean isLoader(TypeMirror type) {
-        TypeMirror loader = mirror(LOADER);
-        return loader != null && processingEnv.getTypeUtils().isAssignable(type, loader);
+    // Resolution is an exact type lookup, so only the declared type itself being a singleton counts
+    private boolean isSingleton(TypeMirror type) {
+        Element element = processingEnv
+                .getTypeUtils()
+                .asElement(processingEnv.getTypeUtils().erasure(type));
+        return element instanceof TypeElement singleton && isSingleton(singleton);
+    }
+
+    private boolean isSingleton(TypeElement component) {
+        return component.getAnnotation(Singleton.class) != null;
     }
 
     // Internal means declared in this compilation and not already satisfied by a @Registry constructor argument

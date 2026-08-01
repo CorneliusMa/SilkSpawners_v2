@@ -10,9 +10,9 @@ import java.util.TreeMap;
 
 class WiringModel {
 
-    record Component(boolean loader, List<Parameter> parameters) {}
+    record Component(boolean singleton, List<Parameter> parameters) {}
 
-    record Parameter(String erasedClass, String declaredType, boolean loader, boolean internal) {}
+    record Parameter(String erasedClass, String declaredType, boolean singleton, boolean internal) {}
 
     record Product(String owner, String getter) {}
 
@@ -24,16 +24,16 @@ class WiringModel {
 
     private final Map<String, List<String>> requirements = new TreeMap<>();
 
-    void addComponent(String component, boolean loader, List<Parameter> parameters) {
-        components.put(component, new Component(loader, parameters));
+    void addComponent(String component, boolean singleton, List<Parameter> parameters) {
+        components.put(component, new Component(singleton, parameters));
     }
 
     Product addProduct(String product, Product provider) {
         return products.put(product, provider);
     }
 
-    String addInitializer(String holder, String loader) {
-        return initializers.put(holder, loader);
+    String addInitializer(String holder, String initializer) {
+        return initializers.put(holder, initializer);
     }
 
     void addRequirements(String component, List<String> holders) {
@@ -88,12 +88,12 @@ class WiringModel {
         return dependencies;
     }
 
-    // Seeded from name-sorted loaders so the load sequence and its console output stay deterministic
+    // Seeded from name-sorted singletons so the load sequence and its console output stay deterministic
     List<String> loadOrder() {
         List<String> order = new ArrayList<>();
         Set<String> visited = new HashSet<>();
         components.forEach((component, definition) -> {
-            if (definition.loader()) visit(component, visited, order);
+            if (definition.singleton()) visit(component, visited, order);
         });
         return order;
     }
@@ -101,6 +101,6 @@ class WiringModel {
     private void visit(String component, Set<String> visited, List<String> order) {
         if (!visited.add(component)) return;
         for (String dependency : dependencies(component)) visit(dependency, visited, order);
-        if (components.get(component).loader()) order.add(component);
+        if (components.get(component).singleton()) order.add(component);
     }
 }

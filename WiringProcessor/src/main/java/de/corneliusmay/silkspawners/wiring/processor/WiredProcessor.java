@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.wiring.Initializes;
 import de.corneliusmay.silkspawners.wiring.Provides;
 import de.corneliusmay.silkspawners.wiring.Registry;
 import de.corneliusmay.silkspawners.wiring.Requires;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
@@ -36,6 +37,7 @@ public class WiredProcessor extends AbstractProcessor {
         return Set.of(
                 Registry.class.getCanonicalName(),
                 Wired.class.getCanonicalName(),
+                Singleton.class.getCanonicalName(),
                 Provides.class.getCanonicalName(),
                 Initializes.class.getCanonicalName(),
                 Requires.class.getCanonicalName());
@@ -53,6 +55,8 @@ public class WiredProcessor extends AbstractProcessor {
             validator.validateRegistry((TypeElement) element);
         for (Element element : roundEnvironment.getElementsAnnotatedWith(Wired.class))
             validator.validateComponent((TypeElement) element);
+        for (Element element : roundEnvironment.getElementsAnnotatedWith(Singleton.class))
+            validator.validateSingleton((TypeElement) element);
         for (Element element : roundEnvironment.getElementsAnnotatedWith(Provides.class))
             validator.validateProduct((ExecutableElement) element);
         for (Element element : roundEnvironment.getElementsAnnotatedWith(Initializes.class))

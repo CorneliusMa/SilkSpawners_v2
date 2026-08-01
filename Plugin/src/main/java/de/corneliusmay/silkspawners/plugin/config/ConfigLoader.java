@@ -8,6 +8,7 @@ import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.wiring.Initializes;
 import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Singleton
 @Initializes(PluginConfig.class)
 @RequiredArgsConstructor
 public class ConfigLoader implements Loader, Dumpable {

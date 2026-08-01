@@ -9,7 +9,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.hooks.Hook;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
-import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,7 +21,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Wired
-public class HookLoader implements Loader, Dumpable {
+@Singleton
+public class HookLoader implements Dumpable {
 
     private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}
 
@@ -42,11 +43,6 @@ public class HookLoader implements Loader, Dumpable {
         this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
         this.spawnerProvider = new SilkSpawnersProvider(spawnerFactory);
-    }
-
-    @Override
-    public boolean load() {
-        return true;
     }
 
     public void addHook(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {

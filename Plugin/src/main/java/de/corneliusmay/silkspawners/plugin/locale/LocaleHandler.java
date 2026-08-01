@@ -8,6 +8,7 @@ import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Requires;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Singleton
 @Requires(PluginConfig.class)
 public class LocaleHandler implements Loader, Dumpable {
 
