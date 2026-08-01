@@ -23,7 +23,7 @@ jobs:
           days-before-pr-stale: -1
           days-before-pr-close: -1
           stale-issue-label: stale
-          exempt-issue-labels: pinned
+          exempt-issue-labels: pinned,no-stale,enhancement
           stale-issue-message: >
             This issue has been inactive for 60 days and will be closed in 14 days.
             Comment to keep it open.
