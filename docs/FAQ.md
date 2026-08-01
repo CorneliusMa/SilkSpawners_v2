@@ -35,7 +35,7 @@ The config is created at `plugins/SilkSpawners_v2/config.yml` on first start. Af
 <details>
 <summary><b>Is it safe to update the plugin?</b></summary>
 
-Yes. Replace the jar and restart - the configuration is migrated automatically and your settings are kept. Only locale files are never touched automatically; see the question about missing messages below.
+Yes. Replace the jar and restart - the configuration is migrated automatically and your settings are kept. Locale files are merged automatically as well, keeping every message you customized; see the question about missing messages below.
 
 </details>
 
@@ -133,7 +133,9 @@ The plugin uses `$` instead of `§` or `&` for legacy color codes (`$7`, `$c`, .
 <details>
 <summary><b>Messages are missing or outdated after a plugin update</b></summary>
 
-Locale files are not overwritten automatically to protect your edits. Run `/silkspawners locale update` to pull in the latest messages - this overwrites custom changes, so keep your own edits in a separate `messages_<name>.properties` file and select it with `messages.locale`.
+New and reworded messages are merged into your locale files automatically on startup. Messages you edited yourself are recognised as customizations and left untouched, so nothing you wrote is overwritten and no command is needed.
+
+If a message you customized is stale on purpose and you want the bundled wording back, run `/silkspawners locale restore confirm` - this discards **all** custom changes. To keep edits permanently isolated from the bundled files, put them in a separate `messages_<name>.properties` file and select it with `messages.locale`.
 
 </details>
 

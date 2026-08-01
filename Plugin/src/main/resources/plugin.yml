@@ -19,7 +19,7 @@ permissions:
   silkspawners.explosion:
     description: Permission to set, if spawners explode.
   silkspawners.command.locale:
-    description: Use this command, to reload and update locale files.
+    description: Use this command, to reload and restore locale files.
   silkspawners.command.entities:
     description: Use this command to see the entities you can use in permissions and commands.
   silkspawners.command.version:

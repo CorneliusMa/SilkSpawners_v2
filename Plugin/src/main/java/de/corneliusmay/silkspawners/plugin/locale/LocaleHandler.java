@@ -12,21 +12,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
 
 @Wired
 @Requires(PluginConfig.class)
-@RequiredArgsConstructor
 public class LocaleHandler implements Loader {
 
     private static final String DEFAULT_MESSAGE =
-            "§cNo value found for key {0} using locale {1}.§7\n Use §l§n/silkspawners locale update confirm§7 to update the locale files.\n §eWarning!§7 Updating the locale files will overwrite all changes§7.";
+            "§cNo value found for key {0} using locale {1}.§7\n This message is missing from the locale files bundled with the plugin, please report it to the developer.";
 
     private static final String MIXED_MESSAGE =
             "§cThe message for key {0} mixes legacy formatting codes with MiniMessage tags, which is not supported.§7\n Use §l§neither legacy codes or MiniMessage tags§7 for a message, not both.";
@@ -36,9 +33,12 @@ public class LocaleHandler implements Loader {
 
     public static final String CROWDIN_URL = "https://crowdin.com/project/silkspawners";
 
-    private final Plugin plugin;
+    private final LocaleFiles files;
 
-    @Getter
+    public LocaleHandler(Plugin plugin) {
+        this.files = new LocaleFiles(plugin);
+    }
+
     private volatile ResourceBundle resourceBundle;
 
     private volatile ResourceBundle fallbackBundle;
@@ -50,15 +50,11 @@ public class LocaleHandler implements Loader {
 
     private volatile Locale loadedLocale;
 
-    private File localePath() {
-        return new File(plugin.getDataFolder() + "/locale");
-    }
-
     @Override
     public boolean load() {
         Logger.info("Loading locale file");
         try {
-            copyDefaultLocales(false);
+            files.copy(false);
             loadLocale();
             return true;
         } catch (MissingResourceException | URISyntaxException | IOException ex) {
@@ -69,34 +65,12 @@ public class LocaleHandler implements Loader {
         }
     }
 
-    public synchronized void copyDefaultLocales(boolean overwrite) throws URISyntaxException, IOException {
-        Path target = localePath().toPath();
-        URI resource = getClass().getResource("").toURI();
-        try (FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap())) {
-            final Path jarPath = fileSystem.getPath("/locales");
-
-            Files.walkFileTree(jarPath, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    Files.createDirectories(
-                            target.resolve(jarPath.relativize(dir).toString()));
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    if (isEmptyBundle(file)) return FileVisitResult.CONTINUE;
-                    Path targetFile = target.resolve(jarPath.relativize(file).toString());
-                    if (overwrite) Files.copy(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
-                    else if (Files.notExists(targetFile)) Files.copy(file, targetFile);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        }
+    public synchronized void restore() throws URISyntaxException, IOException {
+        files.copy(true);
     }
 
     public synchronized void loadLocale() throws IOException, MissingResourceException {
-        URL[] urls = {localePath().toURI().toURL()};
+        URL[] urls = {files.path().toURI().toURL()};
         ClassLoader loader = new URLClassLoader(urls);
         try (InputStream in = getClass().getResourceAsStream("/locales/messages_en.properties")) {
             this.bundledFallback = new PropertyResourceBundle(in);
@@ -137,11 +111,12 @@ public class LocaleHandler implements Loader {
     }
 
     public String getAvailableLocales() {
-        File[] files = localePath().listFiles();
-        if (files == null) return "";
+        File[] locales = files.path().listFiles();
+        if (locales == null) return "";
         Set<String> reference = referenceKeys();
-        return Arrays.stream(files)
+        return Arrays.stream(locales)
                 .sorted()
+                .filter((f) -> LocaleFiles.isLocale(f.getName()))
                 .map((f) -> describeLocale(f, reference))
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining(", "));
@@ -150,7 +125,7 @@ public class LocaleHandler implements Loader {
     private String describeLocale(File file, Set<String> reference) {
         Set<String> keys = loadProperties(file.toPath()).stringPropertyNames();
         if (keys.isEmpty()) return null;
-        String name = file.getName().replace("messages_", "").replace(".properties", "");
+        String name = LocaleFiles.localeCode(file.getName());
         if (reference.isEmpty()) return name;
         long translated = keys.stream().filter(reference::contains).count();
         return name + " (" + (100 * translated / reference.size()) + "%)";
@@ -170,10 +145,6 @@ public class LocaleHandler implements Loader {
                 return bundledFallback.getString(key);
             }
         }
-    }
-
-    private boolean isEmptyBundle(Path file) {
-        return loadProperties(file).isEmpty();
     }
 
     private Set<String> referenceKeys() {
