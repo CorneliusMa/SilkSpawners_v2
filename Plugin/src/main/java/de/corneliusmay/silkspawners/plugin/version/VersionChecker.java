@@ -2,6 +2,8 @@ package de.corneliusmay.silkspawners.plugin.version;
 
 import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
+import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.Schedule;
 import de.corneliusmay.silkspawners.wiring.Loader;
@@ -23,7 +25,7 @@ import org.bukkit.plugin.Plugin;
 @Wired
 @Requires(PluginConfig.class)
 @RequiredArgsConstructor
-public class VersionChecker implements Loader {
+public class VersionChecker implements Loader, Dumpable {
 
     public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/silkspawners";
 
@@ -53,6 +55,21 @@ public class VersionChecker implements Loader {
 
     public Optional<String> getAvailableUpdate() {
         return Optional.ofNullable(latestVersion).filter(latest -> !isUpToDate(latest));
+    }
+
+    @Override
+    public void describe(DumpObject<?> writer) {
+        writer.section("plugin")
+                .value("version", getInstalledVersion())
+                .value("latest", latestVersion == null ? "unknown" : latestVersion)
+                .value("update", updateStatus());
+    }
+
+    private String updateStatus() {
+        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) return "checking disabled";
+        String latest = latestVersion;
+        if (latest == null) return "unknown";
+        return isUpToDate(latest) ? "up to date" : "available";
     }
 
     public synchronized void restart() {

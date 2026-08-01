@@ -56,7 +56,7 @@ public class SilkSpawners extends JavaPlugin {
 
     private void registerHooks() {
         Logger.info("Registering hooks");
-        HookLoader hookLoader = loader.create(HookLoader.class);
+        HookLoader hookLoader = loader.get(HookLoader.class);
         hookLoader.addHook("shopguiplus.ShopGUIPlusHook", "ShopGUIPlus", PluginConfig.HOOK_SHOPGUIPLUS);
         hookLoader.register();
     }

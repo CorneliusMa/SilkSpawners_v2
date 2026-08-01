@@ -3,6 +3,9 @@ package de.corneliusmay.silkspawners.plugin.config;
 import static de.corneliusmay.silkspawners.plugin.config.PluginConfig.CONFIG_VERSION;
 
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
+import de.corneliusmay.silkspawners.plugin.dump.DumpEntry;
+import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
+import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.wiring.Initializes;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Wired;
@@ -21,7 +24,7 @@ import org.bukkit.plugin.Plugin;
 @Wired
 @Initializes(PluginConfig.class)
 @RequiredArgsConstructor
-public class ConfigLoader implements Loader {
+public class ConfigLoader implements Loader, Dumpable {
 
     private final Plugin plugin;
 
@@ -56,6 +59,12 @@ public class ConfigLoader implements Loader {
         log(Level.INFO, "Reloading configuration...");
         plugin.reloadConfig();
         return apply();
+    }
+
+    @Override
+    public void describe(DumpObject<?> writer) {
+        DumpEntry<?> section = writer.section("config");
+        for (ConfigKey<?> key : PluginConfig.values()) section.value(key.getPath(), ConfigRegistry.value(key));
     }
 
     private boolean apply() {

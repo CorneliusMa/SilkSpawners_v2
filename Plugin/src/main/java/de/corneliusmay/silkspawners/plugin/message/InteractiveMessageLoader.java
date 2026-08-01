@@ -1,5 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.message;
 
+import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
+import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.message.InteractiveMessenger;
@@ -8,7 +10,7 @@ import de.corneliusmay.silkspawners.wiring.Provides;
 import de.corneliusmay.silkspawners.wiring.Wired;
 
 @Wired
-public class InteractiveMessageLoader implements Loader {
+public class InteractiveMessageLoader implements Loader, Dumpable {
 
     private static final String CHAT_COMPONENT_CLASS = "net.md_5.bungee.api.chat.TextComponent";
 
@@ -20,6 +22,13 @@ public class InteractiveMessageLoader implements Loader {
     @Provides
     public InteractiveMessenger getMessenger() {
         return messenger;
+    }
+
+    @Override
+    public void describe(DumpObject<?> writer) {
+        writer.section("interactive-messages")
+                .value("supported", supportsInteractiveMessages())
+                .value("implementation", messenger.getClass().getName());
     }
 
     @Override

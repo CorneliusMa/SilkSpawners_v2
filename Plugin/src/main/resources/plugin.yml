@@ -26,6 +26,8 @@ permissions:
     description: Use this command to see, if updates are available.
   silkspawners.command.config:
     description: Use this command to reload the config.
+  silkspawners.command.dump:
+    description: Use this command to upload a diagnostic report for support requests.
   silkspawners.command.give:
     description: Use this command to give spawners to players.
     children:
