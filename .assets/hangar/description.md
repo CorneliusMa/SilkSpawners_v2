@@ -7,6 +7,14 @@
 
 Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 
+## QuickStart
+
+Want to use SilkSpawners without configuring permissions or anything else? Install the plugin and run this command as an admin or from the console, then confirm as prompted:
+
+```
+/silkspawners setup
+```
+
 ## Commands
 - `/silkspawners help [command]`
 - `/silkspawners give <Player> <Type> [Amount]`
@@ -14,6 +22,7 @@ Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 - `/silkspawners explosion <enable/disable/setting> <Player>`
 - `/silkspawners locale <setting/reload/restore>`
 - `/silkspawners config <reload/get/set> [Setting] [Value]`
+- `/silkspawners setup [confirm/revert]`
 - `/silkspawners entities`
 - `/silkspawners version`
 - `/silkspawners dump`
@@ -29,6 +38,7 @@ Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 - **silkspawners.command.locale** - Use this command to reload and restore locale files.
 - **silkspawners.command.config** - Use this command to view and reload the configuration.
 > In addition, set **silkspawners.command.config.set** to allow changing settings.
+- **silkspawners.command.setup** - Use this command to disable or restore the permissions needed to use spawners.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
 - **silkspawners.command.dump** - Use this command to create a diagnostic report for support requests.

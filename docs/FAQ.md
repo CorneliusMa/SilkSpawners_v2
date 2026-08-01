@@ -21,7 +21,7 @@ Paper, Spigot, Purpur, Bukkit and Folia, tested with Minecraft 1.8 through 26.2.
 <details>
 <summary><b>Can I use this plugin without a permission system?</b></summary>
 
-Yes. Set `spawner.permission.disableDestroy`, `disablePlace` and `disableChange` to `true` and mining, placing and changing spawners works for everyone without any permission checks. The admin commands stay available to server operators. Spawner explosions can be switched on per player with `/silkspawners explosion enable <Player>` even without a permission system, but only until the player logs out. Only for permanent per-player or per-mob rules do you need a permissions plugin such as LuckPerms.
+Yes. Run `/silkspawners setup`, then confirm with `/silkspawners setup confirm`, to let everyone mine, place and change spawners without permission checks. `/silkspawners setup revert` undoes it. The command just sets `spawner.permission.disableDestroy`, `disablePlace` and `disableChange` to `true`, which you can also edit in the config. Admin commands stay available to operators. Spawner explosions can be enabled per player with `/silkspawners explosion enable <Player>` even without a permission system, but only until the player logs out. For permanent per-player or per-mob rules you need a permissions plugin such as LuckPerms.
 
 </details>
 

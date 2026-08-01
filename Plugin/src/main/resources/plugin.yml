@@ -30,6 +30,8 @@ permissions:
     description: Use this permission to additionally allow changing settings.
   silkspawners.command.dump:
     description: Use this command to upload a diagnostic report for support requests.
+  silkspawners.command.setup:
+    description: Use this command to disable or restore the permissions needed to use spawners.
   silkspawners.command.give:
     description: Use this command to give spawners to players.
     children:
