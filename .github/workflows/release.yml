@@ -5,6 +5,7 @@ on:
     tags:
       - '*'
       - '!api-*'
+      - '!*-beta.*'
   workflow_call:
   workflow_dispatch:
 
@@ -18,6 +19,7 @@ jobs:
     needs: build
     permissions:
       contents: write
+      pull-requests: read
     outputs:
       already-published: ${{ steps.existing.outputs.published }}
       draft: ${{ steps.state.outputs.draft }}
@@ -36,18 +38,36 @@ jobs:
           path: artifact
 
       - id: tag
-        run: echo "latest=$(git describe --tags --abbrev=0 --exclude 'api-*')" >> $GITHUB_OUTPUT
+        run: echo "latest=$(git describe --tags --abbrev=0 --exclude 'api-*' --exclude '*-beta.*')" >> $GITHUB_OUTPUT
 
       - id: existing
         env:
           GH_TOKEN: ${{ github.token }}
         run: echo "published=$(gh release view '${{ steps.tag.outputs.latest }}' --json isDraft --jq '.isDraft == false' 2> /dev/null || echo false)" >> $GITHUB_OUTPUT
 
+      # Release notes are whatever was written above the marker on the release
+      # pull request, falling back to the commit subjects when it was left alone.
+      # release/next is reused every release, so the title has to name this one.
       - id: changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.latest }}
         run: |
+          : > "$RUNNER_TEMP/pr"
+          if [ "$(gh pr list --head release/next --state merged --limit 1 --json title --jq '.[0].title // ""')" = "build: release version ${TAG#v}" ]; then
+            gh pr list --head release/next --state merged --limit 1 --json body --jq '.[0].body // ""' > "$RUNNER_TEMP/pr"
+          fi
+          sed '/<!-- commits -->/,$d' "$RUNNER_TEMP/pr" > "$RUNNER_TEMP/notes"
+
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/notes"; then
+            last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' --exclude '*-beta.*' HEAD^ 2> /dev/null || true)
+            git log --no-merges --format='- %s' ${last:+$last..}HEAD | grep -E '^- (feat|fix|perf)' > "$RUNNER_TEMP/notes" || true
+          fi
+
           {
             echo 'changes<<CHANGES_EOF'
-            git log --oneline $(git tag -l 'v[0-9]*' --format='%(objectname)' --sort=creatordate | tail -n2 | head -n1)..HEAD --pretty=format:%s | grep -E '(^feat)|(^fix)' || true
+            cat "$RUNNER_TEMP/notes"
+            echo
             echo CHANGES_EOF
           } >> $GITHUB_OUTPUT
 

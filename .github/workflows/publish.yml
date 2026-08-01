@@ -10,14 +10,28 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - if: github.event_name == 'workflow_dispatch' && github.ref_name != 'release/next'
+        run: |
+          echo "::error::Previews are published from release/next only, got ${{ github.ref_name }}"
+          exit 1
+
+      # Full history: the locale signatures are generated from the released tags
       - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
-          filter: tree:0
 
+      # release/next already carries the version a merge would ship, so previews are
+      # labelled against that instead of against the last release
       - id: beta
-        run: echo "version=$(git describe --tags --long --exclude 'api-*' | sed -E 's/^v//; s/-([0-9]+)-g([0-9a-f]+)$/-beta.\1+\2/')" >> $GITHUB_OUTPUT
+        if: github.event_name == 'workflow_dispatch' || github.event.release.prerelease
+        run: |
+          version=$(sed -n 's/^[[:space:]]*pluginVersion[[:space:]]*=[[:space:]]*//p' gradle.properties | tr -d '[:space:]')
+          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' --exclude '*-beta.*' origin/master)
+          echo "version=$version-beta.$(git rev-list --count "$last..origin/master")" >> $GITHUB_OUTPUT
+          echo "commit=$(git rev-parse origin/master)" >> $GITHUB_OUTPUT
 
       - uses: actions/setup-java@v5.4.0
         with:
@@ -43,3 +57,12 @@ jobs:
           PUBLISH_VERSIONS: ${{ vars.PUBLISH_VERSIONS }}
           MODRINTH_PUBLISH_CHANNEL: ${{ (github.event_name == 'workflow_dispatch' || github.event.release.prerelease) && 'beta' || 'release' }}
           PUBLISH_BETA_VERSION: ${{ steps.beta.outputs.version }}
+
+      - if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="v${{ steps.beta.outputs.version }}"
+          if git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then exit 0; fi
+          git tag "$tag" '${{ steps.beta.outputs.commit }}'
+          git push origin "refs/tags/$tag"

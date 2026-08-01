@@ -48,5 +48,6 @@ jobs:
     needs: tag
     permissions:
       contents: write
+      pull-requests: read
     uses: ./.github/workflows/release.yml
     secrets: inherit
