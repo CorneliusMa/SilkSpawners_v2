@@ -1,0 +1,80 @@
+name: Release PR
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+
+  release-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # A pull request opened with GITHUB_TOKEN never triggers pull_request
+      # workflows, so the release pull request would go untested
+      - uses: actions/create-github-app-token@v3.2.0
+        id: app-token
+        with:
+          client-id: ${{ secrets.CROWDIN_APP_ID }}
+          private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@v7.0.0
+        with:
+          fetch-depth: 0
+          filter: tree:0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - id: versions
+        run: |
+          plugin=$(.github/scripts/next-version.sh v HEAD exclude api)
+          api=$(.github/scripts/next-version.sh api- HEAD include api)
+          current=$(sed -n 's/^[[:space:]]*pluginVersion[[:space:]]*=[[:space:]]*//p' gradle.properties | tr -d '[:space:]')
+          currentApi=$(sed -n 's/^[[:space:]]*apiVersion[[:space:]]*=[[:space:]]*//p' gradle.properties | tr -d '[:space:]')
+
+          # Right after a release merge the computed version already sits in gradle.properties
+          if [ "$plugin" = "$current" ]; then plugin=; fi
+          if [ "$api" = "$currentApi" ]; then api=; fi
+
+          if [ -n "$plugin" ]; then sed -i "s/^pluginVersion=.*/pluginVersion=$plugin/" gradle.properties; fi
+          if [ -n "$api" ]; then sed -i "s/^apiVersion=.*/apiVersion=$api/" gradle.properties; fi
+
+          echo "plugin=$plugin" >> $GITHUB_OUTPUT
+          echo "api=$api" >> $GITHUB_OUTPUT
+
+          # An api only release must not be titled like a plugin one, the release
+          # notes are matched back to this title by version
+          if [ -n "$plugin" ]; then
+            echo "title=build: release version $plugin" >> $GITHUB_OUTPUT
+          else
+            echo "title=build: release api version $api" >> $GITHUB_OUTPUT
+          fi
+
+      # The action rewrites the body on every update, so release notes edited on
+      # the open PR are read back and only the commit list below the marker is
+      # regenerated. A merged PR is skipped, its notes belong to the last release.
+      - if: steps.versions.outputs.plugin != '' || steps.versions.outputs.api != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh pr list --head release/next --state open --limit 1 --json body --jq '.[0].body // ""' > "$RUNNER_TEMP/existing"
+          sed '/<!-- commits -->/,$d' "$RUNNER_TEMP/existing" > "$RUNNER_TEMP/body"
+
+          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' --exclude '*-beta.*' HEAD 2> /dev/null || true)
+          {
+            echo '<!-- commits -->'
+            echo '### Commits'
+            git log --no-merges --format='- %s' ${last:+$last..}HEAD | grep -E '^- (feat|fix|perf)' || echo '- No user facing changes'
+          } >> "$RUNNER_TEMP/body"
+
+      - if: steps.versions.outputs.plugin != '' || steps.versions.outputs.api != ''
+        uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          branch: release/next
+          title: ${{ steps.versions.outputs.title }}
+          body-path: ${{ runner.temp }}/body
+          commit-message: ${{ steps.versions.outputs.title }}

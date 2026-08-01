@@ -9,11 +9,8 @@ case "$first_line" in
     Merge\ *|Revert\ *|fixup!*|squash!*) exit 0 ;;
 esac
 
-if printf '%s' "$first_line" | grep -Eq '^(build|ci|docs|feat|fix|perf|refactor|style|test|revert|chore)(\([^)]+\))?!?: .+'; then
-    exit 0
-fi
-
-cat >&2 <<EOF
+if ! printf '%s' "$first_line" | grep -Eq '^(build|ci|docs|feat|fix|perf|refactor|style|test|revert|chore)(\([^)]+\))?!?: .+'; then
+    cat >&2 <<EOF
 commit-msg: message does not follow Conventional Commits (see CONTRIBUTING.md)
 
   <type>[optional scope][!]: <description>
@@ -23,4 +20,32 @@ commit-msg: message does not follow Conventional Commits (see CONTRIBUTING.md)
 
   got: $first_line
 EOF
-exit 1
+    exit 1
+fi
+
+# The api scope, not the touched paths, decides whether a change releases the
+# API module, so for the types that trigger a release the two have to agree.
+# CI overrides the paths to run this hook against past commits.
+if printf '%s' "$first_line" | grep -Eq '^(feat|fix|perf)[(!:]'; then
+    changed=${COMMIT_PATHS-$(git diff --cached --name-only)}
+
+    printf '%s\n' "$changed" | grep -q '^API/' && touches=yes || touches=no
+    printf '%s' "$first_line" | grep -Eq '^[a-z]+\(api\)' && scoped=yes || scoped=no
+
+    if [ "$touches" != "$scoped" ]; then
+        if [ "$touches" = yes ]; then
+            reason='changes under API/ must carry the api scope, it releases the API module'
+        else
+            reason='the api scope releases the API module, but nothing under API/ changed'
+        fi
+
+        cat >&2 <<EOF
+commit-msg: $reason
+
+  example: feat(api): spawner settings access
+
+  got: $first_line
+EOF
+        exit 1
+    fi
+fi
