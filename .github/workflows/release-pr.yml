@@ -22,6 +22,16 @@ jobs:
           client-id: ${{ secrets.CROWDIN_APP_ID }}
           private-key: ${{ secrets.CROWDIN_APP_PRIVATE_KEY }}
 
+      - uses: actions/github-script@v8
+        id: bot
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const login = '${{ steps.app-token.outputs.app-slug }}[bot]'
+            const { data } = await github.rest.users.getByUsername({ username: login })
+            core.setOutput('login', login)
+            core.setOutput('id', data.id)
+
       - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
@@ -74,6 +84,9 @@ jobs:
         uses: peter-evans/create-pull-request@v8.1.1
         with:
           token: ${{ steps.app-token.outputs.token }}
+          sign-commits: true
+          committer: ${{ steps.bot.outputs.login }} <${{ steps.bot.outputs.id }}+${{ steps.bot.outputs.login }}@users.noreply.github.com>
+          author: ${{ steps.bot.outputs.login }} <${{ steps.bot.outputs.id }}+${{ steps.bot.outputs.login }}@users.noreply.github.com>
           branch: release/next
           title: ${{ steps.versions.outputs.title }}
           body-path: ${{ runner.temp }}/body
