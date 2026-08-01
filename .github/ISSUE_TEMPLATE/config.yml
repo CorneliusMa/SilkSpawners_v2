@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Frequently asked questions
+    url: https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md
+    about: Common questions and problems are answered in the FAQ. Please check it before opening an issue.
   - name: Translations
     url: https://crowdin.com/project/silkspawners
     about: Report translation mistakes or contribute new translations on Crowdin. Translation pull requests and issues are not accepted here.
