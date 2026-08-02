@@ -4,6 +4,7 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.spi.message.ClickAction;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -45,7 +46,9 @@ public class LocaleCommand extends SilkSpawnersCommand {
                         String locale = configuredLocale();
                         sendMessage(sender, "SETTING", locale, localeHandler.getAvailableLocales());
                     }
-                    case "restore" -> sendMessage(sender, "RESTORE_WARNING");
+                    case "restore" ->
+                        sendInteractive(
+                                sender, ClickAction.runCommand(commandString("restore", "confirm")), "RESTORE_WARNING");
                     default -> invalidSyntax(sender);
                 }
             }

@@ -25,6 +25,8 @@ import org.bukkit.plugin.Plugin;
 @RequiredArgsConstructor
 public class VersionChecker implements Loader {
 
+    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/silkspawners";
+
     private static final URI LATEST_RELEASE_URI =
             URI.create("https://api.github.com/repos/CorneliusMa/SilkSpawners_v2/releases/latest");
 
@@ -124,7 +126,7 @@ public class VersionChecker implements Loader {
     }
 
     private String updateAvailableMessage(String latestVersion) {
-        return "§eUpdate available! Download at https://modrinth.com/plugin/silkspawners §f\nInstalled version: v"
+        return "§eUpdate available! Download at " + DOWNLOAD_URL + " §f\nInstalled version: v"
                 + getInstalledVersion()
                 + "\nLatest version: v"
                 + latestVersion;
