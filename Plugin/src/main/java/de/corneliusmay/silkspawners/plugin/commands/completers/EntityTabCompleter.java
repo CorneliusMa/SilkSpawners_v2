@@ -18,8 +18,7 @@ public class EntityTabCompleter implements TabCompletion {
         entityTypes.add(null); // empty
         entityTypes.addAll(SpawnableEntities.TYPES);
         return entityTypes.stream()
-                .map(entityType -> entityType == null ? Spawner.EMPTY : entityType.getName())
-                .filter(Objects::nonNull)
+                .map(Spawner::serializedEntityType)
                 .filter((entity) -> {
                     if (sender.hasPermission(command.getPermissionString() + "." + entity)) return true;
                     else return sender.hasPermission(command.getPermissionString() + ".*");
