@@ -16,6 +16,7 @@ Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 - `/silkspawners config <reload>`
 - `/silkspawners entities`
 - `/silkspawners version`
+- `/silkspawners dump`
 
 ## Permissions
 
@@ -29,6 +30,7 @@ Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 - **silkspawners.command.config** - Use this command to reload the configuration.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
+- **silkspawners.command.dump** - Use this command to create a diagnostic report for support requests.
 
 ### Spawners
 - **silkspawners.break.*** - Permission to set if players will receive destroyed spawners.
@@ -134,6 +136,7 @@ COMMAND_SILKSPAWNERS_HELP_MESSAGE_ENTITIES = $7Use this command to see entities 
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_VERSION = $7Use this command to see, if updates are available. \nUsage\: /silkspawners version
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to restore them from the .jar file. New and reworded messages are applied automatically on startup, so restoring is only needed to discard your own changes. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale [setting/reload/restore]
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_CONFIG = $7Use this command to reload the configuration from the config.yml file. \nUsage\: /silkspawners config reload
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_DUMP = $7Use this command to upload a diagnostic report you can attach to support requests. \nUsage\: /silkspawners dump
 
 COMMAND_SILKSPAWNERS_GIVE_USAGE = $ePlease use /silkspawners give <Player> <Mob> [Amount]
 COMMAND_SILKSPAWNERS_GIVE_PLAYER_NOT_FOUND = $7The player $c{0}$7 is not online.
@@ -180,12 +183,22 @@ COMMAND_SILKSPAWNERS_LOCALE_RESTORE_ERROR = $cAn error occurred.$7 Please contac
 COMMAND_SILKSPAWNERS_CONFIG_USAGE = $ePlease use /silkspawners config reload
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_SUCCESSFUL = $7The config was reloaded $asuccessfully$7.
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_ERROR = $7An $cerror$7 occurred reloading the configuration. Please check the server logs.
+
+COMMAND_SILKSPAWNERS_DUMP_USAGE = $ePlease use /silkspawners dump
+COMMAND_SILKSPAWNERS_DUMP_CREATING = $7Creating a diagnostic dump...
+COMMAND_SILKSPAWNERS_DUMP_SUCCESS = $7The dump was uploaded to %link%
+COMMAND_SILKSPAWNERS_DUMP_SUCCESS_LINK = $b$n{0}
+COMMAND_SILKSPAWNERS_DUMP_ERROR = $cThe dump could not be uploaded.$7 It was saved to {0}
 ```
 </details>
 
 ## FAQ
 
 Common questions and problems are answered in the [FAQ](https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md).
+
+## Support
+
+If the FAQ does not cover your problem, [open an issue](https://github.com/CorneliusMa/SilkSpawners_v2/issues). Running `/silkspawners dump` creates a diagnostic report - plugin, server and Java versions, the installed plugins and your configuration - on [pastes.dev](https://pastes.dev) and replies with a link to attach to the issue. If it cannot be shared, the report is written to the plugin folder instead.
 
 ## Integrations
 

@@ -131,6 +131,18 @@ When a new module *is* required:
 
 There is no automated test for version handlers, so verify your changes on a real server running the target version.
 
+## Adding a section to the dump
+
+`/silkspawners dump` renders a JSON report from a list of [`Dumpable`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/Dumpable.java) sections and creates it on [pastes.dev](https://pastes.dev), falling back to a file in the plugin folder when that fails. A section describes itself into the writer it is handed:
+
+```java
+writer.section("my-subsystem").value("implementation", implementation.getClass().getName());
+```
+
+A section that throws is replaced by an error entry instead of failing the dump, so a broken subsystem is still reported.
+
+Components that already exist implement `Dumpable` themselves (`ConfigLoader`, `HookLoader`, …); state that belongs to no component gets a stateless class in [`dump/sections`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/sections). Either way, add it to the list in [`Dump`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/Dump.java) - the order there is the order in the report. Never put player data, IP addresses or anything else identifying into a dump: reports are public once created and get pasted into issues.
+
 ## Adding a plugin hook
 
 Integrations with other plugins live in their own `HookXxx` modules and are loaded through `HookLoader`, which only activates a hook when the target plugin is installed *and* the corresponding config option is enabled.

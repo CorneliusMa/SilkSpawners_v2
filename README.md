@@ -43,6 +43,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - `/silkspawners config <reload>`
 - `/silkspawners entities`
 - `/silkspawners version`
+- `/silkspawners dump`
 
 ## Permissions
 
@@ -56,6 +57,7 @@ Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`
 - **silkspawners.command.config** - Use this command to reload the configuration.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
+- **silkspawners.command.dump** - Use this command to create a diagnostic report for support requests.
 
 ### Spawners
 - **silkspawners.break.*** - Permission to set if players will receive destroyed spawners.
@@ -140,6 +142,10 @@ Locale files must be named accordingly to the messages_myfile.properties naming 
 ## FAQ
 
 Common questions and problems are answered in the [FAQ](docs/FAQ.md).
+
+## Support
+
+If the FAQ does not cover your problem, [open an issue](https://github.com/CorneliusMa/SilkSpawners_v2/issues). Running `/silkspawners dump` creates a diagnostic report - plugin, server and Java versions, the installed plugins and your configuration - on [pastes.dev](https://pastes.dev) and replies with a link to attach to the issue. If it cannot be shared, the report is written to the plugin folder instead.
 
 ## Integrations
 
