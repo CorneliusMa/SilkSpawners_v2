@@ -1,8 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.metrics;
 
+import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Requires;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import lombok.RequiredArgsConstructor;
 import org.bstats.bukkit.Metrics;
@@ -10,6 +12,7 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Requires(PluginConfig.class)
 @RequiredArgsConstructor
 public class MetricsHandler implements Loader {
 
@@ -28,6 +31,8 @@ public class MetricsHandler implements Loader {
             Logger.info("Starting bStats integration");
             metrics = new Metrics(plugin, SERVICE_ID);
             metrics.addCustomChart(new SimplePie("locale", localeHandler::getLocaleDisplayName));
+            metrics.addCustomChart(new SimplePie(
+                    "update_check", () -> PluginConfig.UPDATE_CHECK_ENABLED.get() ? "enabled" : "disabled"));
         } catch (RuntimeException ex) {
             Logger.error("Failed to start bStats integration", ex);
         }
