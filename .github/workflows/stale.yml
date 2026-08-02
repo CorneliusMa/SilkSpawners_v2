@@ -7,6 +7,7 @@ on:
 
 permissions:
   issues: write
+  pull-requests: write
   actions: write
 
 jobs:
@@ -20,13 +21,21 @@ jobs:
         with:
           days-before-stale: 60
           days-before-close: 14
-          days-before-pr-stale: -1
-          days-before-pr-close: -1
+          days-before-pr-stale: 14
+          days-before-pr-close: 14
           stale-issue-label: stale
-          exempt-issue-labels: pinned,no-stale,enhancement
+          stale-pr-label: stale
+          exempt-issue-labels: pinned,no-stale,enhancement,triage
+          exempt-pr-labels: pinned,no-stale,dependencies,crowdin
           stale-issue-message: >
             This issue has been inactive for 60 days and will be closed in 14 days.
             Comment to keep it open.
           close-issue-message: >
             This issue was closed due to inactivity. Feel free to reopen or open
             a new issue if it is still relevant.
+          stale-pr-message: >
+            This pull request has been inactive and will be closed in 14 days.
+            Push a commit or comment to keep it open.
+          close-pr-message: >
+            This pull request was closed due to inactivity. Feel free to reopen it
+            if you want to continue the work.
