@@ -34,6 +34,7 @@ public class MessageRenderer {
     }
 
     public static String render(String template, Object... args) {
+        if (template == null) return null;
         if (isMixed(template)) throw new MixedFormattingException();
         // Crowdin only escapes apostrophes in strings containing variables, so plain strings must skip MessageFormat
         if (template.indexOf('§') != -1) return args.length == 0 ? template : MessageFormat.format(template, args);
