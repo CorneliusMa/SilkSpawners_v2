@@ -1,17 +1,21 @@
 package de.corneliusmay.silkspawners.plugin.platform;
 
+import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
+import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Provides;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Wired
+@Singleton
 @RequiredArgsConstructor
-public class PlatformLoader implements Loader {
+public class PlatformLoader implements Loader, Dumpable {
 
     private final JavaPlugin plugin;
 
@@ -23,6 +27,12 @@ public class PlatformLoader implements Loader {
     @Provides
     public ServerPlatform getServerPlatform() {
         return serverPlatform;
+    }
+
+    @Override
+    public void describe(DumpObject<?> writer) {
+        writer.section("platform")
+                .value("implementation", serverPlatform.getClass().getName());
     }
 
     @Override

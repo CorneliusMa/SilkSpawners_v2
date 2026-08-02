@@ -1,11 +1,15 @@
 package de.corneliusmay.silkspawners.plugin.hooks;
 
 import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
+import de.corneliusmay.silkspawners.plugin.dump.DumpEntry;
+import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
+import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.hooks.Hook;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +21,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Wired
-public class HookLoader {
+@Singleton
+public class HookLoader implements Dumpable {
 
     private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}
 
@@ -46,6 +51,15 @@ public class HookLoader {
 
     public void register() {
         hooks.forEach(this::register);
+    }
+
+    @Override
+    public void describe(DumpObject<?> writer) {
+        DumpEntry<?> section = writer.section("hooks");
+        hooks.forEach(hook -> section.section(hook.pluginName())
+                .value("registered", registeredHooks.contains(hook.hookName()))
+                .value("enabled", hook.enabledConfig().get())
+                .value("plugin-present", pluginManager.getPlugin(hook.pluginName()) != null));
     }
 
     private void register(HookDefinition definition) {

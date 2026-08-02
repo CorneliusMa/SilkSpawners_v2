@@ -1,22 +1,18 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
-import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Location;
 
 @Wired
-public class EditedSpawners implements Loader {
+@Singleton
+public class EditedSpawners {
 
     private static final long TTL_MILLIS = 5000;
 
     private final Map<Location, Long> pending = new ConcurrentHashMap<>();
-
-    @Override
-    public boolean load() {
-        return true;
-    }
 
     public boolean beginEdit(Location location) {
         long now = System.currentTimeMillis();

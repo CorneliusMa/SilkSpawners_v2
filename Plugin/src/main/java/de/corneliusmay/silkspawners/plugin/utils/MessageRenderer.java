@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.utils;
 
 import java.text.MessageFormat;
+import java.util.regex.Pattern;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -8,6 +9,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class MessageRenderer {
+
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\{(\\d+)\\}");
 
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
@@ -36,13 +39,18 @@ public class MessageRenderer {
     public static String render(String template, Object... args) {
         if (isMixed(template)) throw new MixedFormattingException();
         // Crowdin only escapes apostrophes in strings containing variables, so plain strings must skip MessageFormat
-        if (template.indexOf('§') != -1) return args.length == 0 ? template : MessageFormat.format(template, args);
+        if (template.indexOf('§') != -1)
+            return hasPlaceholder(template) ? MessageFormat.format(template, args) : template;
 
         // Args are inserted as components because they may contain legacy codes, which MiniMessage rejects
         TagResolver.Builder resolver = TagResolver.builder();
         for (int i = 0; i < args.length; i++) resolver.resolver(Placeholder.component("arg" + i, asComponent(args[i])));
         return SERIALIZER.serialize(
-                MINI_MESSAGE.deserialize(template.replaceAll("\\{(\\d+)\\}", "<arg$1>"), resolver.build()));
+                MINI_MESSAGE.deserialize(PLACEHOLDER.matcher(template).replaceAll("<arg$1>"), resolver.build()));
+    }
+
+    private static boolean hasPlaceholder(String template) {
+        return PLACEHOLDER.matcher(template).find();
     }
 
     private static Component asComponent(Object arg) {

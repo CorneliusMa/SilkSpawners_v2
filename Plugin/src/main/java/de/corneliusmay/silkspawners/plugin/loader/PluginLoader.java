@@ -16,7 +16,7 @@ public class PluginLoader {
 
     private final Object[] ambient;
 
-    private final Map<Class<? extends Loader>, Loader> loaded = new HashMap<>();
+    private final Map<Class<?>, Object> singletons = new HashMap<>();
 
     public PluginLoader(SilkSpawners plugin) {
         this.plugin = plugin;
@@ -24,16 +24,16 @@ public class PluginLoader {
     }
 
     public boolean load() {
-        for (Class<? extends Loader> type : WiredComponents.LOAD_ORDER) {
-            Loader loader = create(type);
-            if (!loader.load()) return backOff();
-            loaded.put(type, loader);
+        for (Class<?> type : WiredComponents.LOAD_ORDER) {
+            Object singleton = create(type);
+            if (singleton instanceof Loader loader && !loader.load()) return backOff();
+            singletons.put(type, singleton);
         }
         return true;
     }
 
-    public <T extends Loader> T get(Class<T> type) {
-        return type.cast(loaded.get(type));
+    public <T> T get(Class<T> type) {
+        return type.cast(singletons.get(type));
     }
 
     // Picks up every matching @Wired class, so new components never need manual registration
@@ -41,7 +41,7 @@ public class PluginLoader {
         return WiredComponents.PARAMETERS.keySet().stream()
                 .filter(supertype::isAssignableFrom)
                 .sorted(Comparator.comparing(Class::getName))
-                .map(type -> supertype.cast(create(type, arguments)))
+                .map(type -> supertype.cast(isSingleton(type) ? loaded(type) : create(type, arguments)))
                 .toList();
     }
 
@@ -74,14 +74,10 @@ public class PluginLoader {
         }
         if (match != null) return match;
         for (Object provided : ambient) if (parameter.isInstance(provided)) return provided;
-        if (Loader.class.isAssignableFrom(parameter)) {
-            Loader dependency = loaded.get(parameter);
-            if (dependency != null) return dependency;
-            throw new IllegalStateException("Loader dependency is not loaded: " + parameter.getName());
-        }
-        Class<? extends Loader> owner = WiredComponents.PRODUCT_OWNERS.get(parameter);
+        if (isSingleton(parameter)) return loaded(parameter);
+        Class<?> owner = WiredComponents.PRODUCT_OWNERS.get(parameter);
         if (owner != null) {
-            Loader provider = loaded.get(owner);
+            Object provider = singletons.get(owner);
             Object product = provider == null
                     ? null
                     : WiredComponents.PRODUCT_GETTERS.get(parameter).apply(provider);
@@ -92,6 +88,16 @@ public class PluginLoader {
         if (WiredComponents.PARAMETERS.containsKey(parameter)) return create(parameter);
         throw new IllegalStateException(
                 "Cannot resolve dependency " + parameter.getName() + " for " + component.getName());
+    }
+
+    private boolean isSingleton(Class<?> type) {
+        return WiredComponents.LOAD_ORDER.contains(type);
+    }
+
+    private Object loaded(Class<?> type) {
+        Object singleton = singletons.get(type);
+        if (singleton == null) throw new IllegalStateException("Singleton dependency is not loaded: " + type.getName());
+        return singleton;
     }
 
     private boolean backOff() {

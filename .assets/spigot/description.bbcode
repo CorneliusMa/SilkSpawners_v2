@@ -14,6 +14,7 @@
 [*][SIZE=4]/silkspawners config <reload>[/SIZE]
 [*][SIZE=4]/silkspawners entities[/SIZE]
 [*][SIZE=4]/silkspawners version[/SIZE]
+[*][SIZE=4]/silkspawners dump[/SIZE]
 [/LIST]
 
 [B][FONT=Verdana][SIZE=6][COLOR=#0059b3]Permissions[/COLOR][/SIZE][/FONT][/B]
@@ -28,7 +29,8 @@
 [B]silkspawners.command.locale [/B]- Use this command to reload and restore locale files.
 [B]silkspawners.command.config [/B]- Use this command to reload the configuration.
 [B]silkspawners.command.entities [/B]- Use this command to see the entities you can use in permissions and commands.
-[B]silkspawners.command.version [/B]- Use this command to see if updates are available.[/SIZE]
+[B]silkspawners.command.version [/B]- Use this command to see if updates are available.
+[B]silkspawners.command.dump [/B]- Use this command to create a diagnostic report for support requests.[/SIZE]
 [/QUOTE]
 [QUOTE]
 [SIZE=5][B]Spawners[/B][/SIZE]
@@ -127,6 +129,7 @@ COMMAND_SILKSPAWNERS_HELP_MESSAGE_ENTITIES = $7Use this command to see entities 
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_VERSION = $7Use this command to see, if updates are available. \nUsage\: /silkspawners version
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to restore them from the .jar file. New and reworded messages are applied automatically on startup, so restoring is only needed to discard your own changes. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale [setting/reload/restore]
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_CONFIG = $7Use this command to reload the configuration from the config.yml file. \nUsage\: /silkspawners config reload
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_DUMP = $7Use this command to upload a diagnostic report you can attach to support requests. \nUsage\: /silkspawners dump
 
 COMMAND_SILKSPAWNERS_GIVE_USAGE = $ePlease use /silkspawners give <Player> <Mob> [Amount]
 COMMAND_SILKSPAWNERS_GIVE_PLAYER_NOT_FOUND = $7The player $c{0}$7 is not online.
@@ -173,6 +176,12 @@ COMMAND_SILKSPAWNERS_LOCALE_RESTORE_ERROR = $cAn error occurred.$7 Please contac
 COMMAND_SILKSPAWNERS_CONFIG_USAGE = $ePlease use /silkspawners config reload
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_SUCCESSFUL = $7The config was reloaded $asuccessfully$7.
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_ERROR = $7An $cerror$7 occurred reloading the configuration. Please check the server logs.
+
+COMMAND_SILKSPAWNERS_DUMP_USAGE = $ePlease use /silkspawners dump
+COMMAND_SILKSPAWNERS_DUMP_CREATING = $7Creating a diagnostic dump...
+COMMAND_SILKSPAWNERS_DUMP_SUCCESS = $7The dump was uploaded to %link%
+COMMAND_SILKSPAWNERS_DUMP_SUCCESS_LINK = $b$n{0}
+COMMAND_SILKSPAWNERS_DUMP_ERROR = $cThe dump could not be uploaded.$7 It was saved to {0}
 [/CODE]
 [/SPOILER]
 
@@ -205,4 +214,5 @@ Thanks to [URL='https://www.youtube.com/@KasaiSora']KasaiSora[/URL] for creating
 [B][FONT=Verdana][SIZE=6][COLOR=#0059b3]Support[/COLOR][/SIZE][/FONT][/B]
 
 [QUOTE][CENTER][SIZE=5][B][COLOR=#ff8000]Got a question, bug or idea? We'd love to help - just not in the reviews.[/COLOR][/B]
-A review only allows a single reply, so there is no real conversation possible. Please check the [URL='https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md'][B]FAQ[/B][/URL] and otherwise [URL='https://github.com/CorneliusMa/SilkSpawners_v2/issues'][B]open a GitHub issue[/B][/URL], that's where we reply fastest. Spigot discussion and chat are only checked occasionally.[/SIZE][/CENTER][/QUOTE]
+A review only allows a single reply, so there is no real conversation possible. Please check the [URL='https://github.com/CorneliusMa/SilkSpawners_v2/blob/master/docs/FAQ.md'][B]FAQ[/B][/URL] and otherwise [URL='https://github.com/CorneliusMa/SilkSpawners_v2/issues'][B]open a GitHub issue[/B][/URL], that's where we reply fastest. Spigot discussion and chat are only checked occasionally.
+Running [B]/silkspawners dump[/B] creates a diagnostic report - plugin, server and Java versions, the installed plugins and your configuration - on [URL='https://pastes.dev']pastes.dev[/URL] and replies with a link to attach to the issue.[/SIZE][/CENTER][/QUOTE]

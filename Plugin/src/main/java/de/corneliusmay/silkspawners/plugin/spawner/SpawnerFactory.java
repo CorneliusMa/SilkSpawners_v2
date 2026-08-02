@@ -7,7 +7,7 @@ import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
-import de.corneliusmay.silkspawners.wiring.Loader;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Map;
 import java.util.Optional;
@@ -20,8 +20,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 @Wired
+@Singleton
 @RequiredArgsConstructor
-public class SpawnerFactory implements Loader {
+public class SpawnerFactory {
 
     // The stored location of every spawner item's identity. Changing this orphans all existing items
     private static final String ENTITY_TAG = "silkspawners:entity";
@@ -33,11 +34,6 @@ public class SpawnerFactory implements Loader {
     private final ServerPlatform platform;
 
     private final EditedSpawners editedSpawners;
-
-    @Override
-    public boolean load() {
-        return true;
-    }
 
     public Optional<Spawner> fromBlock(Block block) {
         if (block == null || block.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();

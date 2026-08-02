@@ -1,11 +1,14 @@
 package de.corneliusmay.silkspawners.plugin.locale;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
+import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Requires;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +22,9 @@ import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Singleton
 @Requires(PluginConfig.class)
-public class LocaleHandler implements Loader {
+public class LocaleHandler implements Loader, Dumpable {
 
     private static final String DEFAULT_MESSAGE =
             "§cNo value found for key {0} using locale {1}.§7\n This message is missing from the locale files bundled with the plugin, please report it to the developer.";
@@ -86,6 +90,14 @@ public class LocaleHandler implements Loader {
 
     public boolean isSelectedLocaleLoaded() {
         return getLocale().equals(loadedLocale);
+    }
+
+    @Override
+    public void describe(DumpObject<?> writer) {
+        writer.section("locale")
+                .value("selected", getLocale())
+                .value("loaded", isSelectedLocaleLoaded())
+                .value("completion", completionPercent + "%");
     }
 
     public boolean isIncomplete() {

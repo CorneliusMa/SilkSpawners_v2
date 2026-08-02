@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.wiring.processor;
 
-import de.corneliusmay.silkspawners.wiring.Loader;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
@@ -15,7 +14,6 @@ class RegistryGenerator {
     private static final String TEMPLATE = """
             package %s;
 
-            import %s;
             import java.util.List;
             import java.util.Map;
             import java.util.function.Function;
@@ -24,7 +22,7 @@ class RegistryGenerator {
             @SuppressWarnings("unchecked")
             final class WiredComponents {
 
-                static final List<Class<? extends Loader>> LOAD_ORDER = List.of(
+                static final List<Class<?>> LOAD_ORDER = List.of(
             %s);
 
                 static final Map<Class<?>, List<Class<?>>> PARAMETERS = Map.ofEntries(
@@ -33,10 +31,10 @@ class RegistryGenerator {
                 static final Map<Class<?>, Function<Object[], Object>> FACTORIES = Map.ofEntries(
             %s);
 
-                static final Map<Class<?>, Class<? extends Loader>> PRODUCT_OWNERS = Map.ofEntries(
+                static final Map<Class<?>, Class<?>> PRODUCT_OWNERS = Map.ofEntries(
             %s);
 
-                static final Map<Class<?>, Function<Loader, Object>> PRODUCT_GETTERS = Map.ofEntries(
+                static final Map<Class<?>, Function<Object, Object>> PRODUCT_GETTERS = Map.ofEntries(
             %s);
 
                 private WiredComponents() {}
@@ -68,7 +66,6 @@ class RegistryGenerator {
     private String render() {
         return TEMPLATE.formatted(
                 registryPackage,
-                Loader.class.getName(),
                 WiredProcessor.class.getName(),
                 loadOrderEntries(),
                 parameterEntries(),
@@ -78,7 +75,7 @@ class RegistryGenerator {
     }
 
     private String loadOrderEntries() {
-        return block(model.loadOrder().stream().map(loader -> loader + ".class"));
+        return block(model.loadOrder().stream().map(singleton -> singleton + ".class"));
     }
 
     private String parameterEntries() {
@@ -115,7 +112,7 @@ class RegistryGenerator {
 
     private String productGetterEntries() {
         return block(model.products().entrySet().stream()
-                .map(entry -> "Map.entry(%s.class, loader -> ((%s) loader).%s())"
+                .map(entry -> "Map.entry(%s.class, owner -> ((%s) owner).%s())"
                         .formatted(
                                 entry.getKey(),
                                 entry.getValue().owner(),

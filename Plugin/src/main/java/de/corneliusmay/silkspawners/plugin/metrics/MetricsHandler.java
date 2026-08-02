@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.wiring.Loader;
 import de.corneliusmay.silkspawners.wiring.Requires;
+import de.corneliusmay.silkspawners.wiring.Singleton;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import lombok.RequiredArgsConstructor;
 import org.bstats.bukkit.Metrics;
@@ -12,6 +13,7 @@ import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
 
 @Wired
+@Singleton
 @Requires(PluginConfig.class)
 @RequiredArgsConstructor
 public class MetricsHandler implements Loader {

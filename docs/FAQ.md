@@ -154,3 +154,21 @@ Yes. If ShopGUI+ is installed, spawners bought and sold in its shops are automat
 Yes, SilkSpawners provides a developer API with a service interface and events for spawner places, breaks, drops, changes, explosions and gives. See the [Developer documentation](DEVELOPERS.md).
 
 </details>
+
+## Support
+
+<details>
+<summary><b>How do I report a problem?</b></summary>
+
+[Open an issue](https://github.com/CorneliusMa/SilkSpawners_v2/issues) and attach a diagnostic dump. Running `/silkspawners dump` (permission `silkspawners.command.dump`, operators by default) creates the report and replies with a link to it.
+
+</details>
+
+<details>
+<summary><b>What does a dump contain and where does it go?</b></summary>
+
+The plugin version and update status, the server brand and version, the version and platform implementations in use, the Java and operating system versions, the locale in use, the active hooks, your configuration and the list of installed plugins with their versions. No player data, IP addresses or world data are included.
+
+The report is created on [pastes.dev](https://pastes.dev) and the command replies with its link. If that is not possible - for example on a server without internet access - the report is saved as `plugins/SilkSpawners_v2/dump-<timestamp>.json` instead, and the command replies with that path so you can attach the file by hand.
+
+</details>

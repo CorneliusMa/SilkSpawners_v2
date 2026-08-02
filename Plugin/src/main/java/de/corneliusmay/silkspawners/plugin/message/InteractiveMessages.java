@@ -23,7 +23,7 @@ public class InteractiveMessages {
 
     public void send(CommandSender sender, ClickAction action, String key, Object... args) {
         String body = locale.getMessage(key, args);
-        String link = linkText(key);
+        String link = linkText(key, args);
         int index = body.indexOf(LINK_TOKEN);
         if (index == -1 || link == null) {
             Logger.warn("Interactive message " + key + " has no clickable link ("
@@ -38,9 +38,9 @@ public class InteractiveMessages {
         else sender.sendMessage(PlainMessageSender.plain(message));
     }
 
-    private String linkText(String key) {
+    private String linkText(String key, Object... args) {
         try {
-            return locale.getMessageClean(key + "_LINK");
+            return locale.getMessageClean(key + "_LINK", args);
         } catch (MissingResourceException ex) {
             return null;
         }
