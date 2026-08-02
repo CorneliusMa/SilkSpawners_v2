@@ -10,7 +10,7 @@ import org.bukkit.entity.HumanEntity;
 public class OnlinePlayersTabCompleter implements TabCompletion {
 
     @Override
-    public List<String> update(SilkSpawnersCommand command, CommandSender sender) {
+    public List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args) {
         return Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).toList();
     }
 }

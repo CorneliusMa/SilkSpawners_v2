@@ -12,7 +12,7 @@ public class StaticTabCompletion implements TabCompletion {
     }
 
     @Override
-    public List<String> update(SilkSpawnersCommand command, CommandSender sender) {
+    public List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args) {
         return completions;
     }
 }

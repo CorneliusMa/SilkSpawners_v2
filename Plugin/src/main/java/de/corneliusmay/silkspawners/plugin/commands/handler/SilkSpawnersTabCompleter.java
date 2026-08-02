@@ -31,7 +31,8 @@ class SilkSpawnersTabCompleter implements TabCompleter {
                 && command.hasPermission(commandSender)) {
             StringUtil.copyPartialMatches(
                     args[args.length - 1],
-                    command.getCompletions()[args.length - 2].update(command, commandSender),
+                    command.getCompletions()[args.length - 2].update(
+                            command, commandSender, Arrays.copyOfRange(args, 1, args.length)),
                     completions);
         }
 

@@ -15,6 +15,8 @@ final class ConfigKeyBuilder {
     Object defaultValue;
     String[] legacyKeys;
     boolean list;
+    boolean internal;
+    ConfigApply apply = ConfigApply.IMMEDIATELY;
     final NavigableMap<Integer, List<ConfigValueMigrator>> migrators = new TreeMap<>();
 
     ConfigKeyBuilder(ConfigScope scope, String key) {
@@ -24,6 +26,16 @@ final class ConfigKeyBuilder {
 
     ConfigKeyBuilder def(Object value) {
         this.defaultValue = value;
+        return this;
+    }
+
+    ConfigKeyBuilder internal() {
+        this.internal = true;
+        return this;
+    }
+
+    ConfigKeyBuilder apply(ConfigApply apply) {
+        this.apply = apply;
         return this;
     }
 

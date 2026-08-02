@@ -34,6 +34,9 @@ public class ConfigLoader implements Loader, Dumpable {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             log(Level.INFO, "No config file was found. The config will be generated with the default configuration");
+            log(
+                    Level.INFO,
+                    "No permissions plugin? Run /silkspawners setup so players can use spawners without configuring permissions");
             return CONFIG_VERSION;
         }
 

@@ -5,5 +5,5 @@ import org.bukkit.command.CommandSender;
 
 public interface TabCompletion {
 
-    List<String> update(SilkSpawnersCommand command, CommandSender sender);
+    List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args);
 }
