@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.commands;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
+import de.corneliusmay.silkspawners.spi.message.ClickAction;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Optional;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,13 @@ public class VersionCommand extends SilkSpawnersCommand {
         }
 
         Optional<String> update = versionChecker.getAvailableUpdate();
-        if (update.isPresent()) sendMessage(sender, "UPDATE_AVAILABLE", installedVersion, update.get());
+        if (update.isPresent())
+            sendInteractive(
+                    sender,
+                    ClickAction.openUrl(VersionChecker.DOWNLOAD_URL),
+                    "UPDATE_AVAILABLE",
+                    installedVersion,
+                    update.get());
         else sendMessage(sender, "INFO", installedVersion);
         return true;
     }

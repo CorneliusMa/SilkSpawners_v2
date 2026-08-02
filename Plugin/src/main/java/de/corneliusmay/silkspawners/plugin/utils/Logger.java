@@ -20,11 +20,19 @@ public class Logger {
         Bukkit.getConsoleSender().sendMessage(getPrefix() + " §8[§eWARN§8]§7: " + msg);
     }
 
+    public static void warn(String msg, Throwable ex) {
+        warn(describe(msg, ex));
+    }
+
     public static void error(String msg) {
         Bukkit.getConsoleSender().sendMessage(getPrefix() + " §8[§cERROR§8]§7: " + msg);
     }
 
     public static void error(String msg, Throwable ex) {
-        error(msg + ": §c" + ex.getMessage() + "\n§7" + Arrays.toString(ex.getStackTrace()));
+        error(describe(msg, ex));
+    }
+
+    private static String describe(String msg, Throwable ex) {
+        return msg + ": §c" + ex.getMessage() + "\n§7" + Arrays.toString(ex.getStackTrace());
     }
 }

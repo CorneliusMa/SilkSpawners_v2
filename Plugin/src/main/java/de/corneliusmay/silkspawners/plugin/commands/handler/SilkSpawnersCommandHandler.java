@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.plugin.message.InteractiveMessages;
 import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,8 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private final LocaleHandler locale;
 
+    private final InteractiveMessages interactive;
+
     @Getter(AccessLevel.PACKAGE)
     private final String mainCommand;
 
@@ -30,9 +33,11 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private final SilkSpawnersTabCompleter tabCompleter;
 
-    public SilkSpawnersCommandHandler(JavaPlugin plugin, LocaleHandler locale, String command) {
+    public SilkSpawnersCommandHandler(
+            JavaPlugin plugin, LocaleHandler locale, InteractiveMessages interactive, String command) {
         this.plugin = plugin;
         this.locale = locale;
+        this.interactive = interactive;
         this.mainCommand = command;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
@@ -59,6 +64,7 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
         if (getCommand(command.getCommand()) != null) return;
         command.setCommandHandler(this);
         command.setLocale(locale);
+        command.setInteractive(interactive);
         commands.add(command);
     }
 

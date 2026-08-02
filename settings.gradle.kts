@@ -33,6 +33,7 @@ include(
     "WiringProcessor",
     "PlatformBukkit",
     "PlatformFolia",
+    "MessageBukkit",
     "HookShopGuiPlus",
     "NBT",
     "PDC",
