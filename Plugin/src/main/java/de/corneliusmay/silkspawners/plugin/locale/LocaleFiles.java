@@ -11,9 +11,11 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.ProviderNotFoundException;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
@@ -48,37 +50,67 @@ class LocaleFiles {
     synchronized void copy(boolean overwrite) throws URISyntaxException, IOException {
         Path target = path().toPath();
         Map<String, Map<String, Set<String>>> signatures = LocaleMerger.signatures(signatureLines());
-        URI resource = getClass().getResource("").toURI();
+        URI resource = getClass().getResource("/locales").toURI();
         List<String> failed = new ArrayList<>();
-        try (FileSystem fileSystem = FileSystems.newFileSystem(resource, Collections.<String, String>emptyMap())) {
-            final Path jarPath = fileSystem.getPath("/locales");
-
-            Files.walkFileTree(jarPath, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    Files.createDirectories(
-                            target.resolve(jarPath.relativize(dir).toString()));
-                    return FileVisitResult.CONTINUE;
+        if ("file".equalsIgnoreCase(resource.getScheme())) {
+            Path jarPath = Path.of(resource);
+            walkAndSync(jarPath, jarPath, target, signatures, overwrite, failed);
+        } else {
+            FileSystem fileSystem = null;
+            boolean created = false;
+            try {
+                try {
+                    fileSystem = FileSystems.getFileSystem(resource);
+                } catch (FileSystemNotFoundException ex) {
+                    fileSystem = FileSystems.newFileSystem(resource, Collections.emptyMap());
+                    created = true;
+                } catch (ProviderNotFoundException ex) {
+                    fileSystem = FileSystems.newFileSystem(resource, Collections.emptyMap());
+                    created = true;
                 }
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                    String relative = jarPath.relativize(file).toString();
-                    try {
-                        List<String> bundled = read(file);
-                        if (isEmpty(bundled)) return FileVisitResult.CONTINUE;
-                        Map<String, Set<String>> locale = signatures.getOrDefault(localeCode(relative), Map.of());
-                        sync(bundled, target.resolve(relative), locale, overwrite);
-                    } catch (IOException | IllegalArgumentException ex) {
-                        Logger.warn("Could not " + (overwrite ? "restore " : "update ") + relative + ": "
-                                + ex.getMessage());
-                        failed.add(relative);
-                    }
-                    return FileVisitResult.CONTINUE;
+                Path jarPath = fileSystem.getPath("/locales");
+                walkAndSync(jarPath, jarPath, target, signatures, overwrite, failed);
+            } finally {
+                if (created && fileSystem != null) {
+                    fileSystem.close();
                 }
-            });
+            }
         }
         if (!failed.isEmpty() && overwrite) throw new IOException("Could not restore " + String.join(", ", failed));
+    }
+
+    private void walkAndSync(
+            Path jarPath,
+            Path startPath,
+            Path target,
+            Map<String, Map<String, Set<String>>> signatures,
+            boolean overwrite,
+            List<String> failed)
+            throws IOException {
+        Files.walkFileTree(startPath, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Files.createDirectories(
+                        target.resolve(jarPath.relativize(dir).toString()));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                String relative = jarPath.relativize(file).toString();
+                try {
+                    List<String> bundled = read(file);
+                    if (isEmpty(bundled)) return FileVisitResult.CONTINUE;
+                    Map<String, Set<String>> locale = signatures.getOrDefault(localeCode(relative), Map.of());
+                    sync(bundled, target.resolve(relative), locale, overwrite);
+                } catch (IOException | IllegalArgumentException ex) {
+                    Logger.warn("Could not " + (overwrite ? "restore " : "update ") + relative + ": "
+                            + ex.getMessage());
+                    failed.add(relative);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
     }
 
     private void sync(List<String> bundled, Path current, Map<String, Set<String>> signatures, boolean overwrite)

@@ -2,8 +2,8 @@ package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
+import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.wiring.Wired;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -23,8 +23,7 @@ public class EntitiesCommand extends SilkSpawnersCommand {
                 sender,
                 "MESSAGE",
                 SpawnableEntities.TYPES.stream()
-                        .map(EntityType::getName)
-                        .filter(Objects::nonNull)
+                        .map(Spawner::serializedEntityType)
                         .collect(Collectors.joining(", ")));
 
         return true;

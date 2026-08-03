@@ -141,7 +141,9 @@ public class VersionChecker implements Loader, Dumpable {
     }
 
     private int[] parseVersion(String version) {
-        return Arrays.stream(version.split("\\.")).mapToInt(Integer::parseInt).toArray();
+        return Arrays.stream(version.split("-")[0].split("\\."))
+                .mapToInt(Integer::parseInt)
+                .toArray();
     }
 
     private String updateAvailableMessage(String latestVersion) {

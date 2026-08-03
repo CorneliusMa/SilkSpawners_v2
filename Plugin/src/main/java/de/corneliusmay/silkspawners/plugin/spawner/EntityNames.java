@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 import org.bukkit.entity.EntityType;
 
-final class EntityNames {
+public final class EntityNames {
 
     // Each legacy name maps to its immediate successor, so resolution stops at the first name the server knows
     private static final Map<String, String> RENAMES = Map.ofEntries(
@@ -27,7 +27,7 @@ final class EntityNames {
 
     private EntityNames() {}
 
-    static EntityType resolve(String serializedName) {
+    public static EntityType resolve(String serializedName) {
         for (String name = serializedName; name != null; name = RENAMES.get(name)) {
             EntityType entityType = EntityType.fromName(name);
             if (entityType != null) return entityType;
