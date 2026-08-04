@@ -34,6 +34,8 @@ Simply download the source and build it using Gradle.
 
 Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`.
 
+The plugin is wired by [weftkit](https://github.com/weftkit/weftkit), the compile-time lifecycle framework for Bukkit plugins that grew out of this project.
+
 ## QuickStart
 
 Want to use SilkSpawners without configuring permissions or anything else? Install the plugin and run this command as an admin or from the console, then confirm as prompted:

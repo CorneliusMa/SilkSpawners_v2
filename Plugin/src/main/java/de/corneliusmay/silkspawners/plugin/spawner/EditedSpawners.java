@@ -1,10 +1,10 @@
 package de.corneliusmay.silkspawners.plugin.spawner;
 
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.Location;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton

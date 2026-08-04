@@ -8,11 +8,11 @@ import de.corneliusmay.silkspawners.plugin.config.ConfigApply;
 import de.corneliusmay.silkspawners.plugin.config.ConfigEditor;
 import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueException;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.BooleanSupplier;
 import org.bukkit.command.CommandSender;
+import org.weftkit.wiring.Wired;
 
 @Wired
 public class ConfigCommand extends SilkSpawnersCommand {

@@ -4,9 +4,9 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.dump.Dump;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.message.ClickAction;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.weftkit.wiring.Wired;
 
 @Wired
 public class DumpCommand extends SilkSpawnersCommand {

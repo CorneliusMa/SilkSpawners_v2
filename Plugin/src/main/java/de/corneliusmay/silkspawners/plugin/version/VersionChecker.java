@@ -6,10 +6,6 @@ import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.Schedule;
-import de.corneliusmay.silkspawners.wiring.Loader;
-import de.corneliusmay.silkspawners.wiring.Requires;
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -22,6 +18,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Requires;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
@@ -50,7 +50,6 @@ public class VersionChecker implements Loader, Dumpable {
 
     @Override
     public boolean load() {
-        Logger.info("Starting version checker");
         start();
         return true;
     }
@@ -86,6 +85,11 @@ public class VersionChecker implements Loader, Dumpable {
         Logger.info("Stopping version checker");
         schedule.stop();
         schedule = null;
+    }
+
+    @Override
+    public void unload() {
+        stop();
     }
 
     private synchronized void start() {

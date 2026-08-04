@@ -5,11 +5,11 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.spi.message.ClickAction;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.MissingResourceException;
 import org.bukkit.command.CommandSender;
+import org.weftkit.wiring.Wired;
 
 @Wired
 public class LocaleCommand extends SilkSpawnersCommand {

@@ -7,12 +7,14 @@ import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueException;
 import de.corneliusmay.silkspawners.spi.message.ClickAction;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.util.List;
 import org.bukkit.command.CommandSender;
+import org.weftkit.wiring.Requires;
+import org.weftkit.wiring.Wired;
 
 @Wired
+@Requires(PluginConfig.class)
 public class SetupCommand extends SilkSpawnersCommand {
 
     private static final List<ConfigKey<Boolean>> PERMISSION_KEYS = List.of(

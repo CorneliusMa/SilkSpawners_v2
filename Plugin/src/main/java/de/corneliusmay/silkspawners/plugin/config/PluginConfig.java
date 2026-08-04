@@ -15,7 +15,9 @@ import de.corneliusmay.silkspawners.plugin.spawner.SpawnerLoreMigrator;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerPrefixOldMigrator;
 import java.util.List;
 import java.util.Locale;
+import org.weftkit.wiring.StaticHolder;
 
+@StaticHolder
 public final class PluginConfig {
 
     public static final int CONFIG_VERSION = 4;

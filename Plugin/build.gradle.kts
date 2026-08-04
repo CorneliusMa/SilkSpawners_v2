@@ -15,16 +15,17 @@ artifacts {
     add(shadowJarArtifact.name, tasks.named("shadowJar"))
 }
 
-val nonCoreModules = setOf("Plugin", "ApiExample", "Publication", "Wiring", "WiringProcessor")
+val nonCoreModules = setOf("Plugin", "ApiExample", "Publication")
 val coreModules = rootProject.subprojects
     .filter { it.name !in nonCoreModules }
     .map { it.path }
 
 dependencies {
     compileOnly(libs.bukkit)
-    annotationProcessor(project(":WiringProcessor"))
+    annotationProcessor(libs.weftkit.processor)
+    annotationProcessor(libs.weftkit.bukkit)
 
-    implementation(project(":Wiring"))
+    implementation(libs.weftkit.bukkit)
     implementation(libs.bstats.bukkit)
     implementation(libs.adventure.minimessage)
     implementation(libs.adventure.serializer.legacy)
@@ -56,6 +57,7 @@ tasks {
         }
         relocate("org.bstats", "de.corneliusmay.silkspawners.plugin.lib.org.bstats")
         relocate("net.kyori", "de.corneliusmay.silkspawners.plugin.lib.net.kyori")
+        relocate("org.weftkit", "de.corneliusmay.silkspawners.plugin.lib.org.weftkit")
         dependencies {
             val bukkit = libs.bukkit.get()
             exclude(dependency("${bukkit.group}:${bukkit.name}:${bukkit.version}"))

@@ -8,7 +8,6 @@ import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -19,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @RequiredArgsConstructor

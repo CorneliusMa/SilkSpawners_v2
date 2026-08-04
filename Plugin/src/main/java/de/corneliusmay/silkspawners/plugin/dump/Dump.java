@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.dump.sections.EnvironmentSection;
 import de.corneliusmay.silkspawners.plugin.dump.sections.MetaSection;
 import de.corneliusmay.silkspawners.plugin.dump.sections.PluginListSection;
 import de.corneliusmay.silkspawners.plugin.dump.sections.ServerSection;
+import de.corneliusmay.silkspawners.plugin.dump.sections.WiringSection;
 import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.message.InteractiveMessageLoader;
@@ -12,7 +13,6 @@ import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Wired;
 
 @Wired
 public class Dump {
@@ -39,7 +40,8 @@ public class Dump {
             LocaleHandler localeHandler,
             InteractiveMessageLoader interactiveMessageLoader,
             ConfigLoader configLoader,
-            HookLoader hookLoader) {
+            HookLoader hookLoader,
+            WiringSection wiringSection) {
         this.plugin = plugin;
         this.sections = List.of(
                 new MetaSection(),
@@ -52,6 +54,7 @@ public class Dump {
                 interactiveMessageLoader,
                 hookLoader,
                 configLoader,
+                wiringSection,
                 new PluginListSection());
     }
 

@@ -5,12 +5,9 @@ import de.corneliusmay.silkspawners.plugin.dump.DumpEntry;
 import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
-import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.hooks.Hook;
 import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +16,8 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
@@ -39,10 +38,10 @@ public class HookLoader implements Dumpable {
     private final ComponentLoader<Hook> loader =
             new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
 
-    public HookLoader(JavaPlugin plugin, SpawnerFactory spawnerFactory) {
+    public HookLoader(JavaPlugin plugin, SpawnerProvider spawnerProvider) {
         this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
-        this.spawnerProvider = new SilkSpawnersProvider(spawnerFactory);
+        this.spawnerProvider = spawnerProvider;
     }
 
     public void addHook(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {

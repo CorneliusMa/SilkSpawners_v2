@@ -4,9 +4,9 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import de.corneliusmay.silkspawners.spi.message.ClickAction;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Optional;
 import org.bukkit.command.CommandSender;
+import org.weftkit.wiring.Wired;
 
 @Wired
 public class VersionCommand extends SilkSpawnersCommand {

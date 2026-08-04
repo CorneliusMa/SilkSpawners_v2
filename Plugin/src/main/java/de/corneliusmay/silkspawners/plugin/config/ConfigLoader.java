@@ -6,10 +6,6 @@ import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueMigrator;
 import de.corneliusmay.silkspawners.plugin.dump.DumpEntry;
 import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
-import de.corneliusmay.silkspawners.wiring.Initializes;
-import de.corneliusmay.silkspawners.wiring.Loader;
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +17,10 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Initializes;
+import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
