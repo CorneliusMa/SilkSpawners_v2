@@ -5,9 +5,11 @@ import de.corneliusmay.silkspawners.spi.hooks.SpawnerProvider;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+import org.weftkit.wiring.Wired;
 
+@Wired
 @RequiredArgsConstructor
-class SilkSpawnersProvider implements SpawnerProvider {
+public class SilkSpawnersProvider implements SpawnerProvider {
 
     private final SpawnerFactory spawnerFactory;
 

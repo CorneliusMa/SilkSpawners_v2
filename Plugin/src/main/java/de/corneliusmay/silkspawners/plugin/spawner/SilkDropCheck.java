@@ -2,12 +2,12 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @RequiredArgsConstructor

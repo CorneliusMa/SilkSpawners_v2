@@ -5,11 +5,11 @@ import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.message.ClickAction;
 import de.corneliusmay.silkspawners.spi.message.InteractiveMessage;
 import de.corneliusmay.silkspawners.spi.message.InteractiveMessenger;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.MissingResourceException;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @RequiredArgsConstructor

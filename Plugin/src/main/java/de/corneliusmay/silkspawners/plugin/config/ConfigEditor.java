@@ -2,9 +2,6 @@ package de.corneliusmay.silkspawners.plugin.config;
 
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
-import de.corneliusmay.silkspawners.wiring.Requires;
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -12,6 +9,9 @@ import java.util.MissingResourceException;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Requires;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton

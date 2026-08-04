@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.message.InteractiveMessages;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.weftkit.wiring.Wired;
 
 @Wired
 public class SilkSpawnersCommandHandler implements CommandExecutor {

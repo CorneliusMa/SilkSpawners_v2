@@ -29,8 +29,6 @@ include(
     "SPI",
     "Plugin",
     "Publication",
-    "Wiring",
-    "WiringProcessor",
     "PlatformBukkit",
     "PlatformFolia",
     "MessageBukkit",

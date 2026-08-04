@@ -6,10 +6,6 @@ import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.MessageRenderer;
 import de.corneliusmay.silkspawners.plugin.utils.MixedFormattingException;
-import de.corneliusmay.silkspawners.wiring.Loader;
-import de.corneliusmay.silkspawners.wiring.Requires;
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +16,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Requires;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton

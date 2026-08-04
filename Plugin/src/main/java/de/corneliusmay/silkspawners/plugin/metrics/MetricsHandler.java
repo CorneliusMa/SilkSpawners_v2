@@ -3,14 +3,14 @@ package de.corneliusmay.silkspawners.plugin.metrics;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
-import de.corneliusmay.silkspawners.wiring.Loader;
-import de.corneliusmay.silkspawners.wiring.Requires;
-import de.corneliusmay.silkspawners.wiring.Singleton;
-import de.corneliusmay.silkspawners.wiring.Wired;
 import lombok.RequiredArgsConstructor;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Requires;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
@@ -30,7 +30,6 @@ public class MetricsHandler implements Loader {
     @Override
     public boolean load() {
         try {
-            Logger.info("Starting bStats integration");
             metrics = new Metrics(plugin, SERVICE_ID);
             metrics.addCustomChart(new SimplePie("locale", localeHandler::getLocaleDisplayName));
             metrics.addCustomChart(new SimplePie(
@@ -41,7 +40,8 @@ public class MetricsHandler implements Loader {
         return true;
     }
 
-    public void stop() {
+    @Override
+    public void unload() {
         if (metrics == null) return;
         Logger.info("Stopping bStats integration");
         metrics.shutdown();
