@@ -21,7 +21,7 @@ Paper, Spigot, Purpur, Bukkit and Folia, tested with Minecraft 1.8 through 26.2.
 <details>
 <summary><b>Can I use this plugin without a permission system?</b></summary>
 
-Yes. Run `/silkspawners setup`, then confirm with `/silkspawners setup confirm`, to let everyone mine, place and change spawners without permission checks. `/silkspawners setup revert` undoes it. The command just sets `spawner.permission.disableDestroy`, `disablePlace` and `disableChange` to `true`, which you can also edit in the config. Admin commands stay available to operators. Spawner explosions can be enabled per player with `/silkspawners explosion enable <Player>` even without a permission system, but only until the player logs out. For permanent per-player or per-mob rules you need a permissions plugin such as LuckPerms.
+Yes. Run `/silkspawners setup`, then confirm with `/silkspawners setup confirm`, to let everyone mine, place and change spawners without permission checks. `/silkspawners setup revert` undoes it. The command just sets `spawner.permission.disableDestroy`, `disablePlace` and `disableChange` to `true`, which you can also edit in the config. Admin commands stay available to operators. Spawner explosions can be enabled per player with `/silkspawners explosion enable <player>` even without a permission system, but only until the player logs out. For permanent per-player or per-mob rules you need a permissions plugin such as LuckPerms.
 
 </details>
 
@@ -83,14 +83,14 @@ Yes, automatically. The mob is stored invisibly in the item data, so the name an
 <details>
 <summary><b>How do I give players spawners of a specific mob?</b></summary>
 
-Use `/silkspawners give <Player> <Mob> [Amount]`, for example `/silkspawners give Steve zombie 3`. Run `/silkspawners entities` to list all valid mob names.
+Use `/silkspawners give <player> <entity> [amount]`, for example `/silkspawners give Steve zombie 3`. Run `/silkspawners entities` to list all valid mob names.
 
 </details>
 
 <details>
 <summary><b>Can I change what an already placed spawner spawns?</b></summary>
 
-Yes. Look at the spawner and run `/silkspawners set <Mob>`, or click the spawner with a spawn egg.
+Yes. Look at the spawner and run `/silkspawners set <entity>`, or click the spawner with a spawn egg.
 
 </details>
 
@@ -108,8 +108,8 @@ That is the default: changing requires `silkspawners.change.<entity>` or `silksp
 
 Three things must be true:
 
-1. At least one tier is configured under `spawner.explosion.normal`, `.silktouch` or `.all` - all lists are empty by default. Tiers can be added in game with `/silkspawners config explosion add <all/normal/silktouch> <Power> [Chance]`.
-2. The mining player has the `silkspawners.explosion` permission. Explosions can also be toggled per player with `/silkspawners explosion <enable/disable> <Player>`.
+1. At least one tier is configured under `spawner.explosion.normal`, `.silktouch` or `.all` - all lists are empty by default. Tiers can be added in game with `/silkspawners config explosion add <all/normal/silktouch> <power> [chance]`.
+2. The mining player has the `silkspawners.explosion` permission. Explosions can also be toggled per player with `/silkspawners explosion <enable/disable> <player>`.
 3. Changes made in the file were applied with `/silkspawners config reload` or a server restart. Changes made with `/silkspawners config explosion` apply immediately.
 
 </details>
