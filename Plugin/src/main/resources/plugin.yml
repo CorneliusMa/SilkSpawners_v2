@@ -18,6 +18,8 @@ permissions:
     description: Permission to set, if spawners can be changed with eggs. You also can set only specific entities.
   silkspawners.explosion:
     description: Permission to set, if spawners explode.
+  silkspawners.command.explosion:
+    description: Use this command to temporarily enable or disable spawner explosions for a specific player.
   silkspawners.command.locale:
     description: Use this command, to reload and restore locale files.
   silkspawners.command.entities:
@@ -25,9 +27,9 @@ permissions:
   silkspawners.command.version:
     description: Use this command to see, if updates are available.
   silkspawners.command.config:
-    description: Use this command to view and reload the config.
+    description: Use this command to view and reload the configuration, including the explosion tiers.
   silkspawners.command.config.set:
-    description: Use this permission to additionally allow changing settings.
+    description: Use this permission to additionally allow changing settings and explosion tiers.
   silkspawners.command.dump:
     description: Use this command to upload a diagnostic report for support requests.
   silkspawners.command.setup:

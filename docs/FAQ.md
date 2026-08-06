@@ -108,9 +108,9 @@ That is the default: changing requires `silkspawners.change.<entity>` or `silksp
 
 Three things must be true:
 
-1. At least one tier is configured under `spawner.explosion.normal`, `.silktouch` or `.all` - all lists are empty by default.
+1. At least one tier is configured under `spawner.explosion.normal`, `.silktouch` or `.all` - all lists are empty by default. Tiers can be added in game with `/silkspawners config explosion add <all/normal/silktouch> <Power> [Chance]`.
 2. The mining player has the `silkspawners.explosion` permission. Explosions can also be toggled per player with `/silkspawners explosion <enable/disable> <Player>`.
-3. Changes to the tiers were applied with `/silkspawners config reload` or a server restart.
+3. Changes made in the file were applied with `/silkspawners config reload` or a server restart. Changes made with `/silkspawners config explosion` apply immediately.
 
 </details>
 

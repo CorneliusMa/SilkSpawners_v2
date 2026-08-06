@@ -38,9 +38,9 @@ public class ExplosionCommand extends SilkSpawnersCommand {
         }
 
         switch (args[0].toLowerCase()) {
-            case "enable", "e" -> setExplosionPermission(sender, p, true);
-            case "disable", "d" -> setExplosionPermission(sender, p, false);
-            case "setting", "s" -> sendExplosionSetting(sender, p);
+            case "enable" -> setExplosionPermission(sender, p, true);
+            case "disable" -> setExplosionPermission(sender, p, false);
+            case "setting" -> sendExplosionSetting(sender, p);
             default -> {
                 return invalidSyntax(sender);
             }

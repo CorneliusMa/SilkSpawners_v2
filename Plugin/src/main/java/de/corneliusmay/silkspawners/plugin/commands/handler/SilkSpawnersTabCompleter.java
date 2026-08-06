@@ -26,17 +26,25 @@ class SilkSpawnersTabCompleter implements TabCompleter {
         if (args.length < 2) {
             StringUtil.copyPartialMatches(
                     args[args.length - 1], commandHandler.getCommands(commandSender), completions);
-        } else if (command != null
-                && command.getCompletions().length >= args.length - 1
-                && command.hasPermission(commandSender)) {
-            StringUtil.copyPartialMatches(
-                    args[args.length - 1],
-                    command.getCompletions()[args.length - 2].update(
-                            command, commandSender, Arrays.copyOfRange(args, 1, args.length)),
-                    completions);
+        } else if (command != null && command.hasPermission(commandSender)) {
+            TabCompletion completion = completion(command, args.length - 2);
+            if (completion != null)
+                StringUtil.copyPartialMatches(
+                        args[args.length - 1],
+                        completion.update(command, commandSender, Arrays.copyOfRange(args, 1, args.length)),
+                        completions);
         }
 
         Collections.sort(completions);
         return completions;
+    }
+
+    private TabCompletion completion(SilkSpawnersCommand command, int index) {
+        TabCompletion[] completions = command.getCompletions();
+        if (index < completions.length) return completions[index];
+        if (completions.length == 0) return null;
+
+        TabCompletion last = completions[completions.length - 1];
+        return last instanceof RepeatingTabCompletion ? last : null;
     }
 }
