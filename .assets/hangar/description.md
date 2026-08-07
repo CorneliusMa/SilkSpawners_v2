@@ -17,11 +17,12 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 
 ## Commands
 - `/silkspawners help [command]`
-- `/silkspawners give <Player> <Type> [Amount]`
-- `/silkspawners set <Type>`
-- `/silkspawners explosion <enable/disable/setting> <Player>`
+- `/silkspawners give <player> <entity> [amount]`
+- `/silkspawners set <entity>`
+- `/silkspawners explosion <enable/disable/setting> <player>`
 - `/silkspawners locale <setting/reload/restore>`
-- `/silkspawners config <reload/get/set> [Setting] [Value]`
+- `/silkspawners config <reload/get/set> [setting] [value]`
+- `/silkspawners config explosion <list/add/remove> [all/normal/silktouch] [values]`
 - `/silkspawners setup [confirm/revert]`
 - `/silkspawners entities`
 - `/silkspawners version`
@@ -36,8 +37,8 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 > In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
 - **silkspawners.command.locale** - Use this command to reload and restore locale files.
-- **silkspawners.command.config** - Use this command to view and reload the configuration.
-> In addition, set **silkspawners.command.config.set** to allow changing settings.
+- **silkspawners.command.config** - Use this command to view and reload the configuration, including the explosion tiers.
+> In addition, set **silkspawners.command.config.set** to allow changing settings and explosion tiers.
 - **silkspawners.command.setup** - Use this command to disable or restore the permissions needed to use spawners.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
@@ -96,10 +97,10 @@ All messages (in the configuration and in locale files) can be formatted with ei
 
 **Changing settings in game:**
 
-- `/silkspawners config get <Setting>` shows the current value and what the setting does
-- `/silkspawners config set <Setting> <Value>` changes it in the `config.yml` file
+- `/silkspawners config get <setting>` shows the current value and what the setting does
+- `/silkspawners config set <setting> <value>` changes it in the `config.yml` file
 
-Settings and values are tab completed. Changing settings requires the `silkspawners.command.config.set` permission. Changes take effect immediately, except for `hooks.shopguiplus`, which needs a server restart. Lists and explosion tiers can only be changed in the file.
+Settings and values are tab completed. Changing settings requires the `silkspawners.command.config.set` permission. Changes take effect immediately, except for `hooks.shopguiplus`, which needs a server restart. Lists can only be changed in the file, and explosion tiers are managed with `/silkspawners config explosion` (see below).
 
 **Explosion tiers:**
 
@@ -119,7 +120,13 @@ spawner:
       breakBlocks: true # Optional: the explosion damages surrounding blocks (default true)
 ```
 
-Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
+**Changing tiers in game:**
+
+- `/silkspawners config explosion list [all/normal/silktouch]` shows the configured tiers
+- `/silkspawners config explosion add <all/normal/silktouch> <power> [chance] [setFire] [breakBlocks]` adds a tier
+- `/silkspawners config explosion remove <all/normal/silktouch> <tier>` removes a tier by its number in the list
+
+Adding and removing tiers requires the `silkspawners.command.config.set` permission. Changes made with the command take effect immediately. Changes made in the file take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
 ![Crowdin Localization](https://badges.crowdin.net/silkspawners/localized.svg)
@@ -147,17 +154,17 @@ COMMAND_SILKSPAWNERS_HELP_USAGE = $ePlease use /silkspawners help [command]
 COMMAND_SILKSPAWNERS_HELP_MESSAGE = $7You can execute the following commands\: \n{0}\nUse /silkspawners help <command> for detailed info
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_HELP = $7Use this command to show information about the commands you can use. \nUsage\: /silkspawners help [command]
 COMMAND_SILKSPAWNERS_HELP_COMMAND_NOT_FOUND = $7The command $c/silkspawners {0}$7 does not exist.
-COMMAND_SILKSPAWNERS_HELP_MESSAGE_EXPLOSION = $7Use this command to temporarily enable or disable spawner explosions for a specific player. \nUsage\: /silkspawners explosion <enable/disable/setting> <Player>
-COMMAND_SILKSPAWNERS_HELP_MESSAGE_GIVE = $7Use this command to give spawners to players. \nUsage\: /silkspawners give <Player> <Mob> [Amount]
-COMMAND_SILKSPAWNERS_HELP_MESSAGE_SET = $7Use this command to change already placed spawners. \nUsage\: /silkspawners set <Mob>
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_EXPLOSION = $7Use this command to temporarily enable or disable spawner explosions for a specific player. \nUsage\: /silkspawners explosion <enable/disable/setting> <player>
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_GIVE = $7Use this command to give spawners to players. \nUsage\: /silkspawners give <player> <entity> [amount]
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_SET = $7Use this command to change already placed spawners. \nUsage\: /silkspawners set <entity>
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_ENTITIES = $7Use this command to see entities that can be used in commands and permissions. \nUsage\: /silkspawners entities
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_VERSION = $7Use this command to see, if updates are available. \nUsage\: /silkspawners version
-COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to restore them from the .jar file. New and reworded messages are applied automatically on startup, so restoring is only needed to discard your own changes. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale [setting/reload/restore]
-COMMAND_SILKSPAWNERS_HELP_MESSAGE_CONFIG = $7Use this command to view and change settings and to reload the configuration from the config.yml file. \nUsage\: /silkspawners config [reload/get <Setting>/set <Setting> <Value>]
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_LOCALE = $7Use this command to see the currently used locale, to reload the locale files and to restore them from the .jar file. New and reworded messages are applied automatically on startup, so restoring is only needed to discard your own changes. \n$eWarning\! All custom changes will be lost if not previously saved\!$7\nUsage\: /silkspawners locale <setting/reload/restore>
+COMMAND_SILKSPAWNERS_HELP_MESSAGE_CONFIG = $7Use this command to view and change settings, to manage the explosion tiers rolled when spawners are mined and to reload the configuration from the config.yml file. \nUsage\:\n/silkspawners config reload\n/silkspawners config get <setting>\n/silkspawners config set <setting> <value>\n/silkspawners config explosion <list/add/remove>
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_DUMP = $7Use this command to upload a diagnostic report you can attach to support requests. \nUsage\: /silkspawners dump
 COMMAND_SILKSPAWNERS_HELP_MESSAGE_SETUP = $7Disables or restores the permissions needed to use spawners, so anyone can break, place and change them without a permissions plugin. \nUsage\: /silkspawners setup [confirm/revert]
 
-COMMAND_SILKSPAWNERS_GIVE_USAGE = $ePlease use /silkspawners give <Player> <Mob> [Amount]
+COMMAND_SILKSPAWNERS_GIVE_USAGE = $ePlease use /silkspawners give <player> <entity> [amount]
 COMMAND_SILKSPAWNERS_GIVE_PLAYER_NOT_FOUND = $7The player $c{0}$7 is not online.
 COMMAND_SILKSPAWNERS_GIVE_ENTITY_NOT_FOUND = $7The entity $c{0}$7 is no valid spawner mob.
 COMMAND_SILKSPAWNERS_GIVE_INSUFFICIENT_ENTITY_PERMISSION = $7You do not have the permission to give $c{0}$7 spawners to players.
@@ -167,7 +174,7 @@ COMMAND_SILKSPAWNERS_GIVE_SUCCESS = $7Gave {0} {1}$7 spawner{2} to {3}.
 COMMAND_SILKSPAWNERS_GIVE_SUCCESS_TARGET = $7You received {0} {1}$7 spawner{2} by {3}.
 COMMAND_SILKSPAWNERS_GIVE_SUCCESS_SELF = $7Gave {0} {1}$7 spawner{2} to yourself.
 
-COMMAND_SILKSPAWNERS_SET_USAGE = $ePlease use /silkspawners set <Mob>
+COMMAND_SILKSPAWNERS_SET_USAGE = $ePlease use /silkspawners set <entity>
 COMMAND_SILKSPAWNERS_SET_PLAYERS_ONLY = $7This command can only be used by players.
 COMMAND_SILKSPAWNERS_SET_ENTITY_NOT_FOUND = $7The entity $c{0}$7 is no valid spawner mob.
 COMMAND_SILKSPAWNERS_SET_INSUFFICIENT_ENTITY_PERMISSION = $7You do not have the permission to set spawners to $c{0}$7.
@@ -175,8 +182,8 @@ COMMAND_SILKSPAWNERS_SET_INVALID_TARGET = $7You must look at a spawner to change
 COMMAND_SILKSPAWNERS_SET_SUCCESS = $7Successfully set spawner to {0}$7.
 COMMAND_SILKSPAWNERS_SET_UNCHANGED = $7The spawner is already set to {0}$7.
 
-COMMAND_SILKSPAWNERS_EXPLOSION_USAGE = $ePlease use /silkspawners explosion <enable/disable/setting> <Player>
-COMMAND_SILKSPAWNERS_EXPLOSION_PLAYER_NOT_FOUND = $7The Player $c{0}$7 is not online.
+COMMAND_SILKSPAWNERS_EXPLOSION_USAGE = $ePlease use /silkspawners explosion <enable/disable/setting> <player>
+COMMAND_SILKSPAWNERS_EXPLOSION_PLAYER_NOT_FOUND = $7The player $c{0}$7 is not online.
 COMMAND_SILKSPAWNERS_EXPLOSION_ENABLED = $cEnabled $7spawner explosion for {0}.
 COMMAND_SILKSPAWNERS_EXPLOSION_DISABLED = $aDisabled $7spawner explosion for {0}.
 COMMAND_SILKSPAWNERS_EXPLOSION_SETTING_ENABLED = $7Explosions for {0} are currently $cenabled$7.
@@ -191,7 +198,7 @@ COMMAND_SILKSPAWNERS_VERSION_UPDATE_AVAILABLE = %link%$7\nThe currently installe
 COMMAND_SILKSPAWNERS_VERSION_UPDATE_AVAILABLE_LINK = $b$nAn update is available\!
 COMMAND_SILKSPAWNERS_VERSION_ERROR = $cUpdate checking is disabled. $7\nThe currently installed version is v{0}
 
-COMMAND_SILKSPAWNERS_LOCALE_USAGE = $ePlease use /silkspawners locale [setting/reload/restore]
+COMMAND_SILKSPAWNERS_LOCALE_USAGE = $ePlease use /silkspawners locale <setting/reload/restore>
 COMMAND_SILKSPAWNERS_LOCALE_SETTING = $7The currently used locale is {0}. Available locales are\: {1}
 COMMAND_SILKSPAWNERS_LOCALE_RELOAD_SUCCESSFUL = $7The locale was reloaded successfully.
 COMMAND_SILKSPAWNERS_LOCALE_RELOAD_ERROR = $cAn error occurred reloading the locale.
@@ -201,12 +208,12 @@ COMMAND_SILKSPAWNERS_LOCALE_RESTORE_WARNING_LINK = $b$n/silkspawners locale rest
 COMMAND_SILKSPAWNERS_LOCALE_RESTORE_SUCCESSFUL = $7The locale files were restored and reloaded successfully.
 COMMAND_SILKSPAWNERS_LOCALE_RESTORE_ERROR = $cAn error occurred.$7 Please contact the developer if this problem persists.
 
-COMMAND_SILKSPAWNERS_CONFIG_USAGE = $ePlease use /silkspawners config [reload/get/set]
+COMMAND_SILKSPAWNERS_CONFIG_USAGE = $ePlease use /silkspawners config <reload/get/set/explosion>
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_SUCCESSFUL = $7The config was reloaded $asuccessfully$7.
 COMMAND_SILKSPAWNERS_CONFIG_RELOAD_ERROR = $7An $cerror$7 occurred reloading the configuration. Please check the server logs.
 COMMAND_SILKSPAWNERS_CONFIG_COMMAND_NOT_FOUND = $7The command $c/silkspawners config {0}$7 does not exist. Use tab completion to see the available commands.
-COMMAND_SILKSPAWNERS_CONFIG_GET_USAGE = $ePlease use /silkspawners config get <Setting>
-COMMAND_SILKSPAWNERS_CONFIG_SET_USAGE = $ePlease use /silkspawners config set <Setting> <Value>
+COMMAND_SILKSPAWNERS_CONFIG_GET_USAGE = $ePlease use /silkspawners config get <setting>
+COMMAND_SILKSPAWNERS_CONFIG_SET_USAGE = $ePlease use /silkspawners config set <setting> <value>
 COMMAND_SILKSPAWNERS_CONFIG_KEY_NOT_FOUND = $7The setting $c{0}$7 does not exist. Use tab completion to see the available settings.
 COMMAND_SILKSPAWNERS_CONFIG_GET_VALUE = $7{0} is set to $e{1}$7\n{2}
 COMMAND_SILKSPAWNERS_CONFIG_SET_SUCCESSFUL = $7{0} was set to $e{1}$7.
@@ -215,6 +222,21 @@ COMMAND_SILKSPAWNERS_CONFIG_SET_UNKNOWN_VALUE = $7The value $c{1}$7 cannot be us
 COMMAND_SILKSPAWNERS_CONFIG_NOT_SETTABLE = $7{0} can only be viewed and changed in the config.yml file.
 COMMAND_SILKSPAWNERS_CONFIG_SET_RESTART_REQUIRED = $eThe new value for {0} takes effect after a server restart.
 COMMAND_SILKSPAWNERS_CONFIG_SET_RELOAD_ERROR = $7{0} was saved as $e{1}$7, but reloading the configuration $cfailed$7, so the change is not active yet. Please check the server logs, then run $e/silkspawners config reload$7 or restart the server.
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_USAGE = $ePlease use /silkspawners config explosion <list/add/remove>
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_LIST_USAGE = $ePlease use /silkspawners config explosion list [all/normal/silktouch]
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_LIST_NOT_FOUND = $7The tier list $c{0}$7 does not exist. Available lists\: $e{1}
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_LIST_EMPTY = $7The tier list $e{0}$7 is empty.
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_LIST_HEADER = $7Explosion tiers in $e{0}$7\:
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_LIST_TIER = $7{0}\: chance $e{1}%$7, power $e{2}$7, setFire $e{3}$7, breakBlocks $e{4}
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_ADD_USAGE = $ePlease use /silkspawners config explosion add <all/normal/silktouch> <power> [chance] [setFire] [breakBlocks]
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_ADD_SUCCESSFUL = $aAdded$7 an explosion tier to $e{0}$7\: chance $e{1}%$7, power $e{2}$7, setFire $e{3}$7, breakBlocks $e{4}
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_INVALID_POWER = $7The power $c{0}$7 is invalid. Use a number of 0 or greater (0 means no explosion).
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_INVALID_CHANCE = $7The chance $c{0}$7 is invalid. Use a number between 0 and 100.
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_INVALID_FLAG = $7The value $c{0}$7 is invalid. Use true or false.
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_REMOVE_USAGE = $ePlease use /silkspawners config explosion remove <all/normal/silktouch> <tier>
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_REMOVE_SUCCESSFUL = $aRemoved$7 explosion tier $e{1}$7 from $e{0}$7.
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_TIER_NOT_FOUND = $7The tier $c{1}$7 does not exist in $e{0}$7. Use $e/silkspawners config explosion list {0}$7 to see the available tiers.
+COMMAND_SILKSPAWNERS_CONFIG_EXPLOSION_SAVE_ERROR = $7An $cerror$7 occurred saving the configuration\: $c{0}
 
 COMMAND_SILKSPAWNERS_DUMP_USAGE = $ePlease use /silkspawners dump
 COMMAND_SILKSPAWNERS_DUMP_CREATING = $7Creating a diagnostic dump...

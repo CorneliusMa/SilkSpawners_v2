@@ -60,9 +60,12 @@ public class ConfigEditor {
     }
 
     public void set(ConfigKey<?> key, String value) throws IOException {
-        Object parsed = key.parse(value);
-        write(key, parsed);
-        if (key.getApply() == ConfigApply.IMMEDIATELY) key.publish(parsed);
+        set(key, key.parse(value));
+    }
+
+    public void set(ConfigKey<?> key, Object value) throws IOException {
+        write(key, value);
+        if (key.getApply() == ConfigApply.IMMEDIATELY) key.publish(value);
     }
 
     private void write(ConfigKey<?> key, Object value) throws IOException {

@@ -46,11 +46,12 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 
 ## Commands
 - `/silkspawners help [command]`
-- `/silkspawners give <Player> <Type> [Amount]`
-- `/silkspawners set <Type>`
-- `/silkspawners explosion <enable/disable/setting> <Player>`
+- `/silkspawners give <player> <entity> [amount]`
+- `/silkspawners set <entity>`
+- `/silkspawners explosion <enable/disable/setting> <player>`
 - `/silkspawners locale <setting/reload/restore>`
-- `/silkspawners config <reload/get/set> [Setting] [Value]`
+- `/silkspawners config <reload/get/set> [setting] [value]`
+- `/silkspawners config explosion <list/add/remove> [all/normal/silktouch] [values]`
 - `/silkspawners setup [confirm/revert]`
 - `/silkspawners entities`
 - `/silkspawners version`
@@ -65,8 +66,8 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 > In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
 - **silkspawners.command.locale** - Use this command to reload and restore locale files.
-- **silkspawners.command.config** - Use this command to view and reload the configuration.
-> In addition, set **silkspawners.command.config.set** to allow changing settings.
+- **silkspawners.command.config** - Use this command to view and reload the configuration, including the explosion tiers.
+> In addition, set **silkspawners.command.config.set** to allow changing settings and explosion tiers.
 - **silkspawners.command.setup** - Use this command to disable or restore the permissions needed to use spawners.
 - **silkspawners.command.entities** - Use this command to see the entities you can use in permissions and commands.
 - **silkspawners.command.version** - Use this command to see if updates are available.
@@ -125,10 +126,10 @@ All messages (in the configuration and in locale files) can be formatted with ei
 
 **Changing settings in game:**
 
-- `/silkspawners config get <Setting>` shows the current value and what the setting does
-- `/silkspawners config set <Setting> <Value>` changes it in the `config.yml` file
+- `/silkspawners config get <setting>` shows the current value and what the setting does
+- `/silkspawners config set <setting> <value>` changes it in the `config.yml` file
 
-Settings and values are tab completed. Changing settings requires the `silkspawners.command.config.set` permission. Changes take effect immediately, except for `hooks.shopguiplus`, which needs a server restart. Lists and explosion tiers can only be changed in the file.
+Settings and values are tab completed. Changing settings requires the `silkspawners.command.config.set` permission. Changes take effect immediately, except for `hooks.shopguiplus`, which needs a server restart. Lists can only be changed in the file, and explosion tiers are managed with `/silkspawners config explosion` (see below).
 
 **Explosion tiers:**
 
@@ -148,7 +149,13 @@ spawner:
       breakBlocks: true # Optional: the explosion damages surrounding blocks (default true)
 ```
 
-Changes to the tiers take effect after `/silkspawners config reload` or a server restart.
+**Changing tiers in game:**
+
+- `/silkspawners config explosion list [all/normal/silktouch]` shows the configured tiers
+- `/silkspawners config explosion add <all/normal/silktouch> <power> [chance] [setFire] [breakBlocks]` adds a tier
+- `/silkspawners config explosion remove <all/normal/silktouch> <tier>` removes a tier by its number in the list
+
+Adding and removing tiers requires the `silkspawners.command.config.set` permission. Changes made with the command take effect immediately. Changes made in the file take effect after `/silkspawners config reload` or a server restart.
 
 ## Custom messages
 > **New and reworded messages are applied to your locale files automatically on startup. Messages you edited yourself are never touched, so a customized message keeps its wording across updates.**
