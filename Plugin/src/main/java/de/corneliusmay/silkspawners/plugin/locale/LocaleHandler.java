@@ -120,10 +120,22 @@ public class LocaleHandler implements Loader, Dumpable {
     }
 
     public String getLocaleDisplayName() {
-        Locale locale = getLocale();
-        String displayName = locale.getDisplayName(Locale.ENGLISH);
+        return displayName(getLocale(), Locale.ENGLISH);
+    }
+
+    public String getConfiguredLocaleLabel() {
+        return label(getLocale().toString(), getLocale(), null);
+    }
+
+    private String label(String code, Locale locale, String completion) {
+        String inside = completion == null ? code : code + ", " + completion;
+        return displayName(locale, locale) + " (" + inside + ")";
+    }
+
+    private String displayName(Locale target, Locale in) {
+        String name = target.getDisplayName(in);
         // Unrecognized codes (eg. a self-made "test" locale) echo back as-is instead of resolving to a language name
-        return displayName.equalsIgnoreCase(locale.getLanguage()) ? "Custom" : displayName;
+        return name.equalsIgnoreCase(target.getLanguage()) ? "Custom" : name;
     }
 
     public String getAvailableLocales() {
@@ -152,10 +164,11 @@ public class LocaleHandler implements Loader, Dumpable {
     private String describeLocale(File file, Set<String> reference) {
         Set<String> keys = loadProperties(file.toPath()).stringPropertyNames();
         if (keys.isEmpty()) return null;
-        String name = LocaleFiles.localeCode(file.getName());
-        if (reference.isEmpty()) return name;
+        String code = LocaleFiles.localeCode(file.getName());
+        Locale locale = Locale.forLanguageTag(code.replace('_', '-'));
+        if (reference.isEmpty()) return label(code, locale, null);
         long translated = keys.stream().filter(reference::contains).count();
-        return name + " (" + (100 * translated / reference.size()) + "%)";
+        return label(code, locale, (100 * translated / reference.size()) + "%");
     }
 
     public String getMessageClean(String key, Object... args) {

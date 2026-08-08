@@ -42,10 +42,12 @@ public class LocaleCommand extends SilkSpawnersCommand {
                             sendMessage(sender, "RELOAD_ERROR");
                         }
                     }
-                    case "setting" -> {
-                        String locale = configuredLocale();
-                        sendMessage(sender, "SETTING", locale, localeHandler.getAvailableLocales());
-                    }
+                    case "setting" ->
+                        sendMessage(
+                                sender,
+                                "SETTING",
+                                localeHandler.getConfiguredLocaleLabel(),
+                                localeHandler.getAvailableLocales());
                     case "restore" ->
                         sendInteractive(
                                 sender, ClickAction.runCommand(commandString("restore", "confirm")), "RESTORE_WARNING");
