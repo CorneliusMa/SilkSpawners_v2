@@ -50,7 +50,7 @@ jobs:
         run: |
           PR_URL="${PR_URL//\"/}"
           gh pr edit "$PR_URL" --add-label "automerge"
-          gh pr merge --auto --squash "$PR_URL"
+          gh pr merge --auto --squash --delete-branch "$PR_URL"
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR_URL: ${{ steps.crowdin.outputs.pull_request_url }}
