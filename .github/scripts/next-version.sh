@@ -39,7 +39,7 @@ while IFS= read -r -d '' message; do
 
     case "${BASH_REMATCH[1]}" in
         feat) bump=minor ;;
-        fix | perf) [ -n "$bump" ] || bump=patch ;;
+        fix | perf) [ -n "$bump" ] || bump='patch' ;;
     esac
 done < <(git log -z --no-merges --format=%B "$range")
 
