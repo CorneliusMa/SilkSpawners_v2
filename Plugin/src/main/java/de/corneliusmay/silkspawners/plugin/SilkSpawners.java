@@ -26,16 +26,7 @@ public class SilkSpawners extends JavaPlugin {
         registerCommands();
         registerApiService();
         registerHooks();
-
-        Logger.info("Enabled SilkSpawners v" + loader.get(VersionChecker.class).getInstalledVersion() + " ("
-                + loadSummary() + ")");
-    }
-
-    private String loadSummary() {
-        long millis = loader.loadTimings().values().stream()
-                .mapToLong(Duration::toMillis)
-                .sum();
-        return loader.loadTimings().size() + " components in " + millis + "ms";
+        logEnabled();
     }
 
     private void registerCommands() {
@@ -52,6 +43,14 @@ public class SilkSpawners extends JavaPlugin {
         HookLoader hookLoader = loader.get(HookLoader.class);
         hookLoader.addHook("shopguiplus.ShopGUIPlusHook", "ShopGUIPlus", PluginConfig.HOOK_SHOPGUIPLUS);
         hookLoader.register();
+    }
+
+    private void logEnabled() {
+        long millis = loader.loadTimings().values().stream()
+                .mapToLong(Duration::toMillis)
+                .sum();
+        Logger.info("Enabled SilkSpawners v" + loader.get(VersionChecker.class).getInstalledVersion() + " ("
+                + loader.loadTimings().size() + " components in " + millis + "ms)");
     }
 
     @Override
