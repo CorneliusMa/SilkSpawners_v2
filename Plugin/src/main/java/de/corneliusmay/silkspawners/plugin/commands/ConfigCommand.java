@@ -7,6 +7,7 @@ import de.corneliusmay.silkspawners.plugin.commands.handler.StaticTabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.ConfigApply;
 import de.corneliusmay.silkspawners.plugin.config.ConfigEditor;
 import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
+import de.corneliusmay.silkspawners.plugin.config.ConfigReloader;
 import de.corneliusmay.silkspawners.plugin.config.handler.ConfigValueException;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTier;
 import de.corneliusmay.silkspawners.plugin.explosion.ExplosionTierEditor;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.BooleanSupplier;
 import org.bukkit.command.CommandSender;
 import org.weftkit.wiring.Wired;
 
@@ -23,11 +23,11 @@ public class ConfigCommand extends SilkSpawnersCommand {
 
     private final ConfigEditor editor;
 
-    private final BooleanSupplier configReloader;
+    private final ConfigReloader configReloader;
 
     private final ExplosionTierEditor tierEditor;
 
-    public ConfigCommand(ConfigEditor editor, BooleanSupplier configReloader, ExplosionTierEditor tierEditor) {
+    public ConfigCommand(ConfigEditor editor, ConfigReloader configReloader, ExplosionTierEditor tierEditor) {
         super(
                 "config",
                 true,
@@ -59,7 +59,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
     }
 
     private boolean reload(CommandSender sender) {
-        if (configReloader.getAsBoolean()) sendMessage(sender, "RELOAD_SUCCESSFUL");
+        if (configReloader.reload()) sendMessage(sender, "RELOAD_SUCCESSFUL");
         else sendMessage(sender, "RELOAD_ERROR");
         return true;
     }
@@ -87,7 +87,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
             return fail(sender, "SET_ERROR", key.getPath(), value, ex.getMessage());
         }
 
-        if (key.getApply() == ConfigApply.AFTER_RELOAD && !configReloader.getAsBoolean())
+        if (key.getApply() == ConfigApply.AFTER_RELOAD && !configReloader.reload())
             return fail(sender, "SET_RELOAD_ERROR", key.getPath(), value);
 
         sendMessage(sender, "SET_SUCCESSFUL", key.getPath(), value);
