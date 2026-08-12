@@ -10,6 +10,7 @@ import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.message.InteractiveMessageLoader;
 import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
+import de.corneliusmay.silkspawners.plugin.utils.Http;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
@@ -30,10 +31,13 @@ public class Dump {
 
     private final Plugin plugin;
 
+    private final Pastes pastes;
+
     private final List<Dumpable> sections;
 
     public Dump(
             Plugin plugin,
+            Http http,
             VersionChecker versionChecker,
             CrossVersionHandler crossVersionHandler,
             PlatformLoader platformLoader,
@@ -43,6 +47,7 @@ public class Dump {
             HookLoader hookLoader,
             WiringSection wiringSection) {
         this.plugin = plugin;
+        this.pastes = new Pastes(http);
         this.sections = List.of(
                 new MetaSection(),
                 versionChecker,
@@ -60,7 +65,7 @@ public class Dump {
 
     public void create(Consumer<String> uploaded, Consumer<Path> saved) {
         String document = new DumpReport().collect(sections).render();
-        Pastes.upload(document).whenComplete((url, ex) -> {
+        pastes.upload(document).whenComplete((url, ex) -> {
             if (ex == null) uploaded.accept(url);
             else {
                 Logger.error("Error uploading dump", ex);

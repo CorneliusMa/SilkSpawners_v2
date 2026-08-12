@@ -4,11 +4,11 @@ import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
+import de.corneliusmay.silkspawners.plugin.utils.Http;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.utils.Schedule;
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -36,7 +36,7 @@ public class VersionChecker implements Loader, Dumpable {
 
     private static final Pattern RELEASE_TAG_PATTERN = Pattern.compile("\"tag_name\":\"v([0-9.]+)\"");
 
-    private final HttpClient client = HttpClient.newHttpClient();
+    private final Http http;
 
     private final Plugin plugin;
 
@@ -120,10 +120,9 @@ public class VersionChecker implements Loader, Dumpable {
 
     private Optional<String> fetchLatestVersion() throws InterruptedException {
         try {
-            HttpRequest request =
-                    HttpRequest.newBuilder().uri(LATEST_RELEASE_URI).GET().build();
+            HttpRequest request = http.request(LATEST_RELEASE_URI).GET().build();
             String body =
-                    client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+                    http.send(request, HttpResponse.BodyHandlers.ofString()).body();
             Matcher matcher = RELEASE_TAG_PATTERN.matcher(body);
             if (matcher.find()) return Optional.of(matcher.group(1));
             Logger.error("Error getting latest version");
