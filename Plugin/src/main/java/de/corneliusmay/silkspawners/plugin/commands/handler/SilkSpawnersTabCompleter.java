@@ -13,7 +13,7 @@ class SilkSpawnersTabCompleter implements TabCompleter {
 
     private final SilkSpawnersCommandHandler commandHandler;
 
-    public SilkSpawnersTabCompleter(SilkSpawnersCommandHandler commandHandler) {
+    SilkSpawnersTabCompleter(SilkSpawnersCommandHandler commandHandler) {
         this.commandHandler = commandHandler;
     }
 

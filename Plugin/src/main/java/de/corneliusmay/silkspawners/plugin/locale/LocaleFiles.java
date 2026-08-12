@@ -23,15 +23,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
-@RequiredArgsConstructor
+@Wired
+@Singleton
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class LocaleFiles {
 
     private static final String SIGNATURES = "/locale-signatures/signatures.properties";
 
     private final Plugin plugin;
+
+    private final Logger logger;
 
     File path() {
         return new File(plugin.getDataFolder() + "/locale");
@@ -70,7 +77,7 @@ class LocaleFiles {
                         Map<String, Set<String>> locale = signatures.getOrDefault(localeCode(relative), Map.of());
                         sync(bundled, target.resolve(relative), locale, overwrite);
                     } catch (IOException | IllegalArgumentException ex) {
-                        Logger.warn("Could not " + (overwrite ? "restore " : "update ") + relative + ": "
+                        logger.warn("Could not " + (overwrite ? "restore " : "update ") + relative + ": "
                                 + ex.getMessage());
                         failed.add(relative);
                     }
@@ -93,7 +100,7 @@ class LocaleFiles {
 
         if (result.lines().equals(currentLines)) return;
         replace(current, result.lines());
-        Logger.info("Updated " + current.getFileName() + ": " + result.added() + " message(s) added, "
+        logger.info("Updated " + current.getFileName() + ": " + result.added() + " message(s) added, "
                 + result.updated() + " updated, " + result.kept() + " kept as customized");
     }
 
@@ -104,7 +111,7 @@ class LocaleFiles {
     private List<String> signatureLines() throws IOException {
         try (InputStream in = getClass().getResourceAsStream(SIGNATURES)) {
             if (in == null) {
-                Logger.warn("Locale signatures are missing from the plugin jar, "
+                logger.warn("Locale signatures are missing from the plugin jar, "
                         + "reworded messages will be kept as customizations");
                 return List.of();
             }

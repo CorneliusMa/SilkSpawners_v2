@@ -9,11 +9,11 @@ import org.bukkit.command.CommandSender;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class VersionCommand extends SilkSpawnersCommand {
+class VersionCommand extends SilkSpawnersCommand {
 
     private final VersionChecker versionChecker;
 
-    public VersionCommand(VersionChecker versionChecker) {
+    VersionCommand(VersionChecker versionChecker) {
         super("version", true);
         this.versionChecker = versionChecker;
     }

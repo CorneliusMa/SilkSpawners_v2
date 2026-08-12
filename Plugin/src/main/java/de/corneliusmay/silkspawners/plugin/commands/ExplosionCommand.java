@@ -11,13 +11,13 @@ import org.bukkit.plugin.Plugin;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class ExplosionCommand extends SilkSpawnersCommand {
+class ExplosionCommand extends SilkSpawnersCommand {
 
     private final Plugin attachmentPlugin;
 
     private final ServerPlatform platform;
 
-    public ExplosionCommand(Plugin attachmentPlugin, ServerPlatform platform) {
+    ExplosionCommand(Plugin attachmentPlugin, ServerPlatform platform) {
         super(
                 "explosion",
                 true,

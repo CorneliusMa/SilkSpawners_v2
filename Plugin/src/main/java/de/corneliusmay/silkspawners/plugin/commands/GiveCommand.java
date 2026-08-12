@@ -16,13 +16,13 @@ import org.bukkit.inventory.ItemStack;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class GiveCommand extends SilkSpawnersCommand {
+class GiveCommand extends SilkSpawnersCommand {
 
     private final SpawnerFactory spawnerFactory;
 
     private final ServerPlatform platform;
 
-    public GiveCommand(SpawnerFactory spawnerFactory, ServerPlatform platform) {
+    GiveCommand(SpawnerFactory spawnerFactory, ServerPlatform platform) {
         super("give", true, new OnlinePlayersTabCompleter(), new EntityTabCompleter());
         this.spawnerFactory = spawnerFactory;
         this.platform = platform;

@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.metrics;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimpleBarChart;
@@ -16,8 +17,8 @@ import org.weftkit.wiring.Wired;
 @Wired
 @Singleton
 @Requires(PluginConfig.class)
-@RequiredArgsConstructor
-public class MetricsHandler implements Loader {
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class MetricsHandler implements Loader {
 
     private static final int SERVICE_ID = 15215;
 
@@ -26,6 +27,8 @@ public class MetricsHandler implements Loader {
     private final LocaleHandler localeHandler;
 
     private final CommandUsageTracker commandUsageTracker;
+
+    private final Logger logger;
 
     private Metrics metrics;
 
@@ -39,7 +42,7 @@ public class MetricsHandler implements Loader {
                     "update_check", () -> PluginConfig.UPDATE_CHECK_ENABLED.get() ? "enabled" : "disabled"));
             metrics.addCustomChart(new SimpleBarChart("commands_executed", commandUsageTracker::snapshot));
         } catch (RuntimeException ex) {
-            Logger.error("Failed to start bStats integration", ex);
+            logger.error("Failed to start bStats integration", ex);
         }
         return true;
     }
@@ -47,7 +50,7 @@ public class MetricsHandler implements Loader {
     @Override
     public void unload() {
         if (metrics == null) return;
-        Logger.info("Stopping bStats integration");
+        logger.info("Stopping bStats integration");
         metrics.shutdown();
     }
 }

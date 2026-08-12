@@ -25,6 +25,8 @@ public class HookLoader implements Dumpable {
 
     private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}
 
+    private final Logger logger;
+
     private final JavaPlugin plugin;
 
     private final PluginManager pluginManager;
@@ -38,7 +40,8 @@ public class HookLoader implements Dumpable {
     private final ComponentLoader<Hook> loader =
             new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
 
-    public HookLoader(JavaPlugin plugin, SpawnerProvider spawnerProvider) {
+    public HookLoader(JavaPlugin plugin, SpawnerProvider spawnerProvider, Logger logger) {
+        this.logger = logger;
         this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
         this.spawnerProvider = spawnerProvider;
@@ -72,9 +75,9 @@ public class HookLoader implements Dumpable {
 
             hook.register();
             registeredHooks.add(definition.hookName());
-            Logger.info("Hooked into " + definition.pluginName());
+            logger.info("Hooked into " + definition.pluginName());
         } catch (Exception e) {
-            Logger.error("Failed to load hook " + definition.hookName(), e);
+            logger.error("Failed to load hook " + definition.hookName(), e);
         }
     }
 }

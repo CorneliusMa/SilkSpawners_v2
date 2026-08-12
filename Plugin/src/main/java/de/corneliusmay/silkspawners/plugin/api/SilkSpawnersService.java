@@ -11,6 +11,7 @@ import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -18,11 +19,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
+import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
-@RequiredArgsConstructor
-public class SilkSpawnersService implements SilkSpawnersAPI {
+@Singleton
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class SilkSpawnersService implements SilkSpawnersAPI, Loader {
 
     private final Plugin plugin;
 
@@ -32,8 +36,15 @@ public class SilkSpawnersService implements SilkSpawnersAPI {
 
     private final SilkDropCheck silkDropCheck;
 
-    public void register() {
+    @Override
+    public boolean load() {
         plugin.getServer().getServicesManager().register(SilkSpawnersAPI.class, this, plugin, ServicePriority.Normal);
+        return true;
+    }
+
+    @Override
+    public void unload() {
+        plugin.getServer().getServicesManager().unregister(SilkSpawnersAPI.class, this);
     }
 
     @Override

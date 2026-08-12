@@ -35,6 +35,8 @@ public class SpawnerFactory {
 
     private final EditedSpawners editedSpawners;
 
+    private final Logger logger;
+
     public Optional<Spawner> fromBlock(Block block) {
         if (block == null || block.getType() != versionAdapter.getSpawnerMaterial()) return Optional.empty();
         CreatureSpawner creatureSpawner = (CreatureSpawner) block.getState();
@@ -49,7 +51,7 @@ public class SpawnerFactory {
         if (entityName != null) {
             EntityType entityType = EntityNames.resolve(entityName);
             if (entityType == null && !entityName.equals(Spawner.EMPTY)) {
-                Logger.warn("Ignoring spawner item with unrecognized entity '" + entityName
+                logger.warn("Ignoring spawner item with unrecognized entity '" + entityName
                         + "' (not supported on this server version)");
                 return Optional.empty();
             }

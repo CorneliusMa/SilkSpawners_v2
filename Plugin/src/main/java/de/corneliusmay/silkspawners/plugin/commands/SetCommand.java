@@ -15,13 +15,13 @@ import org.bukkit.entity.Player;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class SetCommand extends SilkSpawnersCommand {
+class SetCommand extends SilkSpawnersCommand {
 
     private final SpawnerFactory spawnerFactory;
 
     private final VersionAdapter versionAdapter;
 
-    public SetCommand(SpawnerFactory spawnerFactory, VersionAdapter versionAdapter) {
+    SetCommand(SpawnerFactory spawnerFactory, VersionAdapter versionAdapter) {
         super("set", true, new EntityTabCompleter());
         this.spawnerFactory = spawnerFactory;
         this.versionAdapter = versionAdapter;

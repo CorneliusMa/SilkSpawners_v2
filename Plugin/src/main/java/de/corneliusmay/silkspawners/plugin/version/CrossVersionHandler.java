@@ -7,14 +7,18 @@ import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
+import lombok.RequiredArgsConstructor;
 import org.weftkit.wiring.Loader;
 import org.weftkit.wiring.Provides;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
+@RequiredArgsConstructor
 @Singleton
 public class CrossVersionHandler implements Loader, Dumpable {
+
+    private final Logger logger;
 
     private final ComponentLoader<VersionAdapter> loader = new ComponentLoader<>(VersionAdapter.class, "bukkit");
 
@@ -32,14 +36,14 @@ public class CrossVersionHandler implements Loader, Dumpable {
     }
 
     private boolean fail(String message) {
-        Logger.error(message);
-        Logger.warn("Disabling plugin due to version incompatibility");
+        logger.error(message);
+        logger.warn("Disabling plugin due to version incompatibility");
         return false;
     }
 
     @Override
     public boolean load() {
-        Logger.info("Loading Cross-Version support");
+        logger.info("Loading Cross-Version support");
         MinecraftVersion version;
         try {
             version = MinecraftVersion.parse(org.bukkit.Bukkit.getBukkitVersion());
@@ -54,7 +58,7 @@ public class CrossVersionHandler implements Loader, Dumpable {
         }
 
         this.versionAdapter = loader.instantiate(bukkitVersion + ".VersionImplementation");
-        Logger.info("Loaded support for version " + version.getVersion());
+        logger.info("Loaded support for version " + version.getVersion());
         return true;
     }
 }

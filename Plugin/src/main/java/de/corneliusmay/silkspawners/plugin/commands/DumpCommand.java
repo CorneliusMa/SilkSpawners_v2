@@ -9,12 +9,15 @@ import org.bukkit.entity.Player;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class DumpCommand extends SilkSpawnersCommand {
+class DumpCommand extends SilkSpawnersCommand {
+
+    private final Logger logger;
 
     private final Dump dump;
 
-    public DumpCommand(Dump dump) {
+    DumpCommand(Dump dump, Logger logger) {
         super("dump", true);
+        this.logger = logger;
         this.dump = dump;
     }
 
@@ -29,6 +32,6 @@ public class DumpCommand extends SilkSpawnersCommand {
 
     private void succeed(CommandSender sender, String url) {
         sendInteractive(sender, ClickAction.openUrl(url), "SUCCESS", url);
-        if (sender instanceof Player) Logger.info("A dump was uploaded to " + url);
+        if (sender instanceof Player) logger.info("A dump was uploaded to " + url);
     }
 }

@@ -10,7 +10,6 @@ import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.message.InteractiveMessageLoader;
 import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
-import de.corneliusmay.silkspawners.plugin.utils.Http;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
@@ -29,6 +28,8 @@ public class Dump {
 
     private static final DateTimeFormatter FALLBACK_TIMESTAMP = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
 
+    private final Logger logger;
+
     private final Plugin plugin;
 
     private final Pastes pastes;
@@ -37,7 +38,7 @@ public class Dump {
 
     public Dump(
             Plugin plugin,
-            Http http,
+            Pastes pastes,
             VersionChecker versionChecker,
             CrossVersionHandler crossVersionHandler,
             PlatformLoader platformLoader,
@@ -45,9 +46,11 @@ public class Dump {
             InteractiveMessageLoader interactiveMessageLoader,
             ConfigLoader configLoader,
             HookLoader hookLoader,
-            WiringSection wiringSection) {
+            WiringSection wiringSection,
+            Logger logger) {
+        this.logger = logger;
         this.plugin = plugin;
-        this.pastes = new Pastes(http);
+        this.pastes = pastes;
         this.sections = List.of(
                 new MetaSection(),
                 versionChecker,
@@ -68,7 +71,7 @@ public class Dump {
         pastes.upload(document).whenComplete((url, ex) -> {
             if (ex == null) uploaded.accept(url);
             else {
-                Logger.error("Error uploading dump", ex);
+                logger.error("Error uploading dump", ex);
                 saved.accept(save(document));
             }
         });
@@ -81,7 +84,7 @@ public class Dump {
         try {
             return Files.writeString(file, document);
         } catch (IOException ex) {
-            Logger.error("Error saving dump", ex);
+            logger.error("Error saving dump", ex);
             return file;
         }
     }

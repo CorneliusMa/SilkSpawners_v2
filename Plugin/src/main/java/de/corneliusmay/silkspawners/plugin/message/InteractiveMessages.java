@@ -21,12 +21,14 @@ public class InteractiveMessages {
 
     private final InteractiveMessenger messenger;
 
+    private final Logger logger;
+
     public void send(CommandSender sender, ClickAction action, String key, Object... args) {
         String body = locale.getMessage(key, args);
         String link = linkText(key, args);
         int index = body.indexOf(LINK_TOKEN);
         if (index == -1 || link == null) {
-            Logger.warn("Interactive message " + key + " has no clickable link ("
+            logger.warn("Interactive message " + key + " has no clickable link ("
                     + (link == null ? "missing _LINK entry" : "missing " + LINK_TOKEN + " placeholder")
                     + "), sending it as plain text");
             sender.sendMessage(body.replace(LINK_TOKEN, ""));

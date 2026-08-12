@@ -1,6 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.commands.completers;
 
-import de.corneliusmay.silkspawners.plugin.commands.ConfigCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.TabCompletion;
 import de.corneliusmay.silkspawners.plugin.config.ConfigKey;
@@ -20,7 +19,7 @@ public class ConfigExplosionTabCompleter implements TabCompletion {
     public List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args) {
         if (!args[0].equals("explosion")) return List.of();
         if (args.length == 2)
-            return ConfigCommand.canSet(command, sender) ? List.of("list", "add", "remove") : List.of("list");
+            return command.hasSubPermission(sender, "set") ? List.of("list", "add", "remove") : List.of("list");
 
         return switch (args[1]) {
             case "list" -> args.length == 3 ? tierEditor.scopeNames() : List.of();
@@ -31,13 +30,13 @@ public class ConfigExplosionTabCompleter implements TabCompletion {
     }
 
     private List<String> add(SilkSpawnersCommand command, CommandSender sender, String[] args) {
-        if (!ConfigCommand.canSet(command, sender)) return List.of();
+        if (!command.hasSubPermission(sender, "set")) return List.of();
         if (args.length == 3) return tierEditor.scopeNames();
         return args.length == 6 || args.length == 7 ? List.of("true", "false") : List.of();
     }
 
     private List<String> remove(SilkSpawnersCommand command, CommandSender sender, String[] args) {
-        if (!ConfigCommand.canSet(command, sender)) return List.of();
+        if (!command.hasSubPermission(sender, "set")) return List.of();
         if (args.length == 3) return tierEditor.scopeNames();
         if (args.length != 4) return List.of();
 

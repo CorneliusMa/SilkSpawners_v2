@@ -40,6 +40,8 @@ public class VersionChecker implements Loader, Dumpable {
 
     private final Plugin plugin;
 
+    private final Logger logger;
+
     private volatile String latestVersion;
 
     private Schedule schedule;
@@ -82,7 +84,7 @@ public class VersionChecker implements Loader, Dumpable {
 
     public synchronized void stop() {
         if (schedule == null) return;
-        Logger.info("Stopping version checker");
+        logger.info("Stopping version checker");
         schedule.stop();
         schedule = null;
     }
@@ -95,7 +97,7 @@ public class VersionChecker implements Loader, Dumpable {
     private synchronized void start() {
         Optional<Duration> interval = configuredInterval();
         if (interval.isPresent()) start(interval.get());
-        else Logger.warn("Update checking is disabled");
+        else logger.warn("Update checking is disabled");
     }
 
     private Optional<Duration> configuredInterval() {
@@ -109,13 +111,13 @@ public class VersionChecker implements Loader, Dumpable {
     }
 
     private void check() throws InterruptedException {
-        Logger.info("Checking for updates");
+        logger.info("Checking for updates");
         Optional<String> fetched = fetchLatestVersion();
         if (fetched.isEmpty()) return;
         String latest = fetched.get();
         latestVersion = latest;
-        if (isUpToDate(latest)) Logger.info(upToDateMessage(latest));
-        else Logger.warn(updateAvailableMessage(latest));
+        if (isUpToDate(latest)) logger.info(upToDateMessage(latest));
+        else logger.warn(updateAvailableMessage(latest));
     }
 
     private Optional<String> fetchLatestVersion() throws InterruptedException {
@@ -125,10 +127,10 @@ public class VersionChecker implements Loader, Dumpable {
                     http.send(request, HttpResponse.BodyHandlers.ofString()).body();
             Matcher matcher = RELEASE_TAG_PATTERN.matcher(body);
             if (matcher.find()) return Optional.of(matcher.group(1));
-            Logger.error("Error getting latest version");
+            logger.error("Error getting latest version");
             return Optional.empty();
         } catch (IOException ex) {
-            Logger.error("Error getting latest version", ex);
+            logger.error("Error getting latest version", ex);
             return Optional.empty();
         }
     }
