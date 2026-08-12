@@ -5,14 +5,18 @@ import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.message.InteractiveMessenger;
+import lombok.RequiredArgsConstructor;
 import org.weftkit.wiring.Loader;
 import org.weftkit.wiring.Provides;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
+@RequiredArgsConstructor
 @Singleton
 public class InteractiveMessageLoader implements Loader, Dumpable {
+
+    private final Logger logger;
 
     private static final String CHAT_COMPONENT_CLASS = "net.md_5.bungee.api.chat.TextComponent";
 
@@ -36,7 +40,7 @@ public class InteractiveMessageLoader implements Loader, Dumpable {
     @Override
     public boolean load() {
         messenger = loadMessenger();
-        Logger.info("Interactive messages are "
+        logger.info("Interactive messages are "
                 + (messenger instanceof PlainMessageSender ? "unavailable on this server" : "enabled"));
         return true;
     }
@@ -46,7 +50,7 @@ public class InteractiveMessageLoader implements Loader, Dumpable {
         try {
             return loader.instantiate("bukkit.MessageImplementation");
         } catch (RuntimeException | LinkageError ex) {
-            Logger.warn("Failed to enable interactive messages, falling back to plain messages", ex);
+            logger.warn("Failed to enable interactive messages, falling back to plain messages", ex);
             return new PlainMessageSender();
         }
     }

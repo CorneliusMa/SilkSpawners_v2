@@ -15,7 +15,7 @@ import org.weftkit.wiring.Wired;
 
 @Wired
 @Requires(PluginConfig.class)
-public class SetupCommand extends SilkSpawnersCommand {
+class SetupCommand extends SilkSpawnersCommand {
 
     private static final List<ConfigKey<Boolean>> PERMISSION_KEYS = List.of(
             PluginConfig.SPAWNER_PERMISSION_DISABLE_DESTROY,
@@ -24,7 +24,7 @@ public class SetupCommand extends SilkSpawnersCommand {
 
     private final ConfigEditor editor;
 
-    public SetupCommand(ConfigEditor editor) {
+    SetupCommand(ConfigEditor editor) {
         super("setup", true, new StaticTabCompletion("revert"));
         this.editor = editor;
     }

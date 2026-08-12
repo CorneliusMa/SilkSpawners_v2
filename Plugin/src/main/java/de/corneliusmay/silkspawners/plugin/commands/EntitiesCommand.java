@@ -9,9 +9,9 @@ import org.bukkit.entity.EntityType;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class EntitiesCommand extends SilkSpawnersCommand {
+class EntitiesCommand extends SilkSpawnersCommand {
 
-    public EntitiesCommand() {
+    EntitiesCommand() {
         super("entities", true);
     }
 

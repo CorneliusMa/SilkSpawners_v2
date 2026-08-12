@@ -39,6 +39,10 @@ public abstract class SilkSpawnersCommand {
         return sender.hasPermission(getPermissionString());
     }
 
+    public final boolean hasSubPermission(CommandSender sender, String action) {
+        return sender.hasPermission(getPermissionString() + "." + action);
+    }
+
     public final String getPermissionString() {
         return commandHandler.getMainCommand() + ".command." + command;
     }

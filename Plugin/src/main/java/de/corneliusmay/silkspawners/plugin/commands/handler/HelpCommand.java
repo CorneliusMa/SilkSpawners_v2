@@ -6,7 +6,7 @@ class HelpCommand extends SilkSpawnersCommand {
 
     private final SilkSpawnersCommandHandler commandHandler;
 
-    public HelpCommand(SilkSpawnersCommandHandler commandHandler) {
+    HelpCommand(SilkSpawnersCommandHandler commandHandler) {
         super("help", false, (command, sender, args) -> commandHandler.getCommands(sender));
         this.commandHandler = commandHandler;
     }

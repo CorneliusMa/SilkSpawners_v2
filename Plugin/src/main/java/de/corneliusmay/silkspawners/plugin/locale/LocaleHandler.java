@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Getter;
-import org.bukkit.plugin.Plugin;
+import lombok.RequiredArgsConstructor;
 import org.weftkit.wiring.Loader;
 import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
@@ -23,6 +23,7 @@ import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
+@RequiredArgsConstructor
 @Requires(PluginConfig.class)
 public class LocaleHandler implements Loader, Dumpable {
 
@@ -39,9 +40,7 @@ public class LocaleHandler implements Loader, Dumpable {
 
     private final LocaleFiles files;
 
-    public LocaleHandler(Plugin plugin) {
-        this.files = new LocaleFiles(plugin);
-    }
+    private final Logger logger;
 
     private volatile ResourceBundle resourceBundle;
 
@@ -59,15 +58,15 @@ public class LocaleHandler implements Loader, Dumpable {
 
     @Override
     public boolean load() {
-        Logger.info("Loading locale file");
+        logger.info("Loading locale file");
         try {
             files.copy(false);
             loadLocale();
             return true;
         } catch (MissingResourceException | URISyntaxException | IOException ex) {
-            Logger.error("Error loading locale file", ex);
-            Logger.warn("Disabling plugin due to missing locale file");
-            Logger.info("Available locales: " + getAvailableLocales());
+            logger.error("Error loading locale file", ex);
+            logger.warn("Disabling plugin due to missing locale file");
+            logger.info("Available locales: " + getAvailableLocales());
             return false;
         }
     }
@@ -89,7 +88,7 @@ public class LocaleHandler implements Loader, Dumpable {
         this.completionPercent = computeCompletionPercent();
         this.localeCodes = readLocaleCodes();
         if (isIncomplete())
-            Logger.warn(MessageFormat.format(INCOMPLETE_WARNING, locale, completionPercent, CROWDIN_URL));
+            logger.warn(MessageFormat.format(INCOMPLETE_WARNING, locale, completionPercent, CROWDIN_URL));
     }
 
     public boolean isSelectedLocaleLoaded() {

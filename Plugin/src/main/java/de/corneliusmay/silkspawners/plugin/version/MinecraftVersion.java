@@ -2,13 +2,14 @@ package de.corneliusmay.silkspawners.plugin.version;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
 import lombok.Getter;
 
 class MinecraftVersion {
 
     private static final Pattern VERSION_PATTERN = Pattern.compile("^\\d+(\\.\\d+)+");
 
-    @Getter
+    @Getter(AccessLevel.PACKAGE)
     private final String version;
 
     private final int majorVersion;

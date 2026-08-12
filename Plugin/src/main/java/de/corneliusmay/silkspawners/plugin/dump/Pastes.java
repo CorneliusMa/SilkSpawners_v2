@@ -7,9 +7,12 @@ import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.weftkit.wiring.Wired;
 
-@RequiredArgsConstructor
+@Wired
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class Pastes {
 
     private static final URI POST_URI = URI.create("https://api.pastes.dev/post");

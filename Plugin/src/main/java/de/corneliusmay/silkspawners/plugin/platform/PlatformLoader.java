@@ -22,6 +22,8 @@ public class PlatformLoader implements Loader, Dumpable {
     private final ComponentLoader<ServerPlatform> loader =
             new ComponentLoader<>(ServerPlatform.class, "platform", JavaPlugin.class);
 
+    private final Logger logger;
+
     private ServerPlatform serverPlatform;
 
     @Provides
@@ -37,10 +39,10 @@ public class PlatformLoader implements Loader, Dumpable {
 
     @Override
     public boolean load() {
-        Logger.info("Loading server platform");
+        logger.info("Loading server platform");
         String platform = Server.isFolia() ? "folia" : "bukkit";
         this.serverPlatform = loader.instantiate(platform + ".PlatformImplementation", plugin);
-        Logger.info("Initialized plugin for " + platform + " server");
+        logger.info("Initialized plugin for " + platform + " server");
         return true;
     }
 }

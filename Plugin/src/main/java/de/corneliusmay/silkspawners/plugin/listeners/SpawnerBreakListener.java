@@ -4,15 +4,18 @@ import de.corneliusmay.silkspawners.api.events.SpawnerBreakEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.explosion.Explosion;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
-@RequiredArgsConstructor
-public class SpawnerBreakListener implements Listener {
+@Singleton
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class SpawnerBreakListener implements Listener {
 
     private final ServerPlatform platform;
 

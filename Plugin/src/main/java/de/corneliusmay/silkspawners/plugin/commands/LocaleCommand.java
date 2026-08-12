@@ -12,11 +12,11 @@ import org.bukkit.command.CommandSender;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class LocaleCommand extends SilkSpawnersCommand {
+class LocaleCommand extends SilkSpawnersCommand {
 
     private final LocaleHandler localeHandler;
 
-    public LocaleCommand(LocaleHandler localeHandler) {
+    LocaleCommand(LocaleHandler localeHandler) {
         super("locale", true, new StaticTabCompletion("setting", "reload", "restore"));
         this.localeHandler = localeHandler;
     }

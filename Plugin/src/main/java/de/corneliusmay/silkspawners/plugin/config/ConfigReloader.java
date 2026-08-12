@@ -20,12 +20,14 @@ public class ConfigReloader {
 
     private final VersionChecker versionChecker;
 
+    private final Logger logger;
+
     public synchronized boolean reload() {
         if (!configLoader.reload()) return false;
         try {
             if (!localeHandler.isSelectedLocaleLoaded()) localeHandler.loadLocale();
         } catch (IOException | MissingResourceException ex) {
-            Logger.error("Error loading locale file", ex);
+            logger.error("Error loading locale file", ex);
             return false;
         }
         versionChecker.restart();

@@ -8,6 +8,7 @@ import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import java.util.Optional;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,11 +19,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
-@RequiredArgsConstructor
-public class PlayerInteractListener implements Listener {
+@Singleton
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class PlayerInteractListener implements Listener {
 
     private final SpawnerFactory spawnerFactory;
 

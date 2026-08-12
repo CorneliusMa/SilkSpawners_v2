@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.weftkit.wiring.Wired;
 
 @Wired
-public class ConfigCommand extends SilkSpawnersCommand {
+class ConfigCommand extends SilkSpawnersCommand {
 
     private final ConfigEditor editor;
 
@@ -27,7 +27,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
 
     private final ExplosionTierEditor tierEditor;
 
-    public ConfigCommand(ConfigEditor editor, ConfigReloader configReloader, ExplosionTierEditor tierEditor) {
+    ConfigCommand(ConfigEditor editor, ConfigReloader configReloader, ExplosionTierEditor tierEditor) {
         super(
                 "config",
                 true,
@@ -36,10 +36,6 @@ public class ConfigCommand extends SilkSpawnersCommand {
         this.editor = editor;
         this.configReloader = configReloader;
         this.tierEditor = tierEditor;
-    }
-
-    public static boolean canSet(SilkSpawnersCommand command, CommandSender sender) {
-        return sender.hasPermission(command.getPermissionString() + ".set");
     }
 
     @Override
@@ -73,7 +69,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
     }
 
     private boolean set(CommandSender sender, String path, String input) {
-        if (!canSet(this, sender)) return insufficientPermission(sender);
+        if (!hasSubPermission(sender, "set")) return insufficientPermission(sender);
 
         ConfigKey<?> key = key(sender, path);
         if (key == null) return false;
@@ -132,7 +128,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
     }
 
     private boolean explosionAdd(CommandSender sender, String[] args) {
-        if (!canSet(this, sender)) return insufficientPermission(sender);
+        if (!hasSubPermission(sender, "set")) return insufficientPermission(sender);
         if (args.length < 4 || args.length > 7) return fail(sender, "EXPLOSION_ADD_USAGE");
 
         String name = args[2].toLowerCase(Locale.ROOT);
@@ -154,7 +150,7 @@ public class ConfigCommand extends SilkSpawnersCommand {
     }
 
     private boolean explosionRemove(CommandSender sender, String[] args) {
-        if (!canSet(this, sender)) return insufficientPermission(sender);
+        if (!hasSubPermission(sender, "set")) return insufficientPermission(sender);
         if (args.length != 4) return fail(sender, "EXPLOSION_REMOVE_USAGE");
 
         String name = args[2].toLowerCase(Locale.ROOT);
