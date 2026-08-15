@@ -6,7 +6,6 @@ import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimpleBarChart;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
 import org.weftkit.wiring.Loader;
@@ -26,8 +25,6 @@ class MetricsHandler implements Loader {
 
     private final LocaleHandler localeHandler;
 
-    private final CommandUsageTracker commandUsageTracker;
-
     private final Logger logger;
 
     private Metrics metrics;
@@ -40,7 +37,6 @@ class MetricsHandler implements Loader {
             metrics.addCustomChart(new SimplePie("locale", localeHandler::getLocaleDisplayName));
             metrics.addCustomChart(new SimplePie(
                     "update_check", () -> PluginConfig.UPDATE_CHECK_ENABLED.get() ? "enabled" : "disabled"));
-            metrics.addCustomChart(new SimpleBarChart("commands_executed", commandUsageTracker::snapshot));
         } catch (RuntimeException ex) {
             logger.error("Failed to start bStats integration", ex);
         }

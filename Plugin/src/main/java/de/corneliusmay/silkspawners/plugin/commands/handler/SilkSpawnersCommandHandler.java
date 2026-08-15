@@ -2,7 +2,6 @@ package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.message.InteractiveMessages;
-import de.corneliusmay.silkspawners.plugin.metrics.CommandUsageTracker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,8 +24,6 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
     private final InteractiveMessages interactive;
 
-    private final CommandUsageTracker usageTracker;
-
     @Getter(AccessLevel.PACKAGE)
     private final String mainCommand;
 
@@ -37,15 +34,10 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
     private final SilkSpawnersTabCompleter tabCompleter;
 
     public SilkSpawnersCommandHandler(
-            JavaPlugin plugin,
-            LocaleHandler locale,
-            InteractiveMessages interactive,
-            CommandUsageTracker usageTracker,
-            String command) {
+            JavaPlugin plugin, LocaleHandler locale, InteractiveMessages interactive, String command) {
         this.plugin = plugin;
         this.locale = locale;
         this.interactive = interactive;
-        this.usageTracker = usageTracker;
         this.mainCommand = command;
         this.commands = new ArrayList<>();
         this.tabCompleter = new SilkSpawnersTabCompleter(this);
@@ -65,7 +57,6 @@ public class SilkSpawnersCommandHandler implements CommandExecutor {
 
         if (!command.hasPermission(commandSender)) return command.insufficientPermission(commandSender);
 
-        usageTracker.record(command.getCommand());
         return command.execute(commandSender, Arrays.copyOfRange(args, 1, args.length));
     }
 
