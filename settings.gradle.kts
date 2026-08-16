@@ -35,6 +35,8 @@ include(
     "HookShopGuiPlus",
     "NBT",
     "PDC",
+    "SpawnEgg",
+    "SpawnEggLegacy",
     "SpawnerSettings",
     "SpawnerSettingsLegacy",
     "v1_8",

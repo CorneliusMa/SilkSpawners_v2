@@ -52,7 +52,7 @@ public class Spawner implements SpawnerSnapshot {
         return itemStack != null && (isEmpty() || entityType.isSpawnable());
     }
 
-    static String serializedEntityType(EntityType entityType) {
+    public static String serializedEntityType(EntityType entityType) {
         if (entityType == null) return EMPTY;
         String name = entityType.getName();
         return (name == null ? entityType.name() : name).toLowerCase();
