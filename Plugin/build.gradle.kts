@@ -17,7 +17,7 @@ artifacts {
 
 val nonCoreModules = setOf("Plugin", "ApiExample", "Publication")
 val coreModules = rootProject.subprojects
-    .filter { it.name !in nonCoreModules }
+    .filter { it.subprojects.isEmpty() && it.name !in nonCoreModules }
     .map { it.path }
 
 dependencies {
