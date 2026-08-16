@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.v1_20_5;
 
+import de.corneliusmay.silkspawners.bukkit.dualwield.DualWieldVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.pdc.PDCVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.settings.SpawnerSettingsVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.spawnegg.SpawnEggVersionAdapter;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
 
 public class VersionImplementation extends PDCVersionAdapter
-        implements SpawnerSettingsVersionAdapter, SpawnEggVersionAdapter {
+        implements DualWieldVersionAdapter, SpawnerSettingsVersionAdapter, SpawnEggVersionAdapter {
 
     @Override
     public Block getTargetBlock(Player player) {
@@ -27,13 +28,6 @@ public class VersionImplementation extends PDCVersionAdapter
 
         RayTraceResult hitResult = player.rayTraceBlocks(range);
         return hitResult != null ? hitResult.getHitBlock() : null;
-    }
-
-    @Override
-    public ItemStack[] getItemsInHand(Player player) {
-        return new ItemStack[] {
-            player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()
-        };
     }
 
     @Override

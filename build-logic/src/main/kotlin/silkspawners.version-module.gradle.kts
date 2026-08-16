@@ -24,6 +24,7 @@ open class VersionModuleExtension(private val project: Project) {
         project.dependencies.add("implementation", project.project(itemTags))
         project.dependencies.add("implementation", project.project(spawnerSettings))
         project.dependencies.add("implementation", project.project(spawnEgg))
+        if (atLeast(1, 9)) project.dependencies.add("implementation", project.project(":DualWield"))
     }
 }
 

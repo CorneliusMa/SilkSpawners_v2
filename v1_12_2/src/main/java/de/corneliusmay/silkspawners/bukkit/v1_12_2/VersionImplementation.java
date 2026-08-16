@@ -1,5 +1,6 @@
 package de.corneliusmay.silkspawners.bukkit.v1_12_2;
 
+import de.corneliusmay.silkspawners.bukkit.dualwield.DualWieldVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.nbt.NBTVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.settings.SpawnerSettingsVersionAdapter;
 import de.corneliusmay.silkspawners.bukkit.spawnegg.legacy.SpawnEggLegacyVersionAdapter;
@@ -15,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
 
 public class VersionImplementation extends NBTVersionAdapter
-        implements SpawnerSettingsVersionAdapter, SpawnEggLegacyVersionAdapter {
+        implements DualWieldVersionAdapter, SpawnerSettingsVersionAdapter, SpawnEggLegacyVersionAdapter {
 
     private static final Set<Material> PICKAXES = EnumSet.of(
             Material.WOOD_PICKAXE,
@@ -27,13 +28,6 @@ public class VersionImplementation extends NBTVersionAdapter
     @Override
     public Block getTargetBlock(Player player) {
         return player.getTargetBlock(null, 5);
-    }
-
-    @Override
-    public ItemStack[] getItemsInHand(Player player) {
-        return new ItemStack[] {
-            player.getInventory().getItemInMainHand(), player.getInventory().getItemInOffHand()
-        };
     }
 
     @Override

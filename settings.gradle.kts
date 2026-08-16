@@ -33,6 +33,7 @@ include(
     "PlatformFolia",
     "MessageBukkit",
     "HookShopGuiPlus",
+    "DualWield",
     "NBT",
     "PDC",
     "SpawnEgg",
