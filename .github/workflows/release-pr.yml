@@ -32,7 +32,7 @@ jobs:
             core.setOutput('login', login)
             core.setOutput('id', data.id)
 
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
           filter: tree:0

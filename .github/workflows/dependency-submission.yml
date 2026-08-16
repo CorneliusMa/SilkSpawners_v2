@@ -16,7 +16,7 @@ jobs:
     steps:
 
       # Full history: the locale signatures are generated from the released tags
-      - uses: actions/checkout@v7.0.0
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
