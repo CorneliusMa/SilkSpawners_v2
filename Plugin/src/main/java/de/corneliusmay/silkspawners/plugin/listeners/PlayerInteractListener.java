@@ -58,7 +58,7 @@ class PlayerInteractListener implements Listener {
         }
 
         ItemStack usedEgg = findHeldSpawnEgg(e.getPlayer());
-        if (deniedPreemptively(e, spawner, usedEgg)) {
+        if (handledPreemptively(e, spawner, usedEgg)) {
             editedSpawners.endEdit(blockLocation);
             return;
         }
@@ -130,10 +130,14 @@ class PlayerInteractListener implements Listener {
         return null;
     }
 
-    private boolean deniedPreemptively(PlayerInteractEvent e, Spawner spawner, ItemStack usedEgg) {
+    private boolean handledPreemptively(PlayerInteractEvent e, Spawner spawner, ItemStack usedEgg) {
         if (usedEgg == null || e.useItemInHand() == Event.Result.DENY) return false;
         EntityType target = versionAdapter.spawnEggEntityType(usedEgg);
-        if (target == null || target == spawner.getEntityType()) return false;
+        if (target == null) return false;
+        if (target == spawner.getEntityType()) {
+            e.setCancelled(true);
+            return true;
+        }
         if (canChangeSpawner(e.getPlayer(), target)) return false;
 
         e.setCancelled(true);

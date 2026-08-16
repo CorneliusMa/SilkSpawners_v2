@@ -57,12 +57,14 @@ Check the following config values:
 - `spawner.silktouchLevel` - if raised above 1, regular SilkTouch pickaxes no longer qualify.
 - `spawner.dropChance` - below 100, spawners only drop that percentage of the time.
 
+Spawners also never drop in creative mode.
+
 </details>
 
 <details>
 <summary><b>How do I make spawners unbreakable for players without SilkTouch or permission?</b></summary>
 
-Set `spawner.destroyable: false`. Spawners can then only be broken by players who actually receive the drop; for everyone else the break is blocked with a message (configurable via `spawner.message.denyDestroy`).
+Set `spawner.destroyable: false`. Spawners can then only be broken by players who actually receive the drop; for everyone else the break is blocked with a message (configurable via `spawner.message.denyDestroy`). Players in creative mode bypass this and break spawners without a drop.
 
 </details>
 
