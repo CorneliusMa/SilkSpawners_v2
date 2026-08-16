@@ -18,7 +18,7 @@ jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.1.
 spotless-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 
 [plugins]
-shadow = { id = "com.gradleup.shadow", version = "9.5.1" }
+shadow = { id = "com.gradleup.shadow", version = "9.6.0" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 hangar-publish = { id = "io.papermc.hangar-publish-plugin", version = "0.1.4" }
 minotaur = { id = "com.modrinth.minotaur", version = "2.9.0" }
