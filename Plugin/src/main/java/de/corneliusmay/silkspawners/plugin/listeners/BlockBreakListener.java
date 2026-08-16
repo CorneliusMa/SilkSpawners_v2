@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -44,6 +45,8 @@ class BlockBreakListener implements Listener {
 
     private void handleSpawnerBreak(BlockBreakEvent e, Spawner spawner) {
         Player p = e.getPlayer();
+        if (p.getGameMode() == GameMode.CREATIVE) return;
+
         if (!silkDropCheck.canSilkDrop(p, spawner)) {
             destroySpawner(p, e, spawner);
             return;

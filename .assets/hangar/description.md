@@ -5,6 +5,7 @@
 
 **If you use a pickaxe with the silk touch enchantment while breaking a spawner, you will receive the spawner you broke. When placing the spawner again, the spawner will spawn the mob it spawned when breaking it.**
 
+
 Compatible with Paper, Spigot, Purpur, Bukkit and Folia servers.
 
 ## QuickStart
@@ -90,6 +91,8 @@ update:
 hooks:
   shopguiplus: true # If set to true, SilkSpawners will hook into ShopGUI+ if it is installed
 ```
+
+*Spawners never drop in creative mode.*
 
 *If you want to use a dollar sign in a value, you can escape it by putting a backslash in front of it.*
 
