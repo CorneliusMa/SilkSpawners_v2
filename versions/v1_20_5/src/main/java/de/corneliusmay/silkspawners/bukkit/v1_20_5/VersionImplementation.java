@@ -1,0 +1,47 @@
+package de.corneliusmay.silkspawners.bukkit.v1_20_5;
+
+import de.corneliusmay.silkspawners.bukkit.dualwield.DualWieldVersionAdapter;
+import de.corneliusmay.silkspawners.bukkit.pdc.PDCVersionAdapter;
+import de.corneliusmay.silkspawners.bukkit.settings.SpawnerSettingsVersionAdapter;
+import de.corneliusmay.silkspawners.bukkit.spawnegg.SpawnEggVersionAdapter;
+import org.bukkit.Material;
+import org.bukkit.Tag;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.RayTraceResult;
+
+public class VersionImplementation extends PDCVersionAdapter
+        implements DualWieldVersionAdapter, SpawnerSettingsVersionAdapter, SpawnEggVersionAdapter {
+
+    @Override
+    public Block getTargetBlock(Player player) {
+        double range = 5;
+
+        AttributeInstance blockRange = player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE);
+        if (blockRange != null) {
+            range = blockRange.getValue();
+        }
+
+        RayTraceResult hitResult = player.rayTraceBlocks(range);
+        return hitResult != null ? hitResult.getHitBlock() : null;
+    }
+
+    @Override
+    public Material getSpawnerMaterial() {
+        return Material.SPAWNER;
+    }
+
+    @Override
+    public ItemFlag getHideAdditionalTooltipFlag() {
+        return ItemFlag.HIDE_ADDITIONAL_TOOLTIP;
+    }
+
+    @Override
+    public boolean isPickaxe(ItemStack item) {
+        return Tag.ITEMS_PICKAXES.isTagged(item.getType());
+    }
+}

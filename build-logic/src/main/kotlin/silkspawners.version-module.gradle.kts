@@ -16,14 +16,15 @@ open class VersionModuleExtension(private val project: Project) {
         // 1.8 predates the split spigot-api artifact
         val serverApi = if (atLeast(1, 9)) "org.spigotmc:spigot-api:$version-R0.1-SNAPSHOT"
         else "org.bukkit:bukkit:$version-R0.1-SNAPSHOT"
-        val itemTags = if (atLeast(1, 16, 5)) ":PDC" else ":NBT"
-        val spawnerSettings = if (atLeast(1, 12)) ":SpawnerSettings" else ":SpawnerSettingsLegacy"
-        val spawnEgg = if (atLeast(1, 13)) ":SpawnEgg" else ":SpawnEggLegacy"
+        val itemTags = if (atLeast(1, 16, 5)) ":versions:shared:PDC" else ":versions:shared:NBT"
+        val spawnerSettings = if (atLeast(1, 12)) ":versions:shared:SpawnerSettings" else ":versions:shared:SpawnerSettingsLegacy"
+        val spawnEgg = if (atLeast(1, 13)) ":versions:shared:SpawnEgg" else ":versions:shared:SpawnEggLegacy"
 
         project.dependencies.add("compileOnly", serverApi)
         project.dependencies.add("implementation", project.project(itemTags))
         project.dependencies.add("implementation", project.project(spawnerSettings))
         project.dependencies.add("implementation", project.project(spawnEgg))
+        if (atLeast(1, 9)) project.dependencies.add("implementation", project.project(":versions:shared:DualWield"))
     }
 }
 

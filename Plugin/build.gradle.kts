@@ -17,7 +17,7 @@ artifacts {
 
 val nonCoreModules = setOf("Plugin", "ApiExample", "Publication")
 val coreModules = rootProject.subprojects
-    .filter { it.name !in nonCoreModules }
+    .filter { it.subprojects.isEmpty() && it.name !in nonCoreModules }
     .map { it.path }
 
 dependencies {
@@ -41,6 +41,7 @@ tasks {
     }
     processResources {
         val pluginVersion = project.version.toString()
+        inputs.property("pluginVersion", pluginVersion)
         filesMatching("plugin.yml") {
             expand(mapOf("project" to mapOf("version" to pluginVersion)))
         }
