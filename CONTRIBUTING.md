@@ -115,6 +115,10 @@ Pre-releases: run the `Publish` workflow on `release/next`, the only branch it a
 * Published to the Hangar `Preview` and Modrinth `beta` channels
 * Tagged on the `master` commit built from, so they sort before the release
 
+## Component wiring
+
+The plugin is wired with [weftkit](https://weftkit.org) - see [Components](https://weftkit.org/components/), [Lifecycle](https://weftkit.org/lifecycle/) and [Annotations](https://weftkit.org/annotations/). When adding a component, declare exactly the dependencies it uses as constructor parameters; `SilkSpawners` is only the composition root and holds no accessors to pass around.
+
 ## Adding support for a new Minecraft version
 
 Version-specific code is isolated in per-version modules under [`versions/`](versions) (`v1_8`, `v1_9_4`, …). Each module contains a single `VersionImplementation` that implements the [`VersionAdapter`](SPI/src/main/java/de/corneliusmay/silkspawners/spi/version/VersionAdapter.java) API interface, and the correct implementation is picked at runtime by `MinecraftVersionChecker`. Mechanics that changed at some point in Bukkit history are not duplicated per version - they live in shared modules under [`versions/shared/`](versions/shared), one module per side of the cutoff. The spawner-tag methods come from a storage base class the implementation extends: `PDCVersionAdapter` (for servers since 1.16.5) or `NBTVersionAdapter` (reflection over versioned NMS packages for older servers). The other mechanics come from mixin interfaces with default methods: `SpawnerSettingsVersionAdapter` (since 1.12; older servers compose `MobSpawnerFields` from SpawnerSettingsLegacy instead), `SpawnEggVersionAdapter` (since 1.13) or `SpawnEggLegacyVersionAdapter` (before), and `DualWieldVersionAdapter` (since 1.9; `v1_8` implements the single-hand method itself). Every version module applies the `silkspawners.version-module` convention plugin, which selects the matching shared modules and server artifact from the declared API version, so the build file never lists them itself.
