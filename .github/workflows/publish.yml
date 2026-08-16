@@ -33,7 +33,7 @@ jobs:
           echo "version=$version-beta.$(git rev-list --count "$last..origin/master")" >> $GITHUB_OUTPUT
           echo "commit=$(git rev-parse origin/master)" >> $GITHUB_OUTPUT
 
-      - uses: actions/setup-java@v5.5.0
+      - uses: actions/setup-java@v5.6.0
         with:
           java-version: '17'
           distribution: 'temurin'
