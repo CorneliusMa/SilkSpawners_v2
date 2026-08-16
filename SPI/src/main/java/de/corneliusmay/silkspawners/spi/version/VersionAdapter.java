@@ -5,6 +5,7 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +21,10 @@ public interface VersionAdapter {
     ItemFlag getHideAdditionalTooltipFlag();
 
     boolean isPickaxe(ItemStack item);
+
+    boolean isSpawnEgg(ItemStack item);
+
+    EntityType spawnEggEntityType(ItemStack item);
 
     ItemStack writeTag(ItemStack itemStack, String tag, String value);
 

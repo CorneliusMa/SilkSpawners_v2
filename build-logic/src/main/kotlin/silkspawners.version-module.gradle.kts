@@ -18,10 +18,12 @@ open class VersionModuleExtension(private val project: Project) {
         else "org.bukkit:bukkit:$version-R0.1-SNAPSHOT"
         val itemTags = if (atLeast(1, 16, 5)) ":PDC" else ":NBT"
         val spawnerSettings = if (atLeast(1, 12)) ":SpawnerSettings" else ":SpawnerSettingsLegacy"
+        val spawnEgg = if (atLeast(1, 13)) ":SpawnEgg" else ":SpawnEggLegacy"
 
         project.dependencies.add("compileOnly", serverApi)
         project.dependencies.add("implementation", project.project(itemTags))
         project.dependencies.add("implementation", project.project(spawnerSettings))
+        project.dependencies.add("implementation", project.project(spawnEgg))
     }
 }
 
