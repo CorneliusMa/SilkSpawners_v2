@@ -103,6 +103,45 @@ That is the default: changing requires `silkspawners.change.<entity>` or `silksp
 
 </details>
 
+## Trial spawners
+
+The [trial spawners page](TRIAL_SPAWNERS.md) covers the feature, its impact on game balance and the safeguards in one place.
+
+<details>
+<summary><b>Why is trial spawner support disabled by default?</b></summary>
+
+Trial spawners are deliberately neither mineable nor obtainable in vanilla survival, and their reward renews on a cooldown. Making them portable is a balance decision, so `trialspawner.enabled` is `false` until you turn it on.
+
+</details>
+
+<details>
+<summary><b>Which Minecraft versions support it?</b></summary>
+
+Minecraft 1.21.3 and newer. Earlier 1.21 releases are handled by the 1.20 support module, which cannot address trial spawners at all, and the event needed to keep the reward cooldown honest only exists from 1.21.3 on. On older servers the feature disables itself with a log message.
+
+</details>
+
+<details>
+<summary><b>Can players farm rewards by breaking and replacing a trial spawner?</b></summary>
+
+Not with `trialspawner.carryCooldown` enabled, which is the default. Placing a trial spawner creates a fresh block, so its cooldown would otherwise start over and the 30 minute wait between rewards could be skipped. If the spawner was ejecting its reward or cooling down when it was mined, SilkSpawners withholds rewards for one more cooldown after it is placed again. Mob waves themselves are not restricted - that is the same as relocating a regular spawner.
+
+</details>
+
+<details>
+<summary><b>What is lost when a trial spawner is mined?</b></summary>
+
+The entity type, the ominous flag, both configurations including their loot tables, the cooldown length and the spawn ranges are preserved. The display entity and any custom list of potential spawns are not readable and writable through the Bukkit API and fall back to the vanilla defaults.
+
+</details>
+
+<details>
+<summary><b>Do spawn eggs work on trial spawners?</b></summary>
+
+Yes, with `silkspawners.trial.change.<entity>` or `silkspawners.trial.change.*`. Vanilla does not configure trial spawners from eggs, so SilkSpawners cancels the interaction and applies the change itself, to both the normal and the ominous configuration. The egg is consumed outside of creative mode.
+
+</details>
+
 ## Explosions
 
 <details>

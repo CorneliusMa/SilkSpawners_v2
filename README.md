@@ -34,7 +34,7 @@ Simply download the source and build it using Gradle.
 
 Your build of SilkSpawners will be available at `build/libs/SilkSpawners_v2.jar`.
 
-The plugin is wired by [weftkit](https://github.com/weftkit/weftkit), the compile-time lifecycle framework for Bukkit plugins that grew out of this project.
+The plugin is wired by [weftkit](https://weftkit.org), the compile-time lifecycle framework for Bukkit plugins that grew out of this project.
 
 ## QuickStart
 
@@ -46,7 +46,7 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 
 ## Commands
 - `/silkspawners help [command]`
-- `/silkspawners give <player> <entity> [amount]`
+- `/silkspawners give <player> [trial] <entity> [amount]`
 - `/silkspawners set <entity>`
 - `/silkspawners explosion <enable/disable/setting> <player>`
 - `/silkspawners locale <setting/reload/restore>`
@@ -61,9 +61,9 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 
 ### Commands
 - **silkspawners.command.give** - Use this command to give spawners to players.
-> In addition, set **silkspawners.command.give.*** to allow all entities or replace the star with an entity name.
+> In addition, set **silkspawners.command.give.*** to allow all entities or replace the star with an entity name. Trial spawners use the **silkspawners.command.give.trial.*** branch.
 - **silkspawners.command.set** - Use this command to change already placed spawners.
-> In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name.
+> In addition, set **silkspawners.command.set.*** to allow all entities or replace the star with an entity name. Trial spawners use the **silkspawners.command.set.trial.*** branch.
 - **silkspawners.command.explosion** - Use this command to temporarily enable or disable spawner explosions for a specific player.
 - **silkspawners.command.locale** - Use this command to reload and restore locale files.
 - **silkspawners.command.config** - Use this command to view and reload the configuration, including the explosion tiers.
@@ -78,6 +78,12 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 - **silkspawners.place.*** - Permission to set if players can place silk spawners.
 - **silkspawners.change.*** - Permission to set if players can change spawners with eggs.
 - **silkspawners.explosion** - If set, spawner explosion is enabled.
+
+### Trial spawners
+Trial spawner support is disabled by default - the [trial spawners page](docs/TRIAL_SPAWNERS.md) explains its impact on game balance and how the plugin handles it.
+- **silkspawners.trial.break.*** - Permission to set if players will receive destroyed trial spawners.
+- **silkspawners.trial.place.*** - Permission to set if players can place trial spawners.
+- **silkspawners.trial.change.*** - Permission to set if players can change trial spawners with eggs.
 
 *If you want to allow only specific types of spawners you can replace the **\*** with an entity name. Use the entities command to see spawnable entities.*
 
@@ -111,6 +117,26 @@ spawner:
     disableDestroy: false # If set to true, no permission is required to receive destroyed spawners
     disablePlace: false # If set to true, no permission is required to place spawners
     disableChange: false # If set to true, no permission is required to change spawners with eggs
+trialspawner:
+  enabled: false # If set to true, trial spawners can be mined with SilkTouch (Minecraft 1.21.3 or newer)
+  carryCooldown: true # If set to true, a trial spawner that was mined while cooling down withholds its reward for one more cooldown after being placed
+  dropChance: 100 # Probability that the trial spawner will drop when mined (0-100)
+  destroyable: true # If set to false, it won't be possible to destroy trial spawners without SilkTouch or without the permission
+  pickaxeRequired: true # If set to false, trial spawners will always drop regardless of what the player is holding in his hand
+  silktouchRequired: true # If set to false, trial spawners will drop even if the used pickaxe does not have SilkTouch
+  silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine trial spawners
+  item:
+    name: $b{entity} Trial Spawner # The name of the trial spawner item dropped, {entity} is replaced with the mob name
+    ominousName: $5Ominous {entity} Trial Spawner # The name used when the trial spawner was ominous
+    lore: ['$7Spawns $e{entity}'] # The lore of the trial spawner item, {entity} is replaced with the mob name
+  message:
+    denyDestroy: true # If set to true, a message will be sent to the player if the trial spawner cannot be destroyed
+    denyPlace: true # If set to true, a message will be sent to the player if the trial spawner cannot be placed
+    denyChange: true # If set to true, a message will be sent to the player if the trial spawner cannot be changed
+  permission:
+    disableDestroy: false # If set to true, no permission is required to receive destroyed trial spawners
+    disablePlace: false # If set to true, no permission is required to place trial spawners
+    disableChange: false # If set to true, no permission is required to change trial spawners with eggs
 update:
   configVersion: 4 # Do not change this value manually! It is automatically managed by the plugin
   check:
