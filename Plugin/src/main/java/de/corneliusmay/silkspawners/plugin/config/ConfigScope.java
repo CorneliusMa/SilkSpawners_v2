@@ -1,6 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.config;
 
-public enum ConfigScope {
+enum ConfigScope {
     MESSAGES("messages"),
     SPAWNER("spawner"),
     SPAWNER_ITEM("item", SPAWNER),

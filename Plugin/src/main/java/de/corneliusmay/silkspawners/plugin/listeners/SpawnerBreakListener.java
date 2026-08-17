@@ -17,12 +17,14 @@ import org.weftkit.wiring.Wired;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class SpawnerBreakListener implements Listener {
 
+    private final PluginConfig config;
+
     private final ServerPlatform platform;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCall(SpawnerBreakEvent e) {
         if (e.isCancelled()) return;
-        Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH);
+        Explosion explosion = new Explosion(config.SPAWNER_EXPLOSION_SILKTOUCH, config.SPAWNER_EXPLOSION_ALL);
         if (!explosion.applies(e.getPlayer())) return;
         platform.runTaskLater(
                 e.getLocation(),

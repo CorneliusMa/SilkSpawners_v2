@@ -24,6 +24,8 @@ import org.weftkit.wiring.Wired;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class BlockPlaceListener implements Listener {
 
+    private final PluginConfig config;
+
     private final SpawnerFactory spawnerFactory;
 
     private final VersionAdapter versionAdapter;
@@ -45,9 +47,9 @@ class BlockPlaceListener implements Listener {
 
         if (!p.hasPermission("silkspawners.place." + spawner.serializedEntityType())
                 && !p.hasPermission("silkspawners.place.*")
-                && !PluginConfig.SPAWNER_PERMISSION_DISABLE_PLACE.get()) {
+                && !config.SPAWNER_PERMISSION_DISABLE_PLACE.get()) {
             e.setCancelled(true);
-            if (PluginConfig.SPAWNER_MESSAGE_DENY_PLACE.get()) p.sendMessage(locale.getMessage("SPAWNER_PLACE_DENIED"));
+            if (config.SPAWNER_MESSAGE_DENY_PLACE.get()) p.sendMessage(locale.getMessage("SPAWNER_PLACE_DENIED"));
             return;
         }
 

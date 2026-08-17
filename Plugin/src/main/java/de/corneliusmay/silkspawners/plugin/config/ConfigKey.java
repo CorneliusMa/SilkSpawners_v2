@@ -11,6 +11,8 @@ import lombok.Getter;
 
 public final class ConfigKey<T> {
 
+    private final ConfigRegistry registry;
+
     @Getter
     private final String path;
 
@@ -35,6 +37,7 @@ public final class ConfigKey<T> {
     private final NavigableMap<Integer, List<ConfigValueMigrator>> migrators;
 
     ConfigKey(ConfigKeyBuilder builder) {
+        this.registry = builder.registry;
         this.path = builder.scope.getPath() + builder.key;
         this.formatter = builder.formatter;
         this.defaultValue = builder.defaultValue;
@@ -43,12 +46,12 @@ public final class ConfigKey<T> {
         this.internal = builder.internal;
         this.apply = builder.apply;
         this.migrators = builder.migrators;
-        ConfigRegistry.register(this);
+        registry.register(this);
     }
 
     @SuppressWarnings("unchecked")
     public T get() {
-        return (T) ConfigRegistry.value(this);
+        return (T) registry.value(this);
     }
 
     public boolean isSettable() {
@@ -70,7 +73,7 @@ public final class ConfigKey<T> {
     }
 
     void publish(Object value) {
-        ConfigRegistry.update(this, formatter.format(value));
+        registry.update(this, formatter.format(value));
     }
 
     // Lists must reach the config as List, not array, or getStringList ignores the registered default

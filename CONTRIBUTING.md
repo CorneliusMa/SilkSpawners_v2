@@ -158,8 +158,8 @@ To add one:
 1. Create a `hooks/HookXxx` module. Its `build.gradle.kts` should apply the `silkspawners.core-module` convention plugin (which provides the `:SPI` dependency) and `compileOnly` the target plugin's API. If the API needs an extra repository, add it to the `dependencyResolutionManagement` block in [`settings.gradle.kts`](settings.gradle.kts) - repositories are declared centrally there, not per module.
 2. Implement a class extending `Hook` in package `de.corneliusmay.silkspawners.hooks.<subpackage>`, doing the integration work inside `register()`. If your hook listens to Bukkit events, register it as a `Listener` there yourself - the loader only calls `register()`.
 3. Register the module as `hooks:HookXxx` in [`settings.gradle.kts`](settings.gradle.kts); the Plugin picks up every registered module automatically, so no dependency declaration is needed.
-4. Add a toggle for it in `PluginConfig` under the existing `HOOKS` scope, giving it a boolean default (e.g. `HOOK_XXX(builder(HOOKS, "xxx").defs(true).formatter(new BooleanConfigValue()))`).
-5. Wire it up in `SilkSpawners.registerHooks()`:
+4. Add a toggle for it in `PluginConfig` under the existing `HOOKS` scope, giving it a boolean default (e.g. `public final ConfigKey<Boolean> HOOK_XXX = builder(HOOKS, "xxx").def(true).apply(AFTER_RESTART).formatter(new BooleanConfigValue());`).
+5. Wire it up in [`Hooks`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/hooks/Hooks.java):
    ```java
-   hookLoader.addHook("<subpackage>.<ClassName>", "<TargetPluginName>", PluginConfig.HOOK_XXX);
+   hookLoader.addHook("<subpackage>.<ClassName>", "<TargetPluginName>", config.HOOK_XXX);
    ```

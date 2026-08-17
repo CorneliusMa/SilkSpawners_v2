@@ -30,6 +30,8 @@ public class SpawnerFactory {
 
     private static final String SETTINGS_TAG = "silkspawners:settings";
 
+    private final PluginConfig config;
+
     private final VersionAdapter versionAdapter;
 
     private final ServerPlatform platform;
@@ -139,7 +141,7 @@ public class SpawnerFactory {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null || itemMeta.getLore() == null || itemMeta.getLore().isEmpty()) return null;
         String lore = itemMeta.getLore().get(0);
-        for (String oldPrefix : PluginConfig.SPAWNER_ITEM_PREFIX_OLD.get()) {
+        for (String oldPrefix : config.SPAWNER_ITEM_PREFIX_OLD.get()) {
             if (!oldPrefix.isEmpty() && lore.startsWith(oldPrefix))
                 return entityTypeFromName(lore.substring(oldPrefix.length()));
         }
@@ -153,12 +155,12 @@ public class SpawnerFactory {
     }
 
     private String itemName(EntityType entityType) {
-        return PluginConfig.SPAWNER_ITEM_NAME.get().replace("{entity}", Spawner.displayName(entityType));
+        return config.SPAWNER_ITEM_NAME.get().replace("{entity}", Spawner.displayName(entityType));
     }
 
     private List<String> itemLore(EntityType entityType) {
         String entityName = entityType == null ? "Nothing" : Spawner.displayName(entityType);
-        return PluginConfig.SPAWNER_ITEM_LORE.get().stream()
+        return config.SPAWNER_ITEM_LORE.get().stream()
                 .map(line -> line.replace("{entity}", entityName))
                 .toList();
     }

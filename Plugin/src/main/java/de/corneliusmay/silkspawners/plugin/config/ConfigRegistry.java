@@ -4,33 +4,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.weftkit.wiring.Singleton;
+import org.weftkit.wiring.Wired;
 
+@Wired
+@Singleton
 final class ConfigRegistry {
 
-    private static final List<ConfigKey<?>> KEYS = new ArrayList<>();
+    private final List<ConfigKey<?>> keys = new ArrayList<>();
 
-    private static volatile Map<ConfigKey<?>, Object> values = Map.of();
+    private volatile Map<ConfigKey<?>, Object> values = Map.of();
 
-    private ConfigRegistry() {}
-
-    static void register(ConfigKey<?> key) {
-        KEYS.add(key);
+    void register(ConfigKey<?> key) {
+        keys.add(key);
     }
 
-    static List<ConfigKey<?>> keys() {
-        return List.copyOf(KEYS);
+    List<ConfigKey<?>> keys() {
+        return List.copyOf(keys);
     }
 
-    static Object value(ConfigKey<?> key) {
+    Object value(ConfigKey<?> key) {
         Object value = values.get(key);
         return value != null ? value : key.formatDefault();
     }
 
-    static void commit(Map<ConfigKey<?>, Object> newValues) {
+    void commit(Map<ConfigKey<?>, Object> newValues) {
         values = Map.copyOf(newValues);
     }
 
-    static void update(ConfigKey<?> key, Object value) {
+    void update(ConfigKey<?> key, Object value) {
         Map<ConfigKey<?>, Object> updated = new HashMap<>(values);
         updated.put(key, value);
         values = Map.copyOf(updated);

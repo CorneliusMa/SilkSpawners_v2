@@ -9,34 +9,34 @@ import java.util.MissingResourceException;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-@Requires(PluginConfig.class)
 @RequiredArgsConstructor
 public class ConfigEditor {
+
+    private final PluginConfig config;
 
     private final Plugin plugin;
 
     private final LocaleHandler locale;
 
     public List<String> settablePaths() {
-        return PluginConfig.values().stream()
+        return config.values().stream()
                 .filter(ConfigKey::isSettable)
                 .map(ConfigKey::getPath)
                 .toList();
     }
 
     public ConfigKey<?> find(String path) {
-        ConfigKey<?> key = PluginConfig.byPath(path);
+        ConfigKey<?> key = config.byPath(path);
         return key == null || key.isInternal() ? null : key;
     }
 
     public List<String> allowedValues(ConfigKey<?> key) {
-        if (key == PluginConfig.MESSAGE_LOCALE) return locale.getLocaleCodes();
+        if (key == config.MESSAGE_LOCALE) return locale.getLocaleCodes();
         return key.getSuggestions();
     }
 

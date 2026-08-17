@@ -32,6 +32,8 @@ import org.weftkit.wiring.Wired;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class PlayerInteractListener implements Listener {
 
+    private final PluginConfig config;
+
     private final SpawnerFactory spawnerFactory;
 
     private final LocaleHandler locale;
@@ -84,7 +86,7 @@ class PlayerInteractListener implements Listener {
 
         if (!canChangeSpawner(player, newSpawner.getEntityType())) {
             revertChange(player, spawner, block, usedEgg);
-            if (PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE.get())
+            if (config.SPAWNER_MESSAGE_DENY_CHANGE.get())
                 player.sendMessage(locale.getMessage("SPAWNER_CHANGE_DENIED"));
             return;
         }
@@ -141,7 +143,7 @@ class PlayerInteractListener implements Listener {
         if (canChangeSpawner(e.getPlayer(), target)) return false;
 
         e.setCancelled(true);
-        if (PluginConfig.SPAWNER_MESSAGE_DENY_CHANGE.get())
+        if (config.SPAWNER_MESSAGE_DENY_CHANGE.get())
             e.getPlayer().sendMessage(locale.getMessage("SPAWNER_CHANGE_DENIED"));
         return true;
     }
@@ -149,6 +151,6 @@ class PlayerInteractListener implements Listener {
     private boolean canChangeSpawner(Player player, EntityType entityType) {
         return player.hasPermission("silkspawners.change." + Spawner.serializedEntityType(entityType))
                 || player.hasPermission("silkspawners.change.*")
-                || PluginConfig.SPAWNER_PERMISSION_DISABLE_CHANGE.get();
+                || config.SPAWNER_PERMISSION_DISABLE_CHANGE.get();
     }
 }

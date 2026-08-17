@@ -2,18 +2,20 @@ package de.corneliusmay.silkspawners.plugin.utils;
 
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-@Requires(PluginConfig.class)
+@RequiredArgsConstructor
 public class Logger {
 
+    private final PluginConfig config;
+
     private String getPrefix() {
-        return PluginConfig.MESSAGE_PREFIX.get();
+        return config.MESSAGE_PREFIX.get();
     }
 
     public void info(String msg) {
