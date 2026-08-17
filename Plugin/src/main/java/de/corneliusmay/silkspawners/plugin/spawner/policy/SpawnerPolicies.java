@@ -13,7 +13,11 @@ class SpawnerPolicies {
 
     private final SpawnerTypeProfile spawnerProfile;
 
+    private final SpawnerTypeProfile trialSpawnerProfile;
+
     private final SilkDropCheck spawnerCheck;
+
+    private final SilkDropCheck trialSpawnerCheck;
 
     SpawnerPolicies(PluginConfig config, VersionAdapter versionAdapter) {
         this.spawnerProfile = new SpawnerTypeProfile(
@@ -31,7 +35,23 @@ class SpawnerPolicies {
                 config.SPAWNER_MESSAGE_DENY_DESTROY,
                 config.SPAWNER_MESSAGE_DENY_PLACE,
                 config.SPAWNER_MESSAGE_DENY_CHANGE);
+        this.trialSpawnerProfile = new SpawnerTypeProfile(
+                "silkspawners.trial",
+                "trial.",
+                "TRIAL_SPAWNER",
+                config.TRIAL_SPAWNER_DROP_CHANCE,
+                config.TRIAL_SPAWNER_DESTROYABLE,
+                config.TRIAL_SPAWNER_PICKAXE_REQUIRED,
+                config.TRIAL_SPAWNER_SILKTOUCH_REQUIRED,
+                config.TRIAL_SPAWNER_SILKTOUCH_LEVEL,
+                config.TRIAL_SPAWNER_PERMISSION_DISABLE_DESTROY,
+                config.TRIAL_SPAWNER_PERMISSION_DISABLE_PLACE,
+                config.TRIAL_SPAWNER_PERMISSION_DISABLE_CHANGE,
+                config.TRIAL_SPAWNER_MESSAGE_DENY_DESTROY,
+                config.TRIAL_SPAWNER_MESSAGE_DENY_PLACE,
+                config.TRIAL_SPAWNER_MESSAGE_DENY_CHANGE);
         this.spawnerCheck = new SilkDropCheck(versionAdapter, spawnerProfile);
+        this.trialSpawnerCheck = new SilkDropCheck(versionAdapter, trialSpawnerProfile);
     }
 
     @Provides
@@ -41,8 +61,20 @@ class SpawnerPolicies {
     }
 
     @Provides
+    @Qualified("trialSpawner")
+    SpawnerTypeProfile trialSpawnerProfile() {
+        return trialSpawnerProfile;
+    }
+
+    @Provides
     @Qualified("spawner")
     SilkDropCheck spawnerCheck() {
         return spawnerCheck;
+    }
+
+    @Provides
+    @Qualified("trialSpawner")
+    SilkDropCheck trialSpawnerCheck() {
+        return trialSpawnerCheck;
     }
 }
