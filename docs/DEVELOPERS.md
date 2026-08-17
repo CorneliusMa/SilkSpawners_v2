@@ -102,6 +102,19 @@ All events live in `de.corneliusmay.silkspawners.api.events` and extend the comm
 - **`SpawnerExplodeEvent`** - called before a spawner explosion (TNT feature). `setPower(float)`, `setFire(boolean)` and `setBreakBlocks(boolean)` tune the explosion, cancelling prevents it.
 - **`SpawnerGiveEvent`** - called when `/silkspawners give` hands out spawners. `getSender()` returns the command sender, `setAmount(int)` overrides the amount.
 
+### Trial spawners
+
+Trial spawners hold two configurations and switch between them depending on whether they are ominous, which does not fit `SpawnerSnapshot`. They therefore have their own state model and their own event hierarchy with the common base `TrialSpawnerEvent`, exposing `getPlayer()`, `getLocation()`, `getState()` and the `Cancellable` methods.
+
+`TrialSpawnerState` carries the ominous flag, the cooldown length, both `TrialSpawnerConfig` instances and whether the spawner still owed a cooldown when it was broken. `active()` returns the configuration currently in use, `withEntityType(EntityType)` sets an entity type on both configurations. Loot tables are exposed as their namespaced keys; a `null` map means they were never captured, in which case applying the configuration leaves the block's own tables alone. `spawnedEntity` and the potential spawns are not part of the state and fall back to the vanilla defaults when a trial spawner is placed again.
+
+- **`TrialSpawnerPlaceEvent`**, **`TrialSpawnerBreakEvent`** - the trial spawner counterparts of the events above, `setState(TrialSpawnerState)` replaces the state.
+- **`TrialSpawnerChangeEvent`** - called when a trial spawner's type is changed with a spawn egg or `/silkspawners set`. `getNewState()` returns the incoming state, `setNewState(TrialSpawnerState)` overrides it.
+- **`TrialSpawnerDropEvent`** - the counterpart of `SpawnerDropEvent`, with `setDropChance(double)` and `setDrop(ItemStack)`.
+- **`TrialSpawnerGiveEvent`** - called when `/silkspawners give <player> trial` hands out trial spawners.
+
+Trial spawner events are only fired on servers that support them (Minecraft 1.21.3 or newer) and while `trialspawner.enabled` is set.
+
 Example listener:
 
 ```java
