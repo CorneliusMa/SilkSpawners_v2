@@ -73,6 +73,32 @@ public final class PluginConfig extends ConfigDeclaration {
     public final ConfigKey<Boolean> SPAWNER_PERMISSION_DISABLE_PLACE = bool(SPAWNER_PERMISSIONS, "disablePlace", false);
     public final ConfigKey<Boolean> SPAWNER_PERMISSION_DISABLE_CHANGE =
             bool(SPAWNER_PERMISSIONS, "disableChange", false);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_ENABLED = bool(TRIAL_SPAWNER, "enabled", false);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_CARRY_COOLDOWN = bool(TRIAL_SPAWNER, "carryCooldown", true);
+    public final ConfigKey<Integer> TRIAL_SPAWNER_DROP_CHANCE = integer(TRIAL_SPAWNER, "dropChance", 100, 0, 100);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_DESTROYABLE = bool(TRIAL_SPAWNER, "destroyable", true);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_PICKAXE_REQUIRED = bool(TRIAL_SPAWNER, "pickaxeRequired", true);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_SILKTOUCH_REQUIRED = bool(TRIAL_SPAWNER, "silktouchRequired", true);
+    public final ConfigKey<Integer> TRIAL_SPAWNER_SILKTOUCH_LEVEL =
+            integer(TRIAL_SPAWNER, "silktouchLevel", 1, 1, Integer.MAX_VALUE);
+    public final ConfigKey<String> TRIAL_SPAWNER_ITEM_NAME =
+            message(TRIAL_SPAWNER_ITEM, "name", "$b{entity} Trial Spawner");
+    public final ConfigKey<String> TRIAL_SPAWNER_ITEM_OMINOUS_NAME =
+            message(TRIAL_SPAWNER_ITEM, "ominousName", "$5Ominous {entity} Trial Spawner");
+    public final ConfigKey<List<String>> TRIAL_SPAWNER_ITEM_LORE = builder(TRIAL_SPAWNER_ITEM, "lore")
+            .def(new String[] {"$7Spawns $e{entity}"})
+            .listFormatter(new MessageConfigValue());
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_MESSAGE_DENY_DESTROY =
+            bool(TRIAL_SPAWNER_MESSAGES, "denyDestroy", true);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_MESSAGE_DENY_PLACE = bool(TRIAL_SPAWNER_MESSAGES, "denyPlace", true);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_MESSAGE_DENY_CHANGE =
+            bool(TRIAL_SPAWNER_MESSAGES, "denyChange", true);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_PERMISSION_DISABLE_DESTROY =
+            bool(TRIAL_SPAWNER_PERMISSIONS, "disableDestroy", false);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_PERMISSION_DISABLE_PLACE =
+            bool(TRIAL_SPAWNER_PERMISSIONS, "disablePlace", false);
+    public final ConfigKey<Boolean> TRIAL_SPAWNER_PERMISSION_DISABLE_CHANGE =
+            bool(TRIAL_SPAWNER_PERMISSIONS, "disableChange", false);
     public final ConfigKey<Integer> UPDATE_CONFIG_VERSION =
             builder(UPDATE, "configVersion").def(CONFIG_VERSION).internal().formatter(new IntegerConfigValue());
     public final ConfigKey<Boolean> UPDATE_CHECK_ENABLED =
