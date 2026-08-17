@@ -1,7 +1,5 @@
 package de.corneliusmay.silkspawners.plugin.version;
 
-import static de.corneliusmay.silkspawners.plugin.version.MinecraftVersionChecker.getBukkitVersion;
-
 import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
 import de.corneliusmay.silkspawners.plugin.loader.ComponentLoader;
@@ -16,7 +14,7 @@ import org.weftkit.wiring.Wired;
 @Wired
 @RequiredArgsConstructor
 @Singleton
-class CrossVersionHandler implements Loader, Dumpable {
+class VersionAdapterLoader implements Loader, Dumpable {
 
     private final Logger logger;
 
@@ -51,13 +49,13 @@ class CrossVersionHandler implements Loader, Dumpable {
     @Override
     public boolean load() {
         logger.info("Loading Cross-Version support");
-        String bukkitVersion = getBukkitVersion(version);
-        if (bukkitVersion == null) {
+        String module = VersionModules.core(version);
+        if (module == null) {
             return fail("The detected Server Version (" + version.getVersion()
                     + ") is too old for the currently installed version of SilkSpawners");
         }
 
-        this.versionAdapter = loader.instantiate(bukkitVersion + ".VersionImplementation");
+        this.versionAdapter = loader.instantiate(module + ".VersionImplementation");
         logger.info("Loaded support for version " + version.getVersion());
         return true;
     }

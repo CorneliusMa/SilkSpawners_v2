@@ -3,9 +3,9 @@ package de.corneliusmay.silkspawners.plugin.version;
 import java.util.Comparator;
 import java.util.Set;
 
-public class MinecraftVersionChecker {
+public class VersionModules {
 
-    private static final Set<Baseline> SUPPORTED_BASELINES = Set.of(
+    private static final Set<Baseline> CORE_BASELINES = Set.of(
             new Baseline(1, 21, 3),
             new Baseline(1, 20, 5),
             new Baseline(1, 16, 5),
@@ -17,7 +17,7 @@ public class MinecraftVersionChecker {
 
     private static final Set<Baseline> TRIAL_SPAWNER_BASELINES = Set.of(new Baseline(1, 21, 3));
 
-    static String getBukkitVersion(MinecraftVersion version) {
+    static String core(MinecraftVersion version) {
         // As of Minecraft version 1.20.5, Paper ships with a Mojang-mapped runtime instead of reobfuscating the server
         // to Spigot mappings. This means that the package name of the server implementation is no longer a reliable
         // way to determine the server version. Instead, we can use the Bukkit version string.
@@ -26,10 +26,10 @@ public class MinecraftVersionChecker {
         // unless the Bukkit API changes in a way that explicitly breaks it.
         //
         // The module name is derived from the baseline, so a version can never dispatch to a mismatched module.
-        return resolve(version, SUPPORTED_BASELINES);
+        return resolve(version, CORE_BASELINES);
     }
 
-    public static String getTrialSpawnerVersion(MinecraftVersion version) {
+    public static String trialSpawner(MinecraftVersion version) {
         return resolve(version, TRIAL_SPAWNER_BASELINES);
     }
 
@@ -39,7 +39,7 @@ public class MinecraftVersionChecker {
                 .max(Comparator.comparingInt(Baseline::major)
                         .thenComparingInt(Baseline::minor)
                         .thenComparingInt(Baseline::patch))
-                .map(MinecraftVersionChecker::moduleName)
+                .map(VersionModules::moduleName)
                 .orElse(null);
     }
 
