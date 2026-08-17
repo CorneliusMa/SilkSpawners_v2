@@ -31,8 +31,13 @@ class CrossVersionHandler implements Loader, Dumpable {
 
     @Override
     public void describe(DumpObject<?> writer) {
-        writer.section("version-adapter")
-                .value("implementation", versionAdapter.getClass().getName());
+        var mixins = writer.section("version-adapter")
+                .value("implementation", versionAdapter.getClass().getName())
+                .value("storage", versionAdapter.getClass().getSuperclass().getSimpleName())
+                .list("mixins");
+        for (Class<?> mixin : versionAdapter.getClass().getInterfaces()) {
+            mixins.item(mixin.getSimpleName());
+        }
     }
 
     private boolean fail(String message) {
