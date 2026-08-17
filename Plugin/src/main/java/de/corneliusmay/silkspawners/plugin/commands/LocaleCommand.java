@@ -16,9 +16,12 @@ class LocaleCommand extends SilkSpawnersCommand {
 
     private final LocaleHandler localeHandler;
 
-    LocaleCommand(LocaleHandler localeHandler) {
+    private final PluginConfig config;
+
+    LocaleCommand(LocaleHandler localeHandler, PluginConfig config) {
         super("locale", true, new StaticTabCompletion("setting", "reload", "restore"));
         this.localeHandler = localeHandler;
+        this.config = config;
     }
 
     @Override
@@ -71,6 +74,6 @@ class LocaleCommand extends SilkSpawnersCommand {
     }
 
     private String configuredLocale() {
-        return PluginConfig.MESSAGE_LOCALE.get().toString();
+        return config.MESSAGE_LOCALE.get().toString();
     }
 }

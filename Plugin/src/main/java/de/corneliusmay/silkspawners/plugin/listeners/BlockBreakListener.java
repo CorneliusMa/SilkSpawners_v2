@@ -28,6 +28,8 @@ import org.weftkit.wiring.Wired;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class BlockBreakListener implements Listener {
 
+    private final PluginConfig config;
+
     private final SpawnerFactory spawnerFactory;
 
     private final SilkDropCheck silkDropCheck;
@@ -52,7 +54,7 @@ class BlockBreakListener implements Listener {
             return;
         }
 
-        int dropChance = PluginConfig.SPAWNER_DROP_CHANCE.get();
+        int dropChance = config.SPAWNER_DROP_CHANCE.get();
         SpawnerDropEvent dropEvent = new SpawnerDropEvent(
                 p, spawner, e.getBlock().getLocation(), spawner.getItemStack(), dropChance, spawnerFactory::snapshot);
         Bukkit.getPluginManager().callEvent(dropEvent);
@@ -78,7 +80,7 @@ class BlockBreakListener implements Listener {
         ItemStack spawnerItem = !dropEvent.hasCustomDrop() && event.hasReplacedSpawner()
                 ? event.getSpawner().getItemStack()
                 : dropEvent.getDrop();
-        if (new Explosion(PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH).applies(p)) {
+        if (new Explosion(config.SPAWNER_EXPLOSION_SILKTOUCH, config.SPAWNER_EXPLOSION_ALL).applies(p)) {
             platform.runTaskLater(e.getBlock().getLocation(), () -> dropItem(e, spawnerItem), 2);
         } else {
             p.getWorld().dropItemNaturally(e.getBlock().getLocation(), spawnerItem);
@@ -86,14 +88,13 @@ class BlockBreakListener implements Listener {
     }
 
     private void destroySpawner(Player p, BlockBreakEvent e, Spawner spawner) {
-        if (!PluginConfig.SPAWNER_DESTROYABLE.get()) {
+        if (!config.SPAWNER_DESTROYABLE.get()) {
             e.setCancelled(true);
-            if (PluginConfig.SPAWNER_MESSAGE_DENY_DESTROY.get())
-                p.sendMessage(locale.getMessage("SPAWNER_DESTROY_DENIED"));
+            if (config.SPAWNER_MESSAGE_DENY_DESTROY.get()) p.sendMessage(locale.getMessage("SPAWNER_DESTROY_DENIED"));
             return;
         }
 
-        Explosion explosion = new Explosion(PluginConfig.SPAWNER_EXPLOSION_NORMAL);
+        Explosion explosion = new Explosion(config.SPAWNER_EXPLOSION_NORMAL, config.SPAWNER_EXPLOSION_ALL);
         if (!explosion.applies(p)) return;
         platform.runTaskLater(e.getBlock().getLocation(), () -> runExplosion(explosion, p, e, spawner), 1);
     }

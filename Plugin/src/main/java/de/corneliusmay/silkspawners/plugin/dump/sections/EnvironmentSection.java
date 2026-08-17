@@ -2,8 +2,10 @@ package de.corneliusmay.silkspawners.plugin.dump.sections;
 
 import de.corneliusmay.silkspawners.plugin.dump.DumpObject;
 import de.corneliusmay.silkspawners.plugin.dump.Dumpable;
+import org.weftkit.wiring.Wired;
 
-public class EnvironmentSection implements Dumpable {
+@Wired
+class EnvironmentSection implements Dumpable {
 
     @Override
     public void describe(DumpObject<?> writer) {

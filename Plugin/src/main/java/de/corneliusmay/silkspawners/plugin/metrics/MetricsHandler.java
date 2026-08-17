@@ -9,15 +9,15 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.Plugin;
 import org.weftkit.wiring.Loader;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-@Requires(PluginConfig.class)
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class MetricsHandler implements Loader {
+
+    private final PluginConfig config;
 
     private static final int SERVICE_ID = 15215;
 
@@ -35,8 +35,8 @@ class MetricsHandler implements Loader {
         try {
             metrics = new Metrics(plugin, SERVICE_ID);
             metrics.addCustomChart(new SimplePie("locale", localeHandler::getLocaleDisplayName));
-            metrics.addCustomChart(new SimplePie(
-                    "update_check", () -> PluginConfig.UPDATE_CHECK_ENABLED.get() ? "enabled" : "disabled"));
+            metrics.addCustomChart(
+                    new SimplePie("update_check", () -> config.UPDATE_CHECK_ENABLED.get() ? "enabled" : "disabled"));
         } catch (RuntimeException ex) {
             logger.error("Failed to start bStats integration", ex);
         }

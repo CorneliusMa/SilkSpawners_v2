@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.weftkit.wiring.Wired;
 
-public class PluginListSection implements Dumpable {
+@Wired
+class PluginListSection implements Dumpable {
 
     @Override
     public void describe(DumpObject<?> writer) {

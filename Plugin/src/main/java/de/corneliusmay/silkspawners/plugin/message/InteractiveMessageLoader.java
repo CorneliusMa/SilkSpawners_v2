@@ -14,7 +14,7 @@ import org.weftkit.wiring.Wired;
 @Wired
 @RequiredArgsConstructor
 @Singleton
-public class InteractiveMessageLoader implements Loader, Dumpable {
+class InteractiveMessageLoader implements Loader, Dumpable {
 
     private final Logger logger;
 

@@ -19,15 +19,15 @@ import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
 import org.weftkit.wiring.Loader;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-@Requires(PluginConfig.class)
 @RequiredArgsConstructor
 public class VersionChecker implements Loader, Dumpable {
+
+    private final PluginConfig config;
 
     public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/silkspawners";
 
@@ -69,7 +69,7 @@ public class VersionChecker implements Loader, Dumpable {
     }
 
     private String updateStatus() {
-        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) return "checking disabled";
+        if (!config.UPDATE_CHECK_ENABLED.get()) return "checking disabled";
         String latest = latestVersion;
         if (latest == null) return "unknown";
         return isUpToDate(latest) ? "up to date" : "available";
@@ -101,8 +101,8 @@ public class VersionChecker implements Loader, Dumpable {
     }
 
     private Optional<Duration> configuredInterval() {
-        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) return Optional.empty();
-        return Optional.of(Duration.ofHours(PluginConfig.UPDATE_CHECK_INTERVAL.get()));
+        if (!config.UPDATE_CHECK_ENABLED.get()) return Optional.empty();
+        return Optional.of(Duration.ofHours(config.UPDATE_CHECK_INTERVAL.get()));
     }
 
     private void start(Duration interval) {

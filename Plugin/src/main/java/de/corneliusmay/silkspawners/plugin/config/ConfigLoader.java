@@ -11,24 +11,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.weftkit.wiring.Initializes;
 import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Provides;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-@Initializes(PluginConfig.class)
-@RequiredArgsConstructor
-public class ConfigLoader implements Loader, Dumpable {
+class ConfigLoader implements Loader, Dumpable {
 
     private final Plugin plugin;
+
+    private final ConfigRegistry registry;
+
+    private final PluginConfig pluginConfig;
+
+    ConfigLoader(Plugin plugin, ConfigRegistry registry) {
+        this.plugin = plugin;
+        this.registry = registry;
+        this.pluginConfig = new PluginConfig(registry);
+    }
+
+    @Provides
+    PluginConfig config() {
+        return pluginConfig;
+    }
 
     private int getConfigVersion(FileConfiguration config) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
@@ -60,7 +72,7 @@ public class ConfigLoader implements Loader, Dumpable {
         return false;
     }
 
-    public boolean reload() {
+    boolean reload() {
         log(Level.INFO, "Reloading configuration...");
         plugin.reloadConfig();
         return apply();
@@ -69,7 +81,7 @@ public class ConfigLoader implements Loader, Dumpable {
     @Override
     public void describe(DumpObject<?> writer) {
         DumpEntry<?> section = writer.section("config");
-        for (ConfigKey<?> key : PluginConfig.values()) section.value(key.getPath(), ConfigRegistry.value(key));
+        for (ConfigKey<?> key : pluginConfig.values()) section.value(key.getPath(), registry.value(key));
     }
 
     private boolean apply() {
@@ -77,7 +89,7 @@ public class ConfigLoader implements Loader, Dumpable {
 
         int configVersion = getConfigVersion(config);
         ConfigurationSection legacyConfig = legacyCopy(config);
-        for (ConfigKey<?> key : PluginConfig.values()) {
+        for (ConfigKey<?> key : pluginConfig.values()) {
             init(key, config, legacyConfig, configVersion);
         }
         config.options().copyDefaults(true);
@@ -87,7 +99,7 @@ public class ConfigLoader implements Loader, Dumpable {
         Map<ConfigKey<?>, Object> values = new HashMap<>();
 
         boolean valid = true;
-        for (ConfigKey<?> key : PluginConfig.values()) {
+        for (ConfigKey<?> key : pluginConfig.values()) {
             try {
                 values.put(key, load(key, config));
             } catch (Exception ex) {
@@ -96,7 +108,7 @@ public class ConfigLoader implements Loader, Dumpable {
             }
         }
 
-        if (valid) ConfigRegistry.commit(values);
+        if (valid) registry.commit(values);
         return valid;
     }
 

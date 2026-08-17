@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.weftkit.wiring.Loader;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
 @RequiredArgsConstructor
-@Requires(PluginConfig.class)
 public class LocaleHandler implements Loader, Dumpable {
+
+    private final PluginConfig config;
 
     private static final String DEFAULT_MESSAGE =
             "§cNo value found for key {0} using locale {1}.§7\n This message is missing from the locale files bundled with the plugin, please report it to the developer.";
@@ -115,7 +115,7 @@ public class LocaleHandler implements Loader, Dumpable {
     }
 
     private Locale getLocale() {
-        return PluginConfig.MESSAGE_LOCALE.get();
+        return config.MESSAGE_LOCALE.get();
     }
 
     public String getLocaleDisplayName() {
@@ -217,6 +217,6 @@ public class LocaleHandler implements Loader, Dumpable {
     }
 
     private String getPrefix() {
-        return PluginConfig.MESSAGE_PREFIX.get();
+        return config.MESSAGE_PREFIX.get();
     }
 }

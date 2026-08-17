@@ -13,9 +13,12 @@ class VersionCommand extends SilkSpawnersCommand {
 
     private final VersionChecker versionChecker;
 
-    VersionCommand(VersionChecker versionChecker) {
+    private final PluginConfig config;
+
+    VersionCommand(VersionChecker versionChecker, PluginConfig config) {
         super("version", true);
         this.versionChecker = versionChecker;
+        this.config = config;
     }
 
     @Override
@@ -23,7 +26,7 @@ class VersionCommand extends SilkSpawnersCommand {
         if (args.length != 0) return invalidSyntax(sender);
 
         String installedVersion = versionChecker.getInstalledVersion();
-        if (!PluginConfig.UPDATE_CHECK_ENABLED.get()) {
+        if (!config.UPDATE_CHECK_ENABLED.get()) {
             sendMessage(sender, "ERROR", installedVersion);
             return false;
         }

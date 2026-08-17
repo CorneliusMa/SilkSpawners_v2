@@ -7,6 +7,7 @@ import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,8 @@ public class SpawnerFactory {
     private static final String ENTITY_TAG = "silkspawners:entity";
 
     private static final String SETTINGS_TAG = "silkspawners:settings";
+
+    private final PluginConfig config;
 
     private final VersionAdapter versionAdapter;
 
@@ -81,8 +84,8 @@ public class SpawnerFactory {
     public Optional<Spawner> ofType(EntityType entityType, SpawnerSettings settings) {
         settings = SpawnerSettingsFormat.nonDefault(settings);
         ItemBuilder itemBuilder = new ItemBuilder(versionAdapter.getSpawnerMaterial())
-                .setDisplayName(Spawner.itemName(entityType))
-                .addToLore(Spawner.itemLore(entityType))
+                .setDisplayName(itemName(entityType))
+                .addToLore(itemLore(entityType))
                 .addItemFlags(versionAdapter.getHideAdditionalTooltipFlag())
                 .writeTag(versionAdapter, ENTITY_TAG, Spawner.serializedEntityType(entityType));
         if (settings != null)
@@ -138,7 +141,7 @@ public class SpawnerFactory {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null || itemMeta.getLore() == null || itemMeta.getLore().isEmpty()) return null;
         String lore = itemMeta.getLore().get(0);
-        for (String oldPrefix : PluginConfig.SPAWNER_ITEM_PREFIX_OLD.get()) {
+        for (String oldPrefix : config.SPAWNER_ITEM_PREFIX_OLD.get()) {
             if (!oldPrefix.isEmpty() && lore.startsWith(oldPrefix))
                 return entityTypeFromName(lore.substring(oldPrefix.length()));
         }
@@ -149,5 +152,16 @@ public class SpawnerFactory {
         String name = displayName.replace(" ", "_").toLowerCase();
         if (name.equalsIgnoreCase(Spawner.EMPTY)) return null;
         return EntityNames.resolve(name);
+    }
+
+    private String itemName(EntityType entityType) {
+        return config.SPAWNER_ITEM_NAME.get().replace("{entity}", Spawner.displayName(entityType));
+    }
+
+    private List<String> itemLore(EntityType entityType) {
+        String entityName = entityType == null ? "Nothing" : Spawner.displayName(entityType);
+        return config.SPAWNER_ITEM_LORE.get().stream()
+                .map(line -> line.replace("{entity}", entityName))
+                .toList();
     }
 }

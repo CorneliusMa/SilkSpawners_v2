@@ -10,23 +10,22 @@ import de.corneliusmay.silkspawners.spi.message.ClickAction;
 import java.io.IOException;
 import java.util.List;
 import org.bukkit.command.CommandSender;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Wired;
 
 @Wired
-@Requires(PluginConfig.class)
 class SetupCommand extends SilkSpawnersCommand {
 
-    private static final List<ConfigKey<Boolean>> PERMISSION_KEYS = List.of(
-            PluginConfig.SPAWNER_PERMISSION_DISABLE_DESTROY,
-            PluginConfig.SPAWNER_PERMISSION_DISABLE_PLACE,
-            PluginConfig.SPAWNER_PERMISSION_DISABLE_CHANGE);
+    private final List<ConfigKey<Boolean>> permissionKeys;
 
     private final ConfigEditor editor;
 
-    SetupCommand(ConfigEditor editor) {
+    SetupCommand(ConfigEditor editor, PluginConfig config) {
         super("setup", true, new StaticTabCompletion("revert"));
         this.editor = editor;
+        this.permissionKeys = List.of(
+                config.SPAWNER_PERMISSION_DISABLE_DESTROY,
+                config.SPAWNER_PERMISSION_DISABLE_PLACE,
+                config.SPAWNER_PERMISSION_DISABLE_CHANGE);
     }
 
     @Override
@@ -40,7 +39,7 @@ class SetupCommand extends SilkSpawnersCommand {
         boolean confirm = args[0].equalsIgnoreCase("confirm");
         if (!confirm && !args[0].equalsIgnoreCase("revert")) return invalidSyntax(sender);
 
-        for (ConfigKey<Boolean> key : PERMISSION_KEYS) {
+        for (ConfigKey<Boolean> key : permissionKeys) {
             try {
                 editor.set(key, Boolean.toString(confirm));
             } catch (IOException | ConfigValueException ex) {

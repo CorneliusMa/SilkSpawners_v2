@@ -9,24 +9,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import org.weftkit.wiring.Requires;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-@Requires(PluginConfig.class)
 public class ExplosionTierEditor {
 
     private final ConfigEditor editor;
 
     private final Map<String, ConfigKey<List<ExplosionTier>>> scopes = new LinkedHashMap<>();
 
-    public ExplosionTierEditor(ConfigEditor editor) {
+    public ExplosionTierEditor(ConfigEditor editor, PluginConfig config) {
         this.editor = editor;
-        scopes.put("all", PluginConfig.SPAWNER_EXPLOSION_ALL);
-        scopes.put("normal", PluginConfig.SPAWNER_EXPLOSION_NORMAL);
-        scopes.put("silktouch", PluginConfig.SPAWNER_EXPLOSION_SILKTOUCH);
+        scopes.put("all", config.SPAWNER_EXPLOSION_ALL);
+        scopes.put("normal", config.SPAWNER_EXPLOSION_NORMAL);
+        scopes.put("silktouch", config.SPAWNER_EXPLOSION_SILKTOUCH);
     }
 
     public List<String> scopeNames() {

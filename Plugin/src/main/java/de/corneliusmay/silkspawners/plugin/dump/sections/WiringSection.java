@@ -9,7 +9,7 @@ import org.weftkit.wiring.runtime.WeftLoader;
 
 @Wired
 @RequiredArgsConstructor
-public class WiringSection implements Dumpable {
+class WiringSection implements Dumpable {
 
     private final WeftLoader loader;
 

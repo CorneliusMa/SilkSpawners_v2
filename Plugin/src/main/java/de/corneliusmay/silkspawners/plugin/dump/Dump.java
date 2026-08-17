@@ -1,18 +1,6 @@
 package de.corneliusmay.silkspawners.plugin.dump;
 
-import de.corneliusmay.silkspawners.plugin.config.ConfigLoader;
-import de.corneliusmay.silkspawners.plugin.dump.sections.EnvironmentSection;
-import de.corneliusmay.silkspawners.plugin.dump.sections.MetaSection;
-import de.corneliusmay.silkspawners.plugin.dump.sections.PluginListSection;
-import de.corneliusmay.silkspawners.plugin.dump.sections.ServerSection;
-import de.corneliusmay.silkspawners.plugin.dump.sections.WiringSection;
-import de.corneliusmay.silkspawners.plugin.hooks.HookLoader;
-import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
-import de.corneliusmay.silkspawners.plugin.message.InteractiveMessageLoader;
-import de.corneliusmay.silkspawners.plugin.platform.PlatformLoader;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
-import de.corneliusmay.silkspawners.plugin.version.CrossVersionHandler;
-import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,54 +8,47 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Consumer;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.plugin.Plugin;
 import org.weftkit.wiring.Wired;
+import org.weftkit.wiring.runtime.WeftLoader;
 
 @Wired
+@RequiredArgsConstructor
 public class Dump {
 
     private static final DateTimeFormatter FALLBACK_TIMESTAMP = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
 
-    private final Logger logger;
+    // Sections not listed here render after the listed ones
+    private static final List<String> SECTION_ORDER = List.of(
+            "meta",
+            "plugin",
+            "server",
+            "version-adapter",
+            "platform",
+            "environment",
+            "java",
+            "os",
+            "locale",
+            "interactive-messages",
+            "hooks",
+            "config",
+            "wiring",
+            "plugins");
 
     private final Plugin plugin;
 
     private final Pastes pastes;
 
-    private final List<Dumpable> sections;
+    private final WeftLoader loader;
 
-    public Dump(
-            Plugin plugin,
-            Pastes pastes,
-            VersionChecker versionChecker,
-            CrossVersionHandler crossVersionHandler,
-            PlatformLoader platformLoader,
-            LocaleHandler localeHandler,
-            InteractiveMessageLoader interactiveMessageLoader,
-            ConfigLoader configLoader,
-            HookLoader hookLoader,
-            WiringSection wiringSection,
-            Logger logger) {
-        this.logger = logger;
-        this.plugin = plugin;
-        this.pastes = pastes;
-        this.sections = List.of(
-                new MetaSection(),
-                versionChecker,
-                new ServerSection(),
-                crossVersionHandler,
-                platformLoader,
-                new EnvironmentSection(),
-                localeHandler,
-                interactiveMessageLoader,
-                hookLoader,
-                configLoader,
-                wiringSection,
-                new PluginListSection());
-    }
+    private final Logger logger;
 
     public void create(Consumer<String> uploaded, Consumer<Path> saved) {
-        String document = new DumpReport().collect(sections).render();
+        String document = new DumpReport()
+                .collect(loader.createAll(Dumpable.class))
+                .order(SECTION_ORDER)
+                .render();
         pastes.upload(document).whenComplete((url, ex) -> {
             if (ex == null) uploaded.accept(url);
             else {

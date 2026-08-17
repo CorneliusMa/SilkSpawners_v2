@@ -4,6 +4,7 @@ import de.corneliusmay.silkspawners.api.events.SpawnerGiveEvent;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNameRenderer;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
@@ -22,10 +23,13 @@ class GiveCommand extends SilkSpawnersCommand {
 
     private final ServerPlatform platform;
 
-    GiveCommand(SpawnerFactory spawnerFactory, ServerPlatform platform) {
+    private final EntityNameRenderer entityNames;
+
+    GiveCommand(SpawnerFactory spawnerFactory, ServerPlatform platform, EntityNameRenderer entityNames) {
         super("give", true, new OnlinePlayersTabCompleter(), new EntityTabCompleter());
         this.spawnerFactory = spawnerFactory;
         this.platform = platform;
+        this.entityNames = entityNames;
     }
 
     @Override
@@ -59,7 +63,7 @@ class GiveCommand extends SilkSpawnersCommand {
 
         if (!sender.hasPermission(getPermissionString() + "." + spawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {
-            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", spawner.coloredName());
+            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", entityNames.colored(spawner.getEntityType()));
             return false;
         }
 
@@ -103,10 +107,22 @@ class GiveCommand extends SilkSpawnersCommand {
         String trailingLetter = amount > 1 ? "s" : "";
         p.getInventory().addItem(item);
         if (p != sender) {
-            sendMessage(sender, "SUCCESS", amount, spawner.coloredName(), trailingLetter, p.getName());
-            sendMessage(p, "SUCCESS_TARGET", amount, spawner.coloredName(), trailingLetter, sender.getName());
+            sendMessage(
+                    sender,
+                    "SUCCESS",
+                    amount,
+                    entityNames.colored(spawner.getEntityType()),
+                    trailingLetter,
+                    p.getName());
+            sendMessage(
+                    p,
+                    "SUCCESS_TARGET",
+                    amount,
+                    entityNames.colored(spawner.getEntityType()),
+                    trailingLetter,
+                    sender.getName());
         } else {
-            sendMessage(sender, "SUCCESS_SELF", amount, spawner.coloredName(), trailingLetter);
+            sendMessage(sender, "SUCCESS_SELF", amount, entityNames.colored(spawner.getEntityType()), trailingLetter);
         }
     }
 }

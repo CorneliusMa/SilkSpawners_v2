@@ -9,6 +9,7 @@ import java.util.TreeMap;
 
 final class ConfigKeyBuilder {
 
+    final ConfigRegistry registry;
     final ConfigScope scope;
     final String key;
     ConfigValueFormatter<?> formatter;
@@ -19,7 +20,8 @@ final class ConfigKeyBuilder {
     ConfigApply apply = ConfigApply.IMMEDIATELY;
     final NavigableMap<Integer, List<ConfigValueMigrator>> migrators = new TreeMap<>();
 
-    ConfigKeyBuilder(ConfigScope scope, String key) {
+    ConfigKeyBuilder(ConfigRegistry registry, ConfigScope scope, String key) {
+        this.registry = registry;
         this.scope = scope;
         this.key = key;
     }
