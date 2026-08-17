@@ -30,7 +30,6 @@ public class Dump {
             "java",
             "os",
             "locale",
-            "interactive-messages",
             "hooks",
             "config",
             "wiring",
