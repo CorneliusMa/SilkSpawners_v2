@@ -8,10 +8,12 @@ import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import org.weftkit.wiring.Registry;
 import org.weftkit.wiring.bukkit.WeftPlugin;
+import org.weftkit.wiring.bukkit.metrics.WeftMetrics;
 import org.weftkit.wiring.runtime.ComponentRegistry;
 import org.weftkit.wiring.runtime.WeftLoader;
 
 @Registry
+@WeftMetrics(reportName = true)
 public class SilkSpawners extends WeftPlugin {
 
     @Override
