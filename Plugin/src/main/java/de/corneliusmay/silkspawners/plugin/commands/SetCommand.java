@@ -3,6 +3,7 @@ package de.corneliusmay.silkspawners.plugin.commands;
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNameRenderer;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
@@ -21,10 +22,13 @@ class SetCommand extends SilkSpawnersCommand {
 
     private final VersionAdapter versionAdapter;
 
-    SetCommand(SpawnerFactory spawnerFactory, VersionAdapter versionAdapter) {
+    private final EntityNameRenderer entityNames;
+
+    SetCommand(SpawnerFactory spawnerFactory, VersionAdapter versionAdapter, EntityNameRenderer entityNames) {
         super("set", true, new EntityTabCompleter());
         this.spawnerFactory = spawnerFactory;
         this.versionAdapter = versionAdapter;
+        this.entityNames = entityNames;
     }
 
     @Override
@@ -56,7 +60,7 @@ class SetCommand extends SilkSpawnersCommand {
 
         if (!player.hasPermission(getPermissionString() + "." + newSpawner.serializedEntityType())
                 && !sender.hasPermission(getPermissionString() + ".*")) {
-            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", newSpawner.coloredName());
+            sendMessage(sender, "INSUFFICIENT_ENTITY_PERMISSION", entityNames.colored(newSpawner.getEntityType()));
             return false;
         }
 
@@ -70,7 +74,7 @@ class SetCommand extends SilkSpawnersCommand {
         Spawner spawner = targetSpawner.get();
 
         if (spawner.getEntityType() == newSpawner.getEntityType()) {
-            sendMessage(sender, "UNCHANGED", newSpawner.coloredName());
+            sendMessage(sender, "UNCHANGED", entityNames.colored(newSpawner.getEntityType()));
             return true;
         }
 
@@ -81,7 +85,7 @@ class SetCommand extends SilkSpawnersCommand {
 
         Spawner result = spawnerFactory.of(event.getNewSpawner());
         spawnerFactory.applyToBlock(result, block);
-        sendMessage(sender, "SUCCESS", result.coloredName());
+        sendMessage(sender, "SUCCESS", entityNames.colored(result.getEntityType()));
         return true;
     }
 }

@@ -2,9 +2,7 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
-import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
-import java.util.List;
 import lombok.Getter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -40,10 +38,6 @@ public class Spawner implements SpawnerSnapshot {
         return displayName(entityType);
     }
 
-    public String coloredName() {
-        return PluginConfig.SPAWNER_ITEM_COLOR.get() + displayName(entityType);
-    }
-
     public boolean isEmpty() {
         return entityType == null;
     }
@@ -56,17 +50,6 @@ public class Spawner implements SpawnerSnapshot {
         if (entityType == null) return EMPTY;
         String name = entityType.getName();
         return (name == null ? entityType.name() : name).toLowerCase();
-    }
-
-    static String itemName(EntityType entityType) {
-        return PluginConfig.SPAWNER_ITEM_NAME.get().replace("{entity}", displayName(entityType));
-    }
-
-    static List<String> itemLore(EntityType entityType) {
-        String entityName = entityType == null ? "Nothing" : displayName(entityType);
-        return PluginConfig.SPAWNER_ITEM_LORE.get().stream()
-                .map(line -> line.replace("{entity}", entityName))
-                .toList();
     }
 
     public static String displayName(EntityType entityType) {
