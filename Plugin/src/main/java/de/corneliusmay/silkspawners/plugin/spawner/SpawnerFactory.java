@@ -3,6 +3,8 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
+import de.corneliusmay.silkspawners.plugin.entity.StoredEntityNames;
 import de.corneliusmay.silkspawners.plugin.utils.ItemBuilder;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
@@ -52,8 +54,8 @@ public class SpawnerFactory {
         Map<String, String> tags = versionAdapter.readTags(item, ENTITY_TAG, SETTINGS_TAG);
         String entityName = tags.get(ENTITY_TAG);
         if (entityName != null) {
-            EntityType entityType = EntityNames.resolve(entityName);
-            if (entityType == null && !entityName.equals(Spawner.EMPTY)) {
+            EntityType entityType = StoredEntityNames.resolve(entityName);
+            if (entityType == null && !entityName.equals(EntityNames.EMPTY)) {
                 logger.warn("Ignoring spawner item with unrecognized entity '" + entityName
                         + "' (not supported on this server version)");
                 return Optional.empty();
@@ -87,7 +89,7 @@ public class SpawnerFactory {
                 .setDisplayName(itemName(entityType))
                 .addToLore(itemLore(entityType))
                 .addItemFlags(versionAdapter.getHideAdditionalTooltipFlag())
-                .writeTag(versionAdapter, ENTITY_TAG, Spawner.serializedEntityType(entityType));
+                .writeTag(versionAdapter, ENTITY_TAG, EntityNames.serialized(entityType));
         if (settings != null)
             itemBuilder.writeTag(versionAdapter, SETTINGS_TAG, SpawnerSettingsFormat.serialize(settings));
         return validated(new Spawner(entityType, itemBuilder.build(), settings));
@@ -150,16 +152,16 @@ public class SpawnerFactory {
 
     private EntityType entityTypeFromName(String displayName) {
         String name = displayName.replace(" ", "_").toLowerCase();
-        if (name.equalsIgnoreCase(Spawner.EMPTY)) return null;
-        return EntityNames.resolve(name);
+        if (name.equalsIgnoreCase(EntityNames.EMPTY)) return null;
+        return StoredEntityNames.resolve(name);
     }
 
     private String itemName(EntityType entityType) {
-        return config.SPAWNER_ITEM_NAME.get().replace("{entity}", Spawner.displayName(entityType));
+        return config.SPAWNER_ITEM_NAME.get().replace("{entity}", EntityNames.displayName(entityType));
     }
 
     private List<String> itemLore(EntityType entityType) {
-        String entityName = entityType == null ? "Nothing" : Spawner.displayName(entityType);
+        String entityName = entityType == null ? "Nothing" : EntityNames.displayName(entityType);
         return config.SPAWNER_ITEM_LORE.get().stream()
                 .map(line -> line.replace("{entity}", entityName))
                 .toList();

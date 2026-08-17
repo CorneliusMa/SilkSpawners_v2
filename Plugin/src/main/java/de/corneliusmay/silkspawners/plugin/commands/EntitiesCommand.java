@@ -1,7 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.commands;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
-import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
+import de.corneliusmay.silkspawners.plugin.entity.SpawnableEntities;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;

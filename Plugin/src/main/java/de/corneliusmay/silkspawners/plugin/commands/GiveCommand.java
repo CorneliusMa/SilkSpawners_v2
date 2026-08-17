@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNameRenderer;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
@@ -43,7 +44,7 @@ class GiveCommand extends SilkSpawnersCommand {
         }
 
         EntityType entityType;
-        if (args[1].equalsIgnoreCase(Spawner.EMPTY)) {
+        if (args[1].equalsIgnoreCase(EntityNames.EMPTY)) {
             entityType = null;
         } else {
             entityType = EntityType.fromName(args[1]);

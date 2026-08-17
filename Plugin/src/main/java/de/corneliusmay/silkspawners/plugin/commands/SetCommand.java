@@ -4,6 +4,7 @@ import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNameRenderer;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
@@ -40,7 +41,7 @@ class SetCommand extends SilkSpawnersCommand {
         }
 
         EntityType entityType;
-        if (args[0].equalsIgnoreCase(Spawner.EMPTY)) {
+        if (args[0].equalsIgnoreCase(EntityNames.EMPTY)) {
             entityType = null;
         } else {
             entityType = EntityType.fromName(args[0]);

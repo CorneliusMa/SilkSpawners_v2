@@ -2,14 +2,12 @@ package de.corneliusmay.silkspawners.plugin.spawner;
 
 import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
-import de.corneliusmay.silkspawners.plugin.utils.StringUtils;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
 import lombok.Getter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
 public class Spawner implements SpawnerSnapshot {
-
-    public static final String EMPTY = "empty";
 
     @Getter
     private final EntityType entityType;
@@ -30,12 +28,12 @@ public class Spawner implements SpawnerSnapshot {
     }
 
     public String serializedEntityType() {
-        return serializedEntityType(entityType);
+        return EntityNames.serialized(entityType);
     }
 
     @Override
     public String getDisplayName() {
-        return displayName(entityType);
+        return EntityNames.displayName(entityType);
     }
 
     public boolean isEmpty() {
@@ -44,15 +42,5 @@ public class Spawner implements SpawnerSnapshot {
 
     boolean isValid() {
         return itemStack != null && (isEmpty() || entityType.isSpawnable());
-    }
-
-    public static String serializedEntityType(EntityType entityType) {
-        if (entityType == null) return EMPTY;
-        String name = entityType.getName();
-        return (name == null ? entityType.name() : name).toLowerCase();
-    }
-
-    public static String displayName(EntityType entityType) {
-        return StringUtils.capitalizeFully(serializedEntityType(entityType).replace("_", " "));
     }
 }

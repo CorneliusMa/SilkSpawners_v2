@@ -1,10 +1,11 @@
-package de.corneliusmay.silkspawners.plugin.spawner;
+package de.corneliusmay.silkspawners.plugin.entity;
 
 import java.util.Locale;
 import java.util.Map;
 import org.bukkit.entity.EntityType;
 
-final class EntityNames {
+// Only for names persisted by earlier versions. Interactive input must not accept these aliases.
+public final class StoredEntityNames {
 
     // Each legacy name maps to its immediate successor, so resolution stops at the first name the server knows
     private static final Map<String, String> RENAMES = Map.ofEntries(
@@ -25,9 +26,9 @@ final class EntityNames {
             Map.entry("villager_golem", "iron_golem"),
             Map.entry("zombie_pigman", "zombified_piglin"));
 
-    private EntityNames() {}
+    private StoredEntityNames() {}
 
-    static EntityType resolve(String serializedName) {
+    public static EntityType resolve(String serializedName) {
         for (String name = serializedName; name != null; name = RENAMES.get(name)) {
             EntityType entityType = EntityType.fromName(name);
             if (entityType != null) return entityType;
