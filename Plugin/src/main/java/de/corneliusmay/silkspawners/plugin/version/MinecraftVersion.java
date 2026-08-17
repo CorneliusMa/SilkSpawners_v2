@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-class MinecraftVersion {
+public class MinecraftVersion {
 
     private static final Pattern VERSION_PATTERN = Pattern.compile("^\\d+(\\.\\d+)+");
 

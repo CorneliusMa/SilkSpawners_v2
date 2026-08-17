@@ -26,6 +26,23 @@ open class VersionModuleExtension(private val project: Project) {
         project.dependencies.add("implementation", project.project(spawnEgg))
         if (atLeast(1, 9)) project.dependencies.add("implementation", project.project(":versions:shared:DualWield"))
     }
+
+    fun paperApi(version: String) {
+        // Paper artifacts require Java 21, matching the servers the module can load on. The
+        // published target is kept at 17 so the Java 17 plugin can bundle the module - its
+        // classes are only ever loaded behind the version gate, on servers running Java 21
+        project.extensions
+            .getByType(JavaPluginExtension::class.java)
+            .toolchain
+            .languageVersion
+            .set(JavaLanguageVersion.of(21))
+        listOf("apiElements", "runtimeElements").forEach { name ->
+            project.configurations.named(name) {
+                attributes.attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+            }
+        }
+        project.dependencies.add("compileOnly", "io.papermc.paper:paper-api:$version-R0.1-SNAPSHOT")
+    }
 }
 
 extensions.create("versionModule", VersionModuleExtension::class.java, project)

@@ -21,10 +21,6 @@ public class Capability<T> {
         this.failed = failed;
     }
 
-    protected Capability(Capability<T> capability) {
-        this(capability.name, capability.implementation, capability.failed);
-    }
-
     public static <T> Capability<T> unavailable(String name) {
         return new Capability<>(name, null);
     }

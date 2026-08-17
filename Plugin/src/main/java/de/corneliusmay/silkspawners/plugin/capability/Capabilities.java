@@ -34,7 +34,15 @@ public class Capabilities implements Dumpable {
     }
 
     public <T> Capability<T> probe(String name, String requiredClass, Supplier<T> loader) {
-        if (!classExists(requiredClass)) return unavailable(name);
+        return probeIf(name, classExists(requiredClass), loader);
+    }
+
+    public <T> Capability<T> probe(String name, String requiredClass, String requiredMethod, Supplier<T> loader) {
+        return probeIf(name, methodExists(requiredClass, requiredMethod), loader);
+    }
+
+    private <T> Capability<T> probeIf(String name, boolean present, Supplier<T> loader) {
+        if (!present) return unavailable(name);
         try {
             return available(name, loader.get());
         } catch (RuntimeException | LinkageError ex) {
@@ -47,6 +55,15 @@ public class Capabilities implements Dumpable {
             Class.forName(className);
             return true;
         } catch (ClassNotFoundException ex) {
+            return false;
+        }
+    }
+
+    public static boolean methodExists(String className, String methodName) {
+        try {
+            Class.forName(className).getMethod(methodName);
+            return true;
+        } catch (ReflectiveOperationException ex) {
             return false;
         }
     }
