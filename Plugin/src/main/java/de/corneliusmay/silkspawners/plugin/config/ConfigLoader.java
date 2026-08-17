@@ -23,7 +23,7 @@ import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-public class ConfigLoader implements Loader, Dumpable {
+class ConfigLoader implements Loader, Dumpable {
 
     private final Plugin plugin;
 
@@ -31,14 +31,14 @@ public class ConfigLoader implements Loader, Dumpable {
 
     private final PluginConfig pluginConfig;
 
-    public ConfigLoader(Plugin plugin, ConfigRegistry registry) {
+    ConfigLoader(Plugin plugin, ConfigRegistry registry) {
         this.plugin = plugin;
         this.registry = registry;
         this.pluginConfig = new PluginConfig(registry);
     }
 
     @Provides
-    public PluginConfig config() {
+    PluginConfig config() {
         return pluginConfig;
     }
 

@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +23,8 @@ import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
-public class HookLoader implements Dumpable {
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
+class HookLoader implements Dumpable {
 
     private record HookDefinition(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {}
 
@@ -29,7 +32,7 @@ public class HookLoader implements Dumpable {
 
     private final JavaPlugin plugin;
 
-    private final PluginManager pluginManager;
+    private final PluginManager pluginManager = Bukkit.getPluginManager();
 
     private final SpawnerProvider spawnerProvider;
 
@@ -40,18 +43,11 @@ public class HookLoader implements Dumpable {
     private final ComponentLoader<Hook> loader =
             new ComponentLoader<>(Hook.class, "hooks", JavaPlugin.class, SpawnerProvider.class);
 
-    public HookLoader(JavaPlugin plugin, SpawnerProvider spawnerProvider, Logger logger) {
-        this.logger = logger;
-        this.plugin = plugin;
-        this.pluginManager = Bukkit.getPluginManager();
-        this.spawnerProvider = spawnerProvider;
-    }
-
-    public void addHook(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {
+    void addHook(String hookName, String pluginName, ConfigKey<Boolean> enabledConfig) {
         hooks.add(new HookDefinition(hookName, pluginName, enabledConfig));
     }
 
-    public void register() {
+    void register() {
         hooks.forEach(this::register);
     }
 

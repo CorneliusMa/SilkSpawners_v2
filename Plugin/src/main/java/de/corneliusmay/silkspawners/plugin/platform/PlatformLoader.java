@@ -15,7 +15,7 @@ import org.weftkit.wiring.Wired;
 @Wired
 @Singleton
 @RequiredArgsConstructor
-public class PlatformLoader implements Loader, Dumpable {
+class PlatformLoader implements Loader, Dumpable {
 
     private final JavaPlugin plugin;
 

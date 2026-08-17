@@ -18,6 +18,10 @@ class DumpTree {
         cursor = scope;
     }
 
+    void order(java.util.List<String> names) {
+        root.order(names);
+    }
+
     String render() {
         return DumpJson.render(root.node());
     }

@@ -20,6 +20,11 @@ class DumpReport {
         return this;
     }
 
+    DumpReport order(List<String> names) {
+        tree.order(names);
+        return this;
+    }
+
     String render() {
         return tree.render();
     }

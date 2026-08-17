@@ -16,7 +16,7 @@ import org.weftkit.wiring.Wired;
 @Wired
 @RequiredArgsConstructor
 @Singleton
-public class CrossVersionHandler implements Loader, Dumpable {
+class CrossVersionHandler implements Loader, Dumpable {
 
     private final Logger logger;
 

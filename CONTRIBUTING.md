@@ -145,7 +145,7 @@ writer.section("my-subsystem").value("implementation", implementation.getClass()
 
 A section that throws is replaced by an error entry instead of failing the dump, so a broken subsystem is still reported.
 
-Components that already exist implement `Dumpable` themselves (`ConfigLoader`, `HookLoader`, …); state that belongs to no component gets a stateless class in [`dump/sections`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/sections). Either way, add it to the list in [`Dump`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/Dump.java) - the order there is the order in the report. Never put player data, IP addresses or anything else identifying into a dump: reports are public once created and get pasted into issues.
+Components that already exist implement `Dumpable` themselves (`ConfigLoader`, `HookLoader`, …); state that belongs to no component gets a stateless `@Wired` class in [`dump/sections`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/sections). Sections are discovered automatically, so there is nothing to register. The report order comes from the section name list in [`Dump`](Plugin/src/main/java/de/corneliusmay/silkspawners/plugin/dump/Dump.java), and sections missing from that list render last. Never put player data, IP addresses or anything else identifying into a dump: reports are public once created and get pasted into issues.
 
 ## Adding a plugin hook
 
