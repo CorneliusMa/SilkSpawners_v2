@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.plugin.spawner;
+package de.corneliusmay.silkspawners.plugin.entity;
 
 import java.util.Arrays;
 import java.util.Collections;

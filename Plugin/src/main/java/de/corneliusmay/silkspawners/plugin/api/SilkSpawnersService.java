@@ -3,8 +3,9 @@ package de.corneliusmay.silkspawners.plugin.api;
 import de.corneliusmay.silkspawners.api.SilkSpawnersAPI;
 import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
+import de.corneliusmay.silkspawners.plugin.entity.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
-import de.corneliusmay.silkspawners.plugin.spawner.SpawnableEntities;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
@@ -69,7 +70,7 @@ class SilkSpawnersService implements SilkSpawnersAPI, Loader {
 
     @Override
     public String getDisplayName(EntityType entityType) {
-        return Spawner.displayName(entityType);
+        return EntityNames.displayName(entityType);
     }
 
     @Override

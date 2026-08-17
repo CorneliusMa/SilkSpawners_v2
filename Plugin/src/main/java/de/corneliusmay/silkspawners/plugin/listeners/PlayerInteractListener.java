@@ -2,6 +2,7 @@ package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
+import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.EditedSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
@@ -149,7 +150,7 @@ class PlayerInteractListener implements Listener {
     }
 
     private boolean canChangeSpawner(Player player, EntityType entityType) {
-        return player.hasPermission("silkspawners.change." + Spawner.serializedEntityType(entityType))
+        return player.hasPermission("silkspawners.change." + EntityNames.serialized(entityType))
                 || player.hasPermission("silkspawners.change.*")
                 || config.SPAWNER_PERMISSION_DISABLE_CHANGE.get();
     }
