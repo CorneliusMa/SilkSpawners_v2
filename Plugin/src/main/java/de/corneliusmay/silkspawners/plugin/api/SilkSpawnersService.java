@@ -5,9 +5,9 @@ import de.corneliusmay.silkspawners.api.SpawnerSettings;
 import de.corneliusmay.silkspawners.api.SpawnerSnapshot;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
 import de.corneliusmay.silkspawners.plugin.entity.SpawnableEntities;
-import de.corneliusmay.silkspawners.plugin.spawner.SilkDropCheck;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.plugin.spawner.policy.SilkDropCheck;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.weftkit.wiring.Loader;
+import org.weftkit.wiring.Qualified;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
@@ -35,6 +36,7 @@ class SilkSpawnersService implements SilkSpawnersAPI, Loader {
 
     private final VersionAdapter versionAdapter;
 
+    @Qualified("spawner")
     private final SilkDropCheck silkDropCheck;
 
     @Override
@@ -119,7 +121,7 @@ class SilkSpawnersService implements SilkSpawnersAPI, Loader {
     public boolean canSilkDrop(Player player, EntityType entityType) {
         return spawnerFactory
                 .ofType(entityType)
-                .map(spawner -> silkDropCheck.canSilkDrop(player, spawner))
+                .map(spawner -> silkDropCheck.canSilkDrop(player, spawner.serializedEntityType()))
                 .orElse(false);
     }
 }

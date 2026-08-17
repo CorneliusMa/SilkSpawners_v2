@@ -1,12 +1,11 @@
 package de.corneliusmay.silkspawners.plugin.listeners;
 
 import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
-import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
-import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
 import de.corneliusmay.silkspawners.plugin.spawner.EditedSpawners;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
 import de.corneliusmay.silkspawners.plugin.spawner.SpawnerFactory;
+import de.corneliusmay.silkspawners.plugin.spawner.policy.SpawnerTypeProfile;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
 import java.util.Optional;
@@ -25,19 +24,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.weftkit.wiring.Qualified;
 import org.weftkit.wiring.Singleton;
 import org.weftkit.wiring.Wired;
 
 @Wired
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
-class PlayerInteractListener implements Listener {
+class SpawnerInteractListener implements Listener {
 
-    private final PluginConfig config;
+    @Qualified("spawner")
+    private final SpawnerTypeProfile profile;
 
     private final SpawnerFactory spawnerFactory;
 
-    private final LocaleHandler locale;
+    private final DenyMessageHandler denyMessageHandler;
 
     private final ServerPlatform platform;
 
@@ -87,8 +88,7 @@ class PlayerInteractListener implements Listener {
 
         if (!canChangeSpawner(player, newSpawner.getEntityType())) {
             revertChange(player, spawner, block, usedEgg);
-            if (config.SPAWNER_MESSAGE_DENY_CHANGE.get())
-                player.sendMessage(locale.getMessage("SPAWNER_CHANGE_DENIED"));
+            denyMessageHandler.change(profile, player);
             return;
         }
 
@@ -144,14 +144,11 @@ class PlayerInteractListener implements Listener {
         if (canChangeSpawner(e.getPlayer(), target)) return false;
 
         e.setCancelled(true);
-        if (config.SPAWNER_MESSAGE_DENY_CHANGE.get())
-            e.getPlayer().sendMessage(locale.getMessage("SPAWNER_CHANGE_DENIED"));
+        denyMessageHandler.change(profile, e.getPlayer());
         return true;
     }
 
     private boolean canChangeSpawner(Player player, EntityType entityType) {
-        return player.hasPermission("silkspawners.change." + EntityNames.serialized(entityType))
-                || player.hasPermission("silkspawners.change.*")
-                || config.SPAWNER_PERMISSION_DISABLE_CHANGE.get();
+        return profile.canChange(player, EntityNames.serialized(entityType));
     }
 }
