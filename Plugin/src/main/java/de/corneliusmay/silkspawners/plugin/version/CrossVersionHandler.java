@@ -20,6 +20,8 @@ class CrossVersionHandler implements Loader, Dumpable {
 
     private final Logger logger;
 
+    private final MinecraftVersion version;
+
     private final ComponentLoader<VersionAdapter> loader = new ComponentLoader<>(VersionAdapter.class, "bukkit");
 
     private VersionAdapter versionAdapter;
@@ -49,13 +51,6 @@ class CrossVersionHandler implements Loader, Dumpable {
     @Override
     public boolean load() {
         logger.info("Loading Cross-Version support");
-        MinecraftVersion version;
-        try {
-            version = MinecraftVersion.parse(org.bukkit.Bukkit.getBukkitVersion());
-        } catch (IllegalArgumentException ex) {
-            return fail("Could not detect the server version (" + org.bukkit.Bukkit.getBukkitVersion() + ")");
-        }
-
         String bukkitVersion = getBukkitVersion(version);
         if (bukkitVersion == null) {
             return fail("The detected Server Version (" + version.getVersion()
