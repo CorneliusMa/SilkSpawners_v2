@@ -16,6 +16,12 @@ permissions:
     description: Permission to set, if spawners can be place. You also can set only specific entities.
   silkspawners.change.*:
     description: Permission to set, if spawners can be changed with eggs. You also can set only specific entities.
+  silkspawners.trial.break.*:
+    description: Permission to set, if trial spawners can be mined. You also can set only specific entities.
+  silkspawners.trial.place.*:
+    description: Permission to set, if trial spawners can be placed. You also can set only specific entities.
+  silkspawners.trial.change.*:
+    description: Permission to set, if trial spawners can be changed with eggs. You also can set only specific entities.
   silkspawners.explosion:
     description: Permission to set, if spawners explode.
   silkspawners.command.explosion:
