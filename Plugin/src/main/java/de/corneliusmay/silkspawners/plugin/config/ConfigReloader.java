@@ -1,8 +1,8 @@
 package de.corneliusmay.silkspawners.plugin.config;
 
 import de.corneliusmay.silkspawners.plugin.locale.LocaleHandler;
+import de.corneliusmay.silkspawners.plugin.update.UpdateChecker;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
-import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import java.io.IOException;
 import java.util.MissingResourceException;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class ConfigReloader {
 
     private final LocaleHandler localeHandler;
 
-    private final VersionChecker versionChecker;
+    private final UpdateChecker updateChecker;
 
     private final Logger logger;
 
@@ -30,7 +30,7 @@ public class ConfigReloader {
             logger.error("Error loading locale file", ex);
             return false;
         }
-        versionChecker.restart();
+        updateChecker.restart();
         return true;
     }
 }

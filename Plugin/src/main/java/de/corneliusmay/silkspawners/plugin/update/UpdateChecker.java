@@ -1,4 +1,4 @@
-package de.corneliusmay.silkspawners.plugin.version;
+package de.corneliusmay.silkspawners.plugin.update;
 
 import com.google.common.base.Preconditions;
 import de.corneliusmay.silkspawners.plugin.config.PluginConfig;
@@ -25,7 +25,7 @@ import org.weftkit.wiring.Wired;
 @Wired
 @Singleton
 @RequiredArgsConstructor
-public class VersionChecker implements Loader, Dumpable {
+public class UpdateChecker implements Loader, Dumpable {
 
     private final PluginConfig config;
 
@@ -84,7 +84,7 @@ public class VersionChecker implements Loader, Dumpable {
 
     public synchronized void stop() {
         if (schedule == null) return;
-        logger.info("Stopping version checker");
+        logger.info("Stopping update checker");
         schedule.stop();
         schedule = null;
     }
@@ -107,7 +107,7 @@ public class VersionChecker implements Loader, Dumpable {
 
     private void start(Duration interval) {
         Preconditions.checkState(schedule == null);
-        schedule = new Schedule("SilkSpawners-VersionChecker", interval, this::check);
+        schedule = new Schedule("SilkSpawners-UpdateChecker", interval, this::check);
     }
 
     private void check() throws InterruptedException {

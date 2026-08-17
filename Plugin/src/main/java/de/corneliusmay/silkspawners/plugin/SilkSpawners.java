@@ -2,8 +2,8 @@ package de.corneliusmay.silkspawners.plugin;
 
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommandHandler;
+import de.corneliusmay.silkspawners.plugin.update.UpdateChecker;
 import de.corneliusmay.silkspawners.plugin.utils.Logger;
-import de.corneliusmay.silkspawners.plugin.version.VersionChecker;
 import org.weftkit.wiring.Registry;
 import org.weftkit.wiring.bukkit.WeftPlugin;
 import org.weftkit.wiring.bukkit.metrics.WeftMetrics;
@@ -33,8 +33,8 @@ public class SilkSpawners extends WeftPlugin {
 
     private void logEnabled(WeftLoader loader) {
         Logger logger = loader.get(Logger.class);
-        VersionChecker versionChecker = loader.get(VersionChecker.class);
-        logger.info("Enabled SilkSpawners v" + versionChecker.getInstalledVersion() + " in "
+        UpdateChecker updateChecker = loader.get(UpdateChecker.class);
+        logger.info("Enabled SilkSpawners v" + updateChecker.getInstalledVersion() + " in "
                 + loader.totalLoadTime().toMillis() + "ms");
     }
 }
