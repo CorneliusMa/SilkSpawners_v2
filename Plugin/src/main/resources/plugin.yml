@@ -50,3 +50,7 @@ permissions:
     children:
       silkspawners.command.set.*:
         description: Use this permission to set the entities that can be used.
+  silkspawners.command.give.trial.*:
+    description: Use this permission to set the entities that can be used for trial spawners. Not granted with silkspawners.command.give.
+  silkspawners.command.set.trial.*:
+    description: Use this permission to set the entities that can be used for trial spawners. Not granted with silkspawners.command.set.

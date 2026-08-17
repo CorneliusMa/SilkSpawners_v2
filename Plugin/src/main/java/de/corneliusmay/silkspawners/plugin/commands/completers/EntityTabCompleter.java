@@ -12,18 +12,26 @@ import org.bukkit.entity.EntityType;
 
 public class EntityTabCompleter implements TabCompletion {
 
+    private final String permissionInfix;
+
+    public EntityTabCompleter() {
+        this("");
+    }
+
+    public EntityTabCompleter(String permissionInfix) {
+        this.permissionInfix = permissionInfix;
+    }
+
     @Override
     public List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args) {
         List<EntityType> entityTypes = new ArrayList<>();
         entityTypes.add(null); // empty
         entityTypes.addAll(SpawnableEntities.TYPES);
+        String permission = command.getPermissionString() + "." + permissionInfix;
         return entityTypes.stream()
                 .map(entityType -> entityType == null ? EntityNames.EMPTY : entityType.getName())
                 .filter(Objects::nonNull)
-                .filter((entity) -> {
-                    if (sender.hasPermission(command.getPermissionString() + "." + entity)) return true;
-                    else return sender.hasPermission(command.getPermissionString() + ".*");
-                })
+                .filter(entity -> sender.hasPermission(permission + entity) || sender.hasPermission(permission + "*"))
                 .toList();
     }
 }
