@@ -129,6 +129,7 @@ trialspawner:
     name: $b{entity} Trial Spawner # The name of the trial spawner item dropped, {entity} is replaced with the mob name
     ominousName: $5Ominous {entity} Trial Spawner # The name used when the trial spawner was ominous
     lore: ['$7Spawns $e{entity}'] # The lore of the trial spawner item, {entity} is replaced with the mob name
+    cooldownLore: $eReward cooldown pending # Lore line added when the trial spawner carries a remaining cooldown (see carryCooldown), empty to disable
   message:
     denyDestroy: true # If set to true, a message will be sent to the player if the trial spawner cannot be destroyed
     denyPlace: true # If set to true, a message will be sent to the player if the trial spawner cannot be placed

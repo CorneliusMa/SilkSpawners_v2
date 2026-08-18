@@ -10,6 +10,7 @@ import de.corneliusmay.silkspawners.plugin.utils.Logger;
 import de.corneliusmay.silkspawners.spi.platform.ServerPlatform;
 import de.corneliusmay.silkspawners.spi.version.TrialSpawnerAdapter;
 import de.corneliusmay.silkspawners.spi.version.VersionAdapter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -157,8 +158,15 @@ public class TrialSpawnerFactory implements Loader {
     private List<String> itemLore(TrialSpawnerState state) {
         EntityType entityType = TrialSpawner.entityType(state);
         String entityName = entityType == null ? "Nothing" : EntityNames.displayName(entityType);
-        return config.TRIAL_SPAWNER_ITEM_LORE.get().stream()
+        List<String> lore = new ArrayList<>(config.TRIAL_SPAWNER_ITEM_LORE.get().stream()
                 .map(line -> line.replace("{entity}", entityName))
-                .toList();
+                .toList());
+        cooldownLore(state).ifPresent(lore::add);
+        return lore;
+    }
+
+    private Optional<String> cooldownLore(TrialSpawnerState state) {
+        if (state.cooldownRemaining() <= 0 || !config.TRIAL_SPAWNER_CARRY_COOLDOWN.get()) return Optional.empty();
+        return Optional.of(config.TRIAL_SPAWNER_ITEM_COOLDOWN_LORE.get()).filter(line -> !line.isBlank());
     }
 }

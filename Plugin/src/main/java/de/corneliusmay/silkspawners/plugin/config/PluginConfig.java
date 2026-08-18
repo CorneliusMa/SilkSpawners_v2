@@ -88,6 +88,8 @@ public final class PluginConfig extends ConfigDeclaration {
     public final ConfigKey<List<String>> TRIAL_SPAWNER_ITEM_LORE = builder(TRIAL_SPAWNER_ITEM, "lore")
             .def(new String[] {"$7Spawns $e{entity}"})
             .listFormatter(new MessageConfigValue());
+    public final ConfigKey<String> TRIAL_SPAWNER_ITEM_COOLDOWN_LORE =
+            message(TRIAL_SPAWNER_ITEM, "cooldownLore", "$eReward cooldown pending");
     public final ConfigKey<Boolean> TRIAL_SPAWNER_MESSAGE_DENY_DESTROY =
             bool(TRIAL_SPAWNER_MESSAGES, "denyDestroy", true);
     public final ConfigKey<Boolean> TRIAL_SPAWNER_MESSAGE_DENY_PLACE = bool(TRIAL_SPAWNER_MESSAGES, "denyPlace", true);
