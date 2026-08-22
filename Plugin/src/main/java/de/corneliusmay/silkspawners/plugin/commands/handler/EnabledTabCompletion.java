@@ -1,21 +1,19 @@
 package de.corneliusmay.silkspawners.plugin.commands.handler;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.CommandSender;
 
 @RequiredArgsConstructor
-public class ShiftableTabCompletion implements TabCompletion {
+public class EnabledTabCompletion implements TabCompletion {
 
-    private final String token;
-
-    private final int tokenPosition;
+    private final BooleanSupplier enabled;
 
     private final TabCompletion delegate;
 
     @Override
     public List<String> update(SilkSpawnersCommand command, CommandSender sender, String[] args) {
-        if (args.length <= tokenPosition || !token.equalsIgnoreCase(args[tokenPosition])) return List.of();
-        return delegate.update(command, sender, args);
+        return enabled.getAsBoolean() ? delegate.update(command, sender, args) : List.of();
     }
 }

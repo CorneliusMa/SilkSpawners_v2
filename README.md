@@ -46,7 +46,7 @@ Want to use SilkSpawners without configuring permissions or anything else? Insta
 
 ## Commands
 - `/silkspawners help [command]`
-- `/silkspawners give <player> [trial] <entity> [amount]`
+- `/silkspawners give <player> <entity> [trial] [amount]`
 - `/silkspawners set <entity>`
 - `/silkspawners explosion <enable/disable/setting> <player>`
 - `/silkspawners locale <setting/reload/restore>`

@@ -5,6 +5,7 @@ import de.corneliusmay.silkspawners.api.events.SpawnerChangeEvent;
 import de.corneliusmay.silkspawners.api.events.TrialSpawnerChangeEvent;
 import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.CompositeTabCompletion;
+import de.corneliusmay.silkspawners.plugin.commands.handler.EnabledTabCompletion;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNameRenderer;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
@@ -47,7 +48,9 @@ class SetCommand extends SilkSpawnersCommand {
                 true,
                 new CompositeTabCompletion(
                         new EntityTabCompleter(),
-                        new EntityTabCompleter(trialSpawnerProfile.commandPermissionInfix())));
+                        new EnabledTabCompletion(
+                                trialSpawnerFactory::isEnabled,
+                                new EntityTabCompleter(trialSpawnerProfile.commandPermissionInfix()))));
         this.spawnerFactory = spawnerFactory;
         this.trialSpawnerFactory = trialSpawnerFactory;
         this.versionAdapter = versionAdapter;

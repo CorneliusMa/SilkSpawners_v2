@@ -2,7 +2,7 @@
 
 <sub>Requires Paper 1.21.4 or newer - disabled by default</sub>
 
-When `trialspawner.enabled` is set, trial spawners can be mined with SilkTouch and keep their full state as an item: `/silkspawners give <player> trial <entity> [amount]` hands them out, `/silkspawners set <entity>` retargets the trial spawner you are looking at, and spawn eggs change the spawned entity. The feature needs the Paper API on Minecraft 1.21.4 or newer - this includes Paper forks such as Purpur and Folia. On other servers it disables itself with a log message.
+When `trialspawner.enabled` is set, trial spawners can be mined with SilkTouch and keep their full state as an item: `/silkspawners give <player> <entity> trial [amount]` hands them out, `/silkspawners set <entity>` retargets the trial spawner you are looking at, and spawn eggs change the spawned entity. The feature needs the Paper API on Minecraft 1.21.4 or newer - this includes Paper forks such as Purpur and Folia. On other servers it disables itself with a log message.
 
 ## Impact on game balance
 

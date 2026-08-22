@@ -6,9 +6,8 @@ import de.corneliusmay.silkspawners.plugin.commands.completers.EntityTabComplete
 import de.corneliusmay.silkspawners.plugin.commands.completers.OnlinePlayersTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.completers.TrialTokenTabCompleter;
 import de.corneliusmay.silkspawners.plugin.commands.handler.CompositeTabCompletion;
-import de.corneliusmay.silkspawners.plugin.commands.handler.ShiftableTabCompletion;
+import de.corneliusmay.silkspawners.plugin.commands.handler.EnabledTabCompletion;
 import de.corneliusmay.silkspawners.plugin.commands.handler.SilkSpawnersCommand;
-import de.corneliusmay.silkspawners.plugin.commands.handler.TabCompletion;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNameRenderer;
 import de.corneliusmay.silkspawners.plugin.entity.EntityNames;
 import de.corneliusmay.silkspawners.plugin.spawner.Spawner;
@@ -32,9 +31,9 @@ class GiveCommand extends SilkSpawnersCommand {
 
     private static final String TRIAL_TOKEN = "trial";
 
-    // Position of the optional token within the argument list the tab completer sees, which
-    // excludes the subcommand
-    private static final int TRIAL_TOKEN_POSITION = 1;
+    // Position of the entity within the argument list the tab completer sees, which excludes the
+    // subcommand
+    private static final int ENTITY_POSITION = 1;
 
     private final SpawnerFactory spawnerFactory;
 
@@ -56,25 +55,17 @@ class GiveCommand extends SilkSpawnersCommand {
                 "give",
                 true,
                 new OnlinePlayersTabCompleter(),
-                entityOrTrialToken(trialSpawnerFactory, trialSpawnerProfile),
-                entitiesAfterTrialToken(trialSpawnerProfile));
+                new CompositeTabCompletion(
+                        new EntityTabCompleter(),
+                        new EnabledTabCompletion(trialSpawnerFactory::isEnabled, trialEntities(trialSpawnerProfile))),
+                new EnabledTabCompletion(
+                        trialSpawnerFactory::isEnabled,
+                        new TrialTokenTabCompleter(TRIAL_TOKEN, ENTITY_POSITION, trialEntities(trialSpawnerProfile))));
         this.spawnerFactory = spawnerFactory;
         this.trialSpawnerFactory = trialSpawnerFactory;
         this.platform = platform;
         this.entityNames = entityNames;
         this.trialSpawnerProfile = trialSpawnerProfile;
-    }
-
-    private static TabCompletion entityOrTrialToken(
-            TrialSpawnerFactory trialSpawnerFactory, SpawnerTypeProfile trialSpawnerProfile) {
-        return new CompositeTabCompletion(
-                new EntityTabCompleter(),
-                new TrialTokenTabCompleter(
-                        TRIAL_TOKEN, trialSpawnerFactory::isEnabled, trialEntities(trialSpawnerProfile)));
-    }
-
-    private static TabCompletion entitiesAfterTrialToken(SpawnerTypeProfile trialSpawnerProfile) {
-        return new ShiftableTabCompletion(TRIAL_TOKEN, TRIAL_TOKEN_POSITION, trialEntities(trialSpawnerProfile));
     }
 
     private static EntityTabCompleter trialEntities(SpawnerTypeProfile trialSpawnerProfile) {
@@ -91,11 +82,11 @@ class GiveCommand extends SilkSpawnersCommand {
     protected boolean execute(CommandSender sender, String[] args) {
         if (args.length < 2) return invalidSyntax(sender);
 
-        boolean trial = TRIAL_TOKEN.equalsIgnoreCase(args[1]);
-        int typeIndex = trial ? 2 : 1;
-        if (args.length <= typeIndex || args.length > typeIndex + 2) return invalidSyntax(sender);
-        String type = args[typeIndex];
-        String requestedAmount = args.length == typeIndex + 2 ? args[typeIndex + 1] : null;
+        boolean trial = args.length > 2 && TRIAL_TOKEN.equalsIgnoreCase(args[2]);
+        int amountIndex = trial ? 3 : 2;
+        if (args.length > amountIndex + 1) return invalidSyntax(sender);
+        String type = args[1];
+        String requestedAmount = args.length == amountIndex + 1 ? args[amountIndex] : null;
 
         Player p = Bukkit.getPlayer(args[0]);
         if (p == null) {
