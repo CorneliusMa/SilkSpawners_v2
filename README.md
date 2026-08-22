@@ -125,6 +125,7 @@ trialspawner:
   pickaxeRequired: true # If set to false, trial spawners will always drop regardless of what the player is holding in his hand
   silktouchRequired: true # If set to false, trial spawners will drop even if the used pickaxe does not have SilkTouch
   silktouchLevel: 1 # The minimum SilkTouch level the pickaxe needs to mine trial spawners
+  breakSpeedMultiplier: 1.0 # Multiplies how fast trial spawners break for players who would receive the drop (vanilla trial spawners take about ten times as long as regular spawners)
   item:
     name: $b{entity} Trial Spawner # The name of the trial spawner item dropped, {entity} is replaced with the mob name
     ominousName: $5Ominous {entity} Trial Spawner # The name used when the trial spawner was ominous

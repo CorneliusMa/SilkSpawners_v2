@@ -81,6 +81,8 @@ public final class PluginConfig extends ConfigDeclaration {
     public final ConfigKey<Boolean> TRIAL_SPAWNER_SILKTOUCH_REQUIRED = bool(TRIAL_SPAWNER, "silktouchRequired", true);
     public final ConfigKey<Integer> TRIAL_SPAWNER_SILKTOUCH_LEVEL =
             integer(TRIAL_SPAWNER, "silktouchLevel", 1, 1, Integer.MAX_VALUE);
+    public final ConfigKey<Double> TRIAL_SPAWNER_BREAK_SPEED_MULTIPLIER =
+            decimal(TRIAL_SPAWNER, "breakSpeedMultiplier", 1.0, 0.1, 1000.0);
     public final ConfigKey<String> TRIAL_SPAWNER_ITEM_NAME =
             message(TRIAL_SPAWNER_ITEM, "name", "$b{entity} Trial Spawner");
     public final ConfigKey<String> TRIAL_SPAWNER_ITEM_OMINOUS_NAME =

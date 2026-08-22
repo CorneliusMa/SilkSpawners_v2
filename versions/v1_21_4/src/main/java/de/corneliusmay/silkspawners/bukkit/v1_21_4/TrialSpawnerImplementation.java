@@ -5,6 +5,8 @@ import de.corneliusmay.silkspawners.api.TrialSpawnerState;
 import de.corneliusmay.silkspawners.spi.version.TrialSpawnerAdapter;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.BiPredicate;
+import java.util.function.DoubleSupplier;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,7 +14,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TrialSpawner;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.loot.LootTable;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.spawner.TrialSpawnerConfiguration;
 
 public class TrialSpawnerImplementation implements TrialSpawnerAdapter {
@@ -20,6 +24,11 @@ public class TrialSpawnerImplementation implements TrialSpawnerAdapter {
     @Override
     public Material getTrialSpawnerMaterial() {
         return Material.TRIAL_SPAWNER;
+    }
+
+    @Override
+    public void installBreakSpeedBoost(Plugin plugin, BiPredicate<Player, Block> eligible, DoubleSupplier multiplier) {
+        Bukkit.getPluginManager().registerEvents(new BreakSpeedBoost(eligible, multiplier), plugin);
     }
 
     @Override

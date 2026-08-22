@@ -1,6 +1,7 @@
 package de.corneliusmay.silkspawners.plugin.config;
 
 import de.corneliusmay.silkspawners.plugin.config.formatters.BooleanConfigValue;
+import de.corneliusmay.silkspawners.plugin.config.formatters.DecimalConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.formatters.IntegerConfigValue;
 import de.corneliusmay.silkspawners.plugin.config.formatters.MessageConfigValue;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,10 @@ abstract class ConfigDeclaration {
 
     ConfigKey<Integer> integer(ConfigScope scope, String key, int def, int min, int max) {
         return builder(scope, key).def(def).formatter(new IntegerConfigValue(min, max));
+    }
+
+    ConfigKey<Double> decimal(ConfigScope scope, String key, double def, double min, double max) {
+        return builder(scope, key).def(def).formatter(new DecimalConfigValue(min, max));
     }
 
     ConfigKey<String> message(ConfigScope scope, String key, String def) {
