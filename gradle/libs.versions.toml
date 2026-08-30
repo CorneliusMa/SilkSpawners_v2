@@ -1,7 +1,7 @@
 [versions]
 adventure = "4.26.1"
 auto-service = "1.1.1"
-spotless = "8.8.0"
+spotless = "8.9.0"
 weftkit = "0.5.0"
 
 [libraries]
