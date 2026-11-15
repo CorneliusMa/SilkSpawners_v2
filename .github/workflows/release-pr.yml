@@ -16,7 +16,7 @@ jobs:
 
       # A pull request opened with GITHUB_TOKEN never triggers pull_request
       # workflows, so the release pull request would go untested
-      - uses: actions/create-github-app-token@v3.2.0
+      - uses: actions/create-github-app-token@v3.3.0
         id: app-token
         with:
           client-id: ${{ secrets.CROWDIN_APP_ID }}
